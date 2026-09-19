@@ -16,7 +16,11 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { IMAGES, PRODUCTS } from '../data/products';
-import { Product } from '../types';
+import { Product, ProductTag } from '../types';
+import {
+  OFFICIAL_DESKTOP_BANNER_TAGS,
+  OFFICIAL_MOBILE_BANNER_TAGS,
+} from '../data/bannerTags';
 
 interface MovementBannerProps {
   onExploreClick: () => void;
@@ -24,94 +28,10 @@ interface MovementBannerProps {
   onNavigateProducts?: () => void;
 }
 
-export interface ProductTag {
-  id: string;
-  slug: string;
-  label: string;
-  price: number;
-  top: string;
-  left?: string;
-  right?: string;
-  align: 'left' | 'right';
-}
+export type { ProductTag };
 
-export const DEFAULT_PRODUCT_TAGS: ProductTag[] = [
-  {
-    id: 'oryven-visor',
-    slug: 'oryven-visor',
-    label: 'Visière',
-    price: 349,
-    top: '16%',
-    left: '50%',
-    align: 'right',
-  },
-  {
-    id: 'oryven-tote-bag',
-    slug: 'oryven-tote-bag',
-    label: 'Tote Bag',
-    price: 299,
-    top: '38%',
-    left: '60%',
-    align: 'left',
-  },
-  {
-    id: 'oryven-yoga-headband',
-    slug: 'oryven-yoga-headband',
-    label: 'Bandeau',
-    price: 299,
-    top: '58%',
-    left: '42%',
-    align: 'right',
-  },
-  {
-    id: 'oryven-non-slip-grip-socks',
-    slug: 'oryven-non-slip-grip-socks',
-    label: 'Chaussettes',
-    price: 279,
-    top: '80%',
-    left: '58%',
-    align: 'left',
-  },
-];
-
-export const DEFAULT_DESKTOP_PRODUCT_TAGS: ProductTag[] = [
-  {
-    id: 'oryven-visor',
-    slug: 'oryven-visor',
-    label: 'Visière',
-    price: 349,
-    top: '24%',
-    left: '25%',
-    align: 'right',
-  },
-  {
-    id: 'oryven-tote-bag',
-    slug: 'oryven-tote-bag',
-    label: 'Tote Bag',
-    price: 299,
-    top: '52%',
-    left: '48%',
-    align: 'left',
-  },
-  {
-    id: 'oryven-yoga-headband',
-    slug: 'oryven-yoga-headband',
-    label: 'Bandeau',
-    price: 299,
-    top: '32%',
-    left: '68%',
-    align: 'right',
-  },
-  {
-    id: 'oryven-non-slip-grip-socks',
-    slug: 'oryven-non-slip-grip-socks',
-    label: 'Chaussettes',
-    price: 279,
-    top: '72%',
-    left: '80%',
-    align: 'left',
-  },
-];
+export const DEFAULT_PRODUCT_TAGS: ProductTag[] = OFFICIAL_MOBILE_BANNER_TAGS;
+export const DEFAULT_DESKTOP_PRODUCT_TAGS: ProductTag[] = OFFICIAL_DESKTOP_BANNER_TAGS;
 
 export const getTagCoordinates = (tag: ProductTag): { x: number; y: number } => {
   const y = parseFloat(tag.top) || 50;
@@ -704,7 +624,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
         <img
           src={IMAGES.wideMovementBanner}
           alt="Oryven Conçus Pour Bouger"
-          className="absolute inset-0 w-full h-full object-cover object-center block transition-transform duration-700 group-hover:scale-[1.01]"
+          className="absolute inset-0 w-full h-full object-cover object-center block"
           referrerPolicy="no-referrer"
         />
 

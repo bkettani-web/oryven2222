@@ -81,3 +81,14 @@ export interface FaqItem {
   answer: string;
   iconName: 'truck' | 'creditCard' | 'rotateCcw' | 'messageCircle';
 }
+
+export interface ProductTag {
+  id: string;
+  slug: string;
+  label: string;
+  price: number;
+  top: string;
+  left?: string;
+  right?: string;
+  align: 'left' | 'right';
+}
