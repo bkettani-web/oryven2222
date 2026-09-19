@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Page d'accueil -->
+  <url>
+    <loc>https://oryven-maroc.com/</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Plan du site e-commerce (HTML) -->
+  <url>
+    <loc>https://oryven-maroc.com/plan-du-site</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Catalogue complet des 4 produits -->
+  <url>
+    <loc>https://oryven-maroc.com/produits</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Fiches Produits Individuelles Dédiées -->
+  <url>
+    <loc>https://oryven-maroc.com/produits/oryven-tote-bag</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://oryven-maroc.com/assets/images/oryven_tote_bag.jpg</image:loc>
+      <image:title>Oryven Tote Bag - Toile bio 480 g/m²</image:title>
+      <image:caption>Sac cabas iconique Oryven avec compartiment pour gourde et maintien de tapis au Maroc</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://oryven-maroc.com/produits/oryven-yoga-headband</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://oryven-maroc.com/assets/images/oryven_headband.jpg</image:loc>
+      <image:title>Oryven Yoga Headband - Microfibre Oryven Soft</image:title>
+      <image:caption>Bandeau absorbant ultra-doux avec maintien sans compression au Maroc</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://oryven-maroc.com/produits/oryven-visor</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://oryven-maroc.com/assets/images/oryven_visor.jpg</image:loc>
+      <image:title>Oryven Visor - Protection UV UPF 50+</image:title>
+      <image:caption>Visière athlétique sculptée avec bandeau éponge absorbant au Maroc</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://oryven-maroc.com/produits/oryven-non-slip-grip-socks</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://oryven-maroc.com/assets/images/oryven_grip_socks.jpg</image:loc>
+      <image:title>Oryven Non-Slip Grip Socks - Picots Silicone Médical</image:title>
+      <image:caption>Chaussettes de pilates et yoga avec picots antidérapants au Maroc</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://oryven-maroc.com/produits/pack-complet-oryven</loc>
+    <lastmod>2026-09-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/diptsoc4h/image/upload/v1789817596/ChatGPT_Image_19_sept._2026_12_32_47_2_tiwli3.webp</image:loc>
+      <image:title>Pack Complet 4 Essentiels Oryven</image:title>
+      <image:caption>Coffret complet des 4 essentiels Oryven : Tote Bag, Visière, Yoga Headband et Chaussettes Pilates Grip au Maroc</image:caption>
+    </image:image>
+  </url>
+
+  <!-- Sections Catégories et Univers -->
+  <url>
+    <loc>https://oryven-maroc.com/#essentiels</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://oryven-maroc.com/#studio</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://oryven-maroc.com/#movement</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://oryven-maroc.com/#faq</loc>
+    <lastmod>2026-09-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
