@@ -73,7 +73,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
   // Desktop tags state & calibration
   const [desktopTags, setDesktopTags] = useState<ProductTag[]>(() => {
     try {
-      const saved = localStorage.getItem('oryven_desktop_tags_v2');
+      const saved = localStorage.getItem('oryven_desktop_tags_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -164,7 +164,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
         };
       });
       try {
-        localStorage.setItem('oryven_desktop_tags_v2', JSON.stringify(next));
+        localStorage.setItem('oryven_desktop_tags_v3', JSON.stringify(next));
       } catch {
         // ignore
       }
@@ -249,6 +249,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
   const handleResetDesktopTags = () => {
     setDesktopTags(DEFAULT_DESKTOP_PRODUCT_TAGS);
     try {
+      localStorage.removeItem('oryven_desktop_tags_v3');
       localStorage.removeItem('oryven_desktop_tags_v2');
     } catch {
       // ignore
