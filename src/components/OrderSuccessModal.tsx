@@ -1,13 +1,18 @@
 import React from 'react';
-import { CheckCircle2, Truck, MessageCircle, X, MapPin, Phone, PackageCheck } from 'lucide-react';
+import { CheckCircle2, MessageCircle, X, MapPin, Phone, PackageCheck, FileSpreadsheet } from 'lucide-react';
 import { CustomerOrder } from '../types';
+import { getProductSheetName, getAppsScriptUrl } from '../services/googleSheetsService';
 
 interface OrderSuccessModalProps {
   order: CustomerOrder;
   onClose: () => void;
+  onOpenGoogleSheets?: () => void;
 }
 
-export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({ order, onClose }) => {
+export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({ order, onClose, onOpenGoogleSheets }) => {
+  const item = order.items[0];
+  const targetSheet = item?.product ? getProductSheetName(item.product.id || item.product.slug) : 'Pack 4 Produits';
+  const hasGoogleSheetsConfig = Boolean(getAppsScriptUrl());
   const handleWhatsAppConfirm = () => {
     const item = order.items[0];
     const text = encodeURIComponent(
@@ -133,6 +138,28 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({ order, onC
                 {order.address}, <strong>{order.city}</strong>
               </span>
             </div>
+          </div>
+
+          {/* Google Sheets Sync Card */}
+          <div className="p-3 bg-emerald-50/80 border border-emerald-200 rounded-xl text-xs flex items-center justify-between gap-2">
+            <div className="flex items-center space-x-2 text-emerald-900">
+              <FileSpreadsheet size={16} className="text-emerald-700 shrink-0" />
+              <div>
+                <span className="font-bold">Google Sheets App Script :</span>{' '}
+                <span className="text-emerald-800">
+                  {hasGoogleSheetsConfig ? `Classée dans la feuille « ${targetSheet} »` : `Feuille cible « ${targetSheet} »`}
+                </span>
+              </div>
+            </div>
+            {onOpenGoogleSheets && (
+              <button
+                type="button"
+                onClick={onOpenGoogleSheets}
+                className="text-[11px] font-bold text-[#7A283B] hover:underline shrink-0 bg-white px-2 py-1 rounded-lg border border-emerald-200"
+              >
+                Gérer
+              </button>
+            )}
           </div>
 
           {/* CTAs */}

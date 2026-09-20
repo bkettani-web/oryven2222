@@ -1,11 +1,12 @@
 import React from 'react';
-import { Instagram, MessageCircle } from 'lucide-react';
+import { Instagram, MessageCircle, FileSpreadsheet } from 'lucide-react';
 
 interface FooterProps {
   onNavigateSection: (sectionId: string) => void;
   onNavigateHome: () => void;
   onNavigateSitemap?: () => void;
   onNavigateProducts?: () => void;
+  onOpenGoogleSheets?: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -13,6 +14,7 @@ export const Footer: React.FC<FooterProps> = ({
   onNavigateHome,
   onNavigateSitemap,
   onNavigateProducts,
+  onOpenGoogleSheets,
 }) => {
   return (
     <footer className="bg-[#14171A] text-neutral-300 pt-16 pb-12 border-t border-neutral-800">
@@ -183,6 +185,17 @@ export const Footer: React.FC<FooterProps> = ({
                   Nous contacter (WhatsApp)
                 </a>
               </li>
+              {onOpenGoogleSheets && (
+                <li>
+                  <button
+                    onClick={onOpenGoogleSheets}
+                    className="hover:text-emerald-400 text-emerald-500 font-medium transition-colors flex items-center gap-1.5 pt-1"
+                  >
+                    <FileSpreadsheet size={13} />
+                    <span>Google Sheets App Script</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 

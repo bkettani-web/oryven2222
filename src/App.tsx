@@ -21,6 +21,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { SearchModal } from './components/SearchModal';
 import { OrderSuccessModal } from './components/OrderSuccessModal';
+import { GoogleSheetsModal } from './components/GoogleSheetsModal';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { PRODUCTS } from './data/products';
 import { Product, CartItem, ProductOffer, CustomerOrder } from './types';
@@ -131,6 +132,7 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isGoogleSheetsOpen, setIsGoogleSheetsOpen] = useState(false);
   const [confirmedOrder, setConfirmedOrder] = useState<CustomerOrder | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -405,6 +407,7 @@ export default function App() {
         onNavigateSection={handleNavigateSection}
         onNavigateSitemap={handleOpenSitemap}
         onNavigateProducts={handleOpenProductsPage}
+        onOpenGoogleSheets={() => setIsGoogleSheetsOpen(true)}
       />
 
       {/* View Switcher: Home View vs Products Catalog vs Product View vs Sitemap View */}
@@ -476,6 +479,7 @@ export default function App() {
             onSelectProduct={handleSelectProduct}
             onToggleWishlist={handleToggleWishlist}
             wishlistIds={wishlistIds}
+            onOpenGoogleSheets={() => setIsGoogleSheetsOpen(true)}
           />
         ) : (
           <div className="max-w-2xl mx-auto py-24 px-4 text-center space-y-4">
@@ -509,6 +513,7 @@ export default function App() {
         onNavigateHome={handleBackToHome}
         onNavigateSitemap={handleOpenSitemap}
         onNavigateProducts={handleOpenProductsPage}
+        onOpenGoogleSheets={() => setIsGoogleSheetsOpen(true)}
       />
 
       {/* Cart Drawer */}
@@ -544,8 +549,15 @@ export default function App() {
         <OrderSuccessModal
           order={confirmedOrder}
           onClose={() => setConfirmedOrder(null)}
+          onOpenGoogleSheets={() => setIsGoogleSheetsOpen(true)}
         />
       )}
+
+      {/* Google Sheets Integration Modal */}
+      <GoogleSheetsModal
+        isOpen={isGoogleSheetsOpen}
+        onClose={() => setIsGoogleSheetsOpen(false)}
+      />
 
       {/* Floating WhatsApp Assistance Button */}
       <WhatsAppButton />

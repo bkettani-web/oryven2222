@@ -11,9 +11,16 @@ import {
   Star,
   ShoppingBag,
   ArrowRight,
+  FileSpreadsheet,
+  Wand2,
 } from 'lucide-react';
 import { Product, ProductOffer, CustomerOrder } from '../types';
 import { MOROCCAN_CITIES, IMAGES, PRODUCTS } from '../data/products';
+import {
+  sendOrderToGoogleSheets,
+  getProductSheetName,
+  getAppsScriptUrl,
+} from '../services/googleSheetsService';
 
 interface ProductVisualHighlight {
   image: string;
@@ -352,6 +359,7 @@ interface ProductPageProps {
   onSelectProduct?: (product: Product) => void;
   onToggleWishlist?: (product: Product) => void;
   wishlistIds?: string[];
+  onOpenGoogleSheets?: () => void;
 }
 
 export const ProductPage: React.FC<ProductPageProps> = ({
@@ -362,6 +370,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   onSelectProduct,
   onToggleWishlist,
   wishlistIds = [],
+  onOpenGoogleSheets,
 }) => {
   const isPackComplet = product.id === 'pack-complet-oryven' || product.slug === 'pack-complet-oryven';
 
@@ -494,7 +503,15 @@ export const ProductPage: React.FC<ProductPageProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmitOrder = (e: React.FormEvent) => {
+  const handleFillTestData = () => {
+    setFullName('Kawtar Benjelloun (Test)');
+    setPhone('0661234567');
+    setCity('Casablanca');
+    setAddress('12 Boulevard d’Anfa, Gauthier');
+    setFormErrors({});
+  };
+
+  const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -510,35 +527,40 @@ export const ProductPage: React.FC<ProductPageProps> = ({
             )
         : [];
 
-    setTimeout(() => {
-      const newOrder: CustomerOrder = {
-        orderId: `ORYVEN-MA-${Math.floor(100000 + Math.random() * 900000)}`,
-        createdAt: new Date().toISOString(),
-        fullName: fullName.trim(),
-        phone: phone.trim(),
-        city: city.trim(),
-        address: address.trim(),
-        notes: notes.trim(),
-        items: [
-          {
-            product,
-            selectedColor:
-              product.colors && product.colors.length > 0
-                ? product.colors.find((c) => c.name === selectedColor) || product.colors[0]
-                : undefined,
-            offer: currentOffer,
-            customColors: chosenColors.length > 0 ? chosenColors : undefined,
-            quantity: 1,
-          },
-        ],
-        totalAmount: currentOffer.totalPrice,
-        status: 'confirmed',
-        paymentMethod: 'cash_on_delivery',
-      };
+    const newOrder: CustomerOrder = {
+      orderId: `ORYVEN-MA-${Math.floor(100000 + Math.random() * 900000)}`,
+      createdAt: new Date().toISOString(),
+      fullName: fullName.trim(),
+      phone: phone.trim(),
+      city: city.trim(),
+      address: address.trim(),
+      notes: notes.trim(),
+      items: [
+        {
+          product,
+          selectedColor:
+            product.colors && product.colors.length > 0
+              ? product.colors.find((c) => c.name === selectedColor) || product.colors[0]
+              : undefined,
+          offer: currentOffer,
+          customColors: chosenColors.length > 0 ? chosenColors : undefined,
+          quantity: 1,
+        },
+      ],
+      totalAmount: currentOffer.totalPrice,
+      status: 'confirmed',
+      paymentMethod: 'cash_on_delivery',
+    };
 
-      setIsSubmitting(false);
-      onOrderSuccess(newOrder);
-    }, 600);
+    // Send order data to Google Sheets App Script (asynchronously)
+    try {
+      await sendOrderToGoogleSheets(newOrder);
+    } catch (err) {
+      console.warn('Google Sheets Webhook notification:', err);
+    }
+
+    setIsSubmitting(false);
+    onOrderSuccess(newOrder);
   };
 
   // Direct WhatsApp Order
@@ -1016,12 +1038,23 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
               {/* 2 / 3. SIMPLIFIED EXPRESS DELIVERY FORM */}
               <form onSubmit={handleSubmitOrder} className="space-y-3 pt-2 border-t border-neutral-100">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-700 flex items-center">
-                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black mr-1.5 shadow-xs">
-                    {isPackComplet ? 3 : 2}
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-700 flex items-center">
+                    <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black mr-1.5 shadow-xs">
+                      {isPackComplet ? 3 : 2}
+                    </span>
+                    Vos coordonnées de livraison :
                   </span>
-                  Vos coordonnées de livraison :
-                </span>
+                  <button
+                    type="button"
+                    onClick={handleFillTestData}
+                    className="text-[10px] font-bold text-neutral-500 hover:text-[#7A283B] flex items-center gap-1 px-2 py-0.5 rounded bg-neutral-100 hover:bg-neutral-200 transition-colors cursor-pointer"
+                    title="Remplir automatiquement avec des données de test marocaines"
+                  >
+                    <Wand2 size={11} />
+                    <span>Remplir pour test</span>
+                  </button>
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {/* Full Name */}
@@ -1150,6 +1183,30 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                   </span>
                   <span>•</span>
                   <span>Échange 14 jours</span>
+                </div>
+
+                {/* Google Sheets Live Link Info */}
+                <div className="pt-1">
+                  <div className="bg-[#FAF8F5] border border-neutral-200/80 rounded-lg p-2 flex items-center justify-between text-[11px] text-neutral-600">
+                    <div className="flex items-center gap-1.5">
+                      <FileSpreadsheet size={13} className="text-emerald-600 shrink-0" />
+                      <span>
+                        Envoi vers feuille :{' '}
+                        <strong className="text-neutral-800">
+                          « {getProductSheetName(product.id || product.slug)} »
+                        </strong>
+                      </span>
+                    </div>
+                    {onOpenGoogleSheets && (
+                      <button
+                        type="button"
+                        onClick={onOpenGoogleSheets}
+                        className="text-[10px] font-bold text-[#7A283B] hover:underline cursor-pointer"
+                      >
+                        Paramètres Sheets
+                      </button>
+                    )}
+                  </div>
                 </div>
               </form>
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { ShoppingBag, Menu, X, FileSpreadsheet } from 'lucide-react';
 
 interface HeaderProps {
   cartCount: number;
@@ -11,6 +11,7 @@ interface HeaderProps {
   onNavigateSection: (sectionId: string) => void;
   onNavigateSitemap?: () => void;
   onNavigateProducts?: () => void;
+  onOpenGoogleSheets?: () => void;
   activeSection?: string;
 }
 
@@ -21,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigateSection,
   onNavigateSitemap,
   onNavigateProducts,
+  onOpenGoogleSheets,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -110,8 +112,21 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </nav>
 
-          {/* Right Action Icons - Cart Only */}
-          <div className="flex items-center text-neutral-800">
+          {/* Right Action Icons */}
+          <div className="flex items-center space-x-2 text-neutral-800">
+            {onOpenGoogleSheets && (
+              <button
+                id="header-sheets-btn"
+                type="button"
+                onClick={onOpenGoogleSheets}
+                className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50/70 text-emerald-800 hover:bg-emerald-100 text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                title="Google Sheets App Script (Gestion des commandes)"
+              >
+                <FileSpreadsheet size={16} className="text-emerald-700" />
+                <span className="hidden lg:inline">Google Sheets</span>
+              </button>
+            )}
+
             {/* Cart Icon with count */}
             <button
               id="header-cart-btn"
@@ -194,6 +209,18 @@ export const Header: React.FC<HeaderProps> = ({
                 className="block w-full text-left py-2 text-sm font-semibold uppercase tracking-wider text-[#7A283B] hover:text-neutral-900 border-t border-neutral-100 pt-2"
               >
                 Plan du site (Sitemap)
+              </button>
+            )}
+            {onOpenGoogleSheets && (
+              <button
+                onClick={() => {
+                  onOpenGoogleSheets();
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-2 w-full text-left py-2 text-sm font-semibold text-emerald-800 hover:text-emerald-900 border-t border-neutral-100 pt-2"
+              >
+                <FileSpreadsheet size={16} className="text-emerald-700" />
+                <span>Google Sheets App Script</span>
               </button>
             )}
           </div>
