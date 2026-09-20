@@ -86,6 +86,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
 
   const [isDesktopCalibrating, setIsDesktopCalibrating] = useState(false);
   const [selectedDesktopTagId, setSelectedDesktopTagId] = useState<string>('oryven-visor');
+  const [draggingDesktopTagId, setDraggingDesktopTagId] = useState<string | null>(null);
   const [desktopCopiedNotification, setDesktopCopiedNotification] = useState(false);
   const desktopBannerRef = useRef<HTMLDivElement>(null);
 
@@ -93,6 +94,39 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
   const activeCoords = activeTag ? getTagCoordinates(activeTag) : { x: 50, y: 50 };
 
   const activeDesktopTag = desktopTags.find((t) => t.id === selectedDesktopTagId) || desktopTags[0];
+
+  const handlePointerDownDesktopTag = (e: React.PointerEvent, tagId: string) => {
+    if (!isDesktopCalibrating) return;
+    e.stopPropagation();
+    setSelectedDesktopTagId(tagId);
+    setDraggingDesktopTagId(tagId);
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleDesktopPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDesktopCalibrating || !draggingDesktopTagId || !desktopBannerRef.current) return;
+    const rect = desktopBannerRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const topPercent = Math.max(3, Math.min(97, Math.round((clickY / rect.height) * 100)));
+    const leftPercent = Math.max(3, Math.min(97, Math.round((clickX / rect.width) * 100)));
+
+    updateSelectedDesktopTag({
+      x: leftPercent,
+      y: topPercent,
+    });
+  };
+
+  const handleDesktopPointerUp = () => {
+    if (draggingDesktopTagId) {
+      setDraggingDesktopTagId(null);
+    }
+  };
 
   const handleTagClick = (e: React.MouseEvent, tag: ProductTag) => {
     e.stopPropagation();
@@ -618,8 +652,11 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
         id="desktop-movement-banner"
         ref={desktopBannerRef}
         onClick={handleDesktopBannerClick}
-        className={`hidden sm:block relative w-full aspect-[1918/820] overflow-hidden select-none cursor-pointer group ${
-          isDesktopCalibrating ? 'cursor-crosshair ring-2 ring-[#7A283B] ring-inset' : ''
+        onPointerMove={handleDesktopPointerMove}
+        onPointerUp={handleDesktopPointerUp}
+        onPointerLeave={handleDesktopPointerUp}
+        className={`hidden sm:block relative w-full aspect-[1918/820] overflow-hidden select-none group ${
+          isDesktopCalibrating ? 'cursor-crosshair ring-2 ring-[#7A283B] ring-inset' : 'cursor-pointer'
         }`}
       >
         <img
@@ -662,18 +699,26 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
           const coords = getTagCoordinates(tag);
           const isSelectedInCalib = isDesktopCalibrating && selectedDesktopTagId === tag.id;
           const isTextLeft = tag.align === 'left';
+          const isBeingDragged = isDesktopCalibrating && draggingDesktopTagId === tag.id;
 
           return (
             <button
               key={tag.id}
               type="button"
               onClick={(e) => handleDesktopTagClick(e, tag)}
+              onPointerDown={(e) => handlePointerDownDesktopTag(e, tag.id)}
               aria-label={`Voir le produit ${tag.label} (${tag.price} MAD)`}
-              className={`absolute z-20 flex items-center gap-1.5 cursor-pointer touch-manipulation transition-all duration-200 group/tag active:scale-95 ${
+              className={`absolute z-20 flex items-center gap-1.5 touch-manipulation transition-all duration-150 group/tag ${
+                isDesktopCalibrating
+                  ? 'cursor-grab active:cursor-grabbing'
+                  : 'cursor-pointer active:scale-95'
+              } ${
                 isTextLeft
                   ? 'flex-row -translate-y-1/2 -translate-x-[calc(100%-10px)]'
                   : 'flex-row -translate-y-1/2 -translate-x-[10px]'
-              } ${isSelectedInCalib ? 'scale-110 z-30' : 'hover:scale-105'}`}
+              } ${isSelectedInCalib ? 'scale-110 z-30' : 'hover:scale-105'} ${
+                isBeingDragged ? 'scale-125 z-40 opacity-90' : ''
+              }`}
               style={{
                 top: `${coords.y}%`,
                 left: `${coords.x}%`,
@@ -711,7 +756,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
                     />
                     <span
                       className={`relative inline-flex h-4 w-4 rounded-full bg-white border-[2.5px] shadow-sm items-center justify-center ${
-                        isSelectedInCalib ? 'border-amber-500' : 'border-[#7A283B]'
+                        isSelectedInCalib ? 'border-amber-500 ring-2 ring-amber-400/80 scale-110' : 'border-[#7A283B]'
                       }`}
                     >
                       <span
@@ -720,6 +765,9 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
                         }`}
                       />
                     </span>
+                    {isSelectedInCalib && (
+                      <span className="absolute -inset-1.5 border border-dashed border-amber-400 rounded-full animate-spin-slow pointer-events-none" />
+                    )}
                   </span>
                 </>
               ) : (
@@ -733,7 +781,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
                     />
                     <span
                       className={`relative inline-flex h-4 w-4 rounded-full bg-white border-[2.5px] shadow-sm items-center justify-center ${
-                        isSelectedInCalib ? 'border-amber-500' : 'border-[#7A283B]'
+                        isSelectedInCalib ? 'border-amber-500 ring-2 ring-amber-400/80 scale-110' : 'border-[#7A283B]'
                       }`}
                     >
                       <span
@@ -742,6 +790,9 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
                         }`}
                       />
                     </span>
+                    {isSelectedInCalib && (
+                      <span className="absolute -inset-1.5 border border-dashed border-amber-400 rounded-full animate-spin-slow pointer-events-none" />
+                    )}
                   </span>
 
                   {/* Pill on the RIGHT */}
@@ -794,12 +845,27 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
               <button
                 type="button"
                 onClick={handleResetDesktopTags}
-                className="flex items-center gap-1 px-2 py-1 bg-white/10 hover:bg-white/20 text-[10px] font-bold rounded transition-colors text-neutral-400 cursor-pointer"
-                title="Réinitialiser les coordonnées"
+                className="flex items-center gap-1 px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-neutral-950 text-[10px] font-black rounded transition-colors cursor-pointer shadow-sm"
+                title="Restaurer les positions idéales officielles"
               >
-                <RotateCcw size={11} />
-                <span>Défaut</span>
+                <Sparkles size={11} />
+                <span>Positions Idéales (1 clic)</span>
               </button>
+            </div>
+          </div>
+
+          {/* Easy Method Guide Box */}
+          <div className="bg-neutral-800/90 border border-amber-400/30 rounded-lg p-2.5 flex items-start gap-2.5 text-[11px] text-neutral-300">
+            <span className="text-base leading-none">🎯</span>
+            <div>
+              <p className="font-bold text-white mb-0.5">
+                Comment insérer les pings exactement sur le produit :
+              </p>
+              <p className="text-neutral-300 text-[10px] leading-relaxed">
+                <strong className="text-amber-300">1. Glissez-déposez à la souris :</strong> Maintenez le clic sur le point rouge et glissez-le directement sur l'article (visière sur la tête, sac sur le banc, bandeau sur les mains, chaussettes aux chevilles).<br />
+                <strong className="text-amber-300">2. Cible exacte :</strong> C'est le <span className="underline font-semibold text-white">centre du cercle rouge</span> qui doit toucher le produit. L'étiquette blanche (nom + prix) s'affiche à côté (gauche ou droite) pour ne pas cacher l'article.<br />
+                <strong className="text-amber-300">3. En 1 clic :</strong> Cliquez sur <span className="text-amber-300 font-bold">Positions Idéales</span> pour aligner automatiquement les 4 produits au pixel près.
+              </p>
             </div>
           </div>
 
