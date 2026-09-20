@@ -28,7 +28,7 @@ export const IMAGES = {
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789808701/ChatGPT_Image_19_sept._2026_10_04_35_br7ig8.webp',
   tote: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789744916/vf21tchknrdevrjf5ct1_ir5iuw.webp',
   headband:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
   visor:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
   socks:
@@ -120,14 +120,12 @@ export const PRODUCTS: Product[] = [
     reviewCount: 96,
     badge: 'Bestseller',
     image:
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
     gallery: [
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/djtckeltvqfk2wjohbpg_jadrig.webp',
     ],
     colors: [
       { name: 'Lavande Glacée', code: '#C8C2E6' },
