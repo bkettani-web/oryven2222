@@ -261,37 +261,37 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
   {
     id: 'headband1',
     name: '1er Bandeau Yoga Headband',
-    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
     variants: [
       {
         name: 'Lavande Glacée',
         code: '#C8C2E6',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
       },
       {
         name: 'Bleu Ciel',
         code: '#97C4E8',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
       },
       {
         name: 'Noir Intense',
         code: '#171717',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
       },
       {
         name: 'Corail Énergie',
         code: '#F26D5B',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/djtckeltvqfk2wjohbpg_jadrig.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
       },
       {
         name: 'Vert Forêt',
         code: '#2E543D',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
       },
       {
         name: 'Beige Sable',
         code: '#DACFB9',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
       },
     ],
     defaultVariant: 'Lavande Glacée',
@@ -299,37 +299,37 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
   {
     id: 'headband2',
     name: '2ème Bandeau Yoga Headband',
-    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
+    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
     variants: [
       {
         name: 'Bleu Ciel',
         code: '#97C4E8',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
       },
       {
         name: 'Lavande Glacée',
         code: '#C8C2E6',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
       },
       {
         name: 'Noir Intense',
         code: '#171717',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
       },
       {
         name: 'Corail Énergie',
         code: '#F26D5B',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/djtckeltvqfk2wjohbpg_jadrig.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
       },
       {
         name: 'Vert Forêt',
         code: '#2E543D',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
       },
       {
         name: 'Beige Sable',
         code: '#DACFB9',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
       },
     ],
     defaultVariant: 'Bleu Ciel',
