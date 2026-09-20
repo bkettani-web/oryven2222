@@ -19,9 +19,9 @@ export const IMAGES = {
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789778673/ChatGPT_Image_19_sept._2026_01_43_27_qqwrjj.webp',
   wideLifestyleBanner: wideLifestyleBannerImg,
   studioDesktopBanner:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789817596/ChatGPT_Image_19_sept._2026_12_32_47_2_tiwli3.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_46_58_f8jcgl.webp',
   studioMobileBanner:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789817592/ChatGPT_Image_19_sept._2026_12_32_46_1_zjwaot.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_48_24_ttofyg.webp',
   wideMovementBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789816142/ChatGPT_Image_19_sept._2026_12_08_46_mvaybv.webp',
   mobileMovementBanner:
@@ -350,10 +350,10 @@ export const PRODUCTS: Product[] = [
     reviewCount: 142,
     badge: 'Offre Complète Exclusive -27%',
     image:
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789817596/ChatGPT_Image_19_sept._2026_12_32_47_2_tiwli3.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_46_58_f8jcgl.webp',
     gallery: [
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789817596/ChatGPT_Image_19_sept._2026_12_32_47_2_tiwli3.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789817592/ChatGPT_Image_19_sept._2026_12_32_46_1_zjwaot.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_46_58_f8jcgl.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_48_24_ttofyg.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789744916/vf21tchknrdevrjf5ct1_ir5iuw.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
     ],
