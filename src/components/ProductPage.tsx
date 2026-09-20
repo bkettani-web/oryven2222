@@ -390,6 +390,13 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         [itemId]: variantName,
       },
     }));
+
+    // Update active gallery image with the selected variant's photo for extra visibility
+    const itemConfig = PACK_COMPLET_ITEMS.find((it) => it.id === itemId);
+    const variantObj = itemConfig?.variants.find((v) => v.name === variantName);
+    if (variantObj?.image) {
+      setActiveImage(variantObj.image);
+    }
   };
 
   const getPackCompletColorsList = () => {
@@ -900,8 +907,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     </div>
                   )}
 
-                  {/* 4 items with small square preview image of selected color and quick variant buttons */}
-                  <div className="space-y-2.5">
+                  {/* 4 items with enlarged preview image of selected color and elegant dropdown menus */}
+                  <div className="space-y-3">
                     {PACK_COMPLET_ITEMS.map((item) => {
                       const currentPackSel = packCustomSelections[activePackIndex] || packCustomSelections[0];
                       const selectedVariant = currentPackSel?.[item.id] || item.defaultVariant;
@@ -912,65 +919,82 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                       return (
                         <div
                           key={item.id}
-                          className="bg-white rounded-xl p-2.5 sm:p-3 border border-neutral-200/90 shadow-2xs transition-all hover:border-orange-300/80"
+                          className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-3.5 border border-neutral-200 shadow-2xs transition-all hover:border-orange-300 hover:shadow-xs"
                         >
-                          <div className="flex items-start gap-2.5 sm:gap-3">
-                            {/* Small square preview image showing the product in selected color */}
-                            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden border border-neutral-200 shadow-2xs shrink-0 bg-neutral-100 group">
+                          <div className="flex items-center gap-3 sm:gap-4">
+                            {/* Enlarged preview image showing the product in selected color */}
+                            <div
+                              onClick={() => setActiveImage(selectedImage)}
+                              title="Cliquer pour afficher en grand dans la galerie principale"
+                              className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-neutral-200 shadow-2xs shrink-0 bg-neutral-50 group cursor-pointer transition-all hover:scale-[1.02] hover:border-orange-400"
+                            >
                               <img
                                 src={selectedImage}
                                 alt={`${item.name} - ${selectedVariant}`}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                 referrerPolicy="no-referrer"
                               />
                               {selectedVariantObj && (
                                 <span
-                                  className="absolute bottom-1 right-1 w-3 h-3 rounded-full border border-white shadow-xs"
+                                  className="absolute bottom-1.5 right-1.5 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-white shadow-xs"
                                   style={{ backgroundColor: selectedVariantObj.code }}
-                                  title={selectedVariant}
+                                  title={`Couleur : ${selectedVariant}`}
                                 />
                               )}
+                              <span className="absolute top-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white text-[8px] font-bold px-1.5 py-0.5 rounded backdrop-blur-xs">
+                                Zoom
+                              </span>
                             </div>
 
-                            {/* Product Info & Variant Options */}
-                            <div className="flex-1 min-w-0 space-y-1.5">
+                            {/* Product Info & Dropdown Menu */}
+                            <div className="flex-1 min-w-0 space-y-1.5 sm:space-y-2">
                               <div className="flex items-center justify-between gap-1.5">
-                                <span className="text-xs font-bold text-neutral-900 leading-tight">
+                                <span className="text-xs sm:text-sm font-bold text-neutral-900 leading-snug">
                                   {item.name}
                                 </span>
-                                <span className="text-[10px] sm:text-[11px] font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded shrink-0">
+                                <span className="text-[10px] sm:text-[11px] font-bold text-orange-800 bg-orange-50 border border-orange-200/80 px-2 py-0.5 rounded-full shrink-0">
                                   {selectedVariant}
                                 </span>
                               </div>
 
                               {!isFixed ? (
-                                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                                  {item.variants.map((v) => {
-                                    const isSelected = selectedVariant === v.name;
-                                    return (
-                                      <button
-                                        key={v.name}
-                                        type="button"
-                                        onClick={() => handlePackItemSelect(activePackIndex, item.id, v.name)}
-                                        className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${
-                                          isSelected
-                                            ? 'border-orange-500 bg-orange-50/80 text-orange-950 ring-1 ring-orange-400 font-bold'
-                                            : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300'
-                                        }`}
-                                      >
-                                        <span
-                                          className="w-2.5 h-2.5 rounded-full border border-neutral-300 shrink-0"
-                                          style={{ backgroundColor: v.code }}
-                                        />
-                                        <span>{v.name}</span>
-                                      </button>
-                                    );
-                                  })}
+                                <div className="space-y-1 pt-0.5">
+                                  <label
+                                    htmlFor={`pack-select-${item.id}`}
+                                    className="text-[11px] font-semibold text-neutral-500 flex items-center justify-between"
+                                  >
+                                    <span>Choisir la couleur :</span>
+                                    <span className="text-[10px] text-orange-600 font-medium hidden sm:inline">
+                                      {item.variants.length} coloris disponibles
+                                    </span>
+                                  </label>
+                                  <div className="relative flex items-center">
+                                    <span
+                                      className="absolute left-3 w-3.5 h-3.5 rounded-full border border-neutral-300 shadow-2xs pointer-events-none z-10 shrink-0"
+                                      style={{ backgroundColor: selectedVariantObj?.code || '#171717' }}
+                                    />
+                                    <select
+                                      id={`pack-select-${item.id}`}
+                                      value={selectedVariant}
+                                      onChange={(e) => handlePackItemSelect(activePackIndex, item.id, e.target.value)}
+                                      className="w-full bg-[#FAF7F2]/90 hover:bg-white text-neutral-900 text-xs sm:text-sm font-bold rounded-lg sm:rounded-xl border border-neutral-300 pl-8.5 pr-8 py-2 sm:py-2.5 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all cursor-pointer shadow-2xs"
+                                    >
+                                      {item.variants.map((v) => (
+                                        <option key={v.name} value={v.name}>
+                                          {v.name}
+                                        </option>
+                                      ))}
+                                    </select>
+                                    <ChevronDown
+                                      size={16}
+                                      className="absolute right-3 text-neutral-400 pointer-events-none"
+                                    />
+                                  </div>
                                 </div>
                               ) : (
-                                <div className="text-[11px] text-emerald-700 font-medium flex items-center gap-1 pt-0.5">
-                                  <CheckCircle size={12} className="shrink-0 text-emerald-600" />
-                                  <span>Toile naturelle écru signature (Inclus)</span>
+                                <div className="text-[11px] sm:text-xs text-emerald-800 font-medium flex items-center gap-1.5 pt-0.5 bg-emerald-50/80 border border-emerald-200/80 rounded-lg sm:rounded-xl px-2.5 py-2">
+                                  <CheckCircle size={14} className="shrink-0 text-emerald-600" />
+                                  <span>Coloris unique : Toile Écru Naturelle Signature (Inclus)</span>
                                 </div>
                               )}
                             </div>
