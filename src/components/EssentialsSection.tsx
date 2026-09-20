@@ -10,6 +10,48 @@ interface EssentialsSectionProps {
   wishlistIds: string[];
 }
 
+// Photos des produits prises au sol sur terrain de padel
+const PADEL_COURT_THUMBNAILS: Record<string, string> = {
+  'oryven-tote-bag':
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911773/ChatGPT_Image_20_sept._2026_14_42_24_mlkskn.webp',
+  'oryven-yoga-headband':
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
+  'oryven-visor':
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
+  'oryven-non-slip-grip-socks':
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789912252/ChatGPT_Image_20_sept._2026_14_50_13_wzbqb0.webp',
+};
+
+// Variantes couleur prises sur le sol de padel
+const PADEL_VARIANT_IMAGES: Record<string, Record<string, string>> = {
+  'oryven-yoga-headband': {
+    'Lavande Glacée':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
+    'Bleu Ciel':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
+    'Noir Intense':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
+    'Corail Énergie':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
+    'Vert Forêt':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
+    'Beige Sable':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
+  },
+  'oryven-visor': {
+    'Bleu Glacier':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
+    'Rose Framboise':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_2_s702mz.webp',
+    'Mauve Nude':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911354/ChatGPT_Image_20_sept._2026_14_32_19_3_afxtpd.webp',
+    'Noir Intense':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
+    'Blanc Perle':
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_4_qh8xk2.webp',
+  },
+};
+
 export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
   products,
   onSelectProduct,
@@ -57,6 +99,10 @@ export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
                 ? product.colors[activeColorIdx] || product.colors[0]
                 : null;
 
+            // Image sur sol terrain de padel avec adaptation dynamique au changement de couleur
+            const padelVariantImg = activeColor && PADEL_VARIANT_IMAGES[product.id]?.[activeColor.name];
+            const currentThumbnail = padelVariantImg || PADEL_COURT_THUMBNAILS[product.id] || product.image;
+
             return (
               <div
                 key={product.id}
@@ -96,7 +142,7 @@ export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
 
                   {/* Main Product Image */}
                   <img
-                    src={product.image}
+                    src={currentThumbnail}
                     alt={product.name}
                     className="w-full h-full object-cover object-center rounded-lg group-hover:scale-105 transition-transform duration-500"
                     referrerPolicy="no-referrer"

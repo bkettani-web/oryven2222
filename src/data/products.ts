@@ -26,13 +26,13 @@ export const IMAGES = {
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789816142/ChatGPT_Image_19_sept._2026_12_08_46_mvaybv.webp',
   mobileMovementBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789808701/ChatGPT_Image_19_sept._2026_10_04_35_br7ig8.webp',
-  tote: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789744916/vf21tchknrdevrjf5ct1_ir5iuw.webp',
+  tote: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911773/ChatGPT_Image_20_sept._2026_14_42_24_mlkskn.webp',
   headband:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
   visor:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
   socks:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660961/j0dq1fvx1ejox3rdnqcc_zhfvmq.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789912252/ChatGPT_Image_20_sept._2026_14_50_13_wzbqb0.webp',
   lifestyle: lifestyleImg,
   toteDetail: toteDetailImg,
   yogaMatDetail: yogaMatDetailImg,
@@ -277,6 +277,7 @@ export const PRODUCTS: Product[] = [
     image:
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660961/j0dq1fvx1ejox3rdnqcc_zhfvmq.webp',
     gallery: [
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789912252/ChatGPT_Image_20_sept._2026_14_50_13_wzbqb0.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660961/j0dq1fvx1ejox3rdnqcc_zhfvmq.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660963/ibzin3lgqfeqflla8sac_oaa5bc.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660965/vqxlnr0isp0r2swwe0ik_cvb4rz.webp',
