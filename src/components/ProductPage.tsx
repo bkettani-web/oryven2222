@@ -197,6 +197,59 @@ const getProductHighlights = (product: Product): ProductVisualHighlight[] => {
   }
 };
 
+interface PackItemVariantConfig {
+  id: string;
+  name: string;
+  variants: { name: string; code: string }[];
+  defaultVariant: string;
+}
+
+const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
+  {
+    id: 'visor',
+    name: 'Visière Sport UPF 50+',
+    variants: [
+      { name: 'Noir Intense', code: '#171717' },
+      { name: 'Bleu Glacier', code: '#8FA9BA' },
+      { name: 'Rose Framboise', code: '#B8395B' },
+      { name: 'Mauve Nude', code: '#A88B96' },
+      { name: 'Blanc Perle', code: '#F5F3ED' },
+    ],
+    defaultVariant: 'Noir Intense',
+  },
+  {
+    id: 'headband',
+    name: 'Bandeau Yoga Headband',
+    variants: [
+      { name: 'Lavande Glacée', code: '#C8C2E6' },
+      { name: 'Bleu Ciel', code: '#97C4E8' },
+      { name: 'Noir Intense', code: '#171717' },
+      { name: 'Corail Énergie', code: '#F26D5B' },
+      { name: 'Vert Forêt', code: '#2E543D' },
+      { name: 'Beige Sable', code: '#DACFB9' },
+    ],
+    defaultVariant: 'Lavande Glacée',
+  },
+  {
+    id: 'socks',
+    name: 'Chaussettes Pilates Grip',
+    variants: [
+      { name: 'Orange Sunset', code: '#E25F2E' },
+      { name: 'Noir Intense', code: '#171717' },
+      { name: 'Blanc Studio', code: '#F8F6F0' },
+    ],
+    defaultVariant: 'Orange Sunset',
+  },
+  {
+    id: 'tote',
+    name: 'Tote Bag Grand Format 28L',
+    variants: [
+      { name: 'Toile Écru Naturelle', code: '#DACFB9' },
+    ],
+    defaultVariant: 'Toile Écru Naturelle',
+  },
+];
+
 interface ProductPageProps {
   product: Product;
   onBack: () => void;
@@ -216,11 +269,58 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   onToggleWishlist,
   wishlistIds = [],
 }) => {
+  const isPackComplet = product.id === 'pack-complet-oryven' || product.slug === 'pack-complet-oryven';
+
   // Gallery state
   const [activeImage, setActiveImage] = useState(product.gallery[0] || product.image);
 
   // Check if product has multiple color variants
   const hasVariants = Boolean(product.colors && product.colors.length > 1);
+
+  // Pack item variant custom selections (for pack-complet-oryven)
+  const [packCustomSelections, setPackCustomSelections] = useState<{
+    [packIndex: number]: { [itemId: string]: string };
+  }>({
+    0: {
+      visor: 'Noir Intense',
+      headband: 'Lavande Glacée',
+      socks: 'Orange Sunset',
+      tote: 'Toile Écru Naturelle',
+    },
+    1: {
+      visor: 'Rose Framboise',
+      headband: 'Bleu Ciel',
+      socks: 'Noir Intense',
+      tote: 'Toile Écru Naturelle',
+    },
+  });
+  const [activePackIndex, setActivePackIndex] = useState(0);
+
+  const handlePackItemSelect = (packIndex: number, itemId: string, variantName: string) => {
+    setPackCustomSelections((prev) => ({
+      ...prev,
+      [packIndex]: {
+        ...(prev[packIndex] || {}),
+        [itemId]: variantName,
+      },
+    }));
+  };
+
+  const getPackCompletColorsList = () => {
+    const list: string[] = [];
+    const qty = currentOffer.quantity || 1;
+    for (let i = 0; i < qty; i++) {
+      const p = packCustomSelections[i] || packCustomSelections[0];
+      const prefix = qty > 1 ? `[Coffret ${i + 1}] ` : '';
+      list.push(
+        `${prefix}Visière : ${p?.visor || 'Noir Intense'}`,
+        `${prefix}Bandeau : ${p?.headband || 'Lavande Glacée'}`,
+        `${prefix}Chaussettes : ${p?.socks || 'Orange Sunset'}`,
+        `${prefix}Tote Bag : Toile Écru Naturelle`
+      );
+    }
+    return list;
+  };
 
   // Sync state when product changes
   useEffect(() => {
@@ -233,6 +333,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
       1: product.colors?.[1]?.name || defaultColorName,
       2: product.colors?.[2]?.name || defaultColorName,
     });
+    setActivePackIndex(0);
   }, [product.id, product.image]);
 
   // Active color for x1
@@ -298,8 +399,9 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
     setIsSubmitting(true);
 
-    const chosenColors =
-      hasVariants && product.colors && product.colors.length > 0
+    const chosenColors = isPackComplet
+      ? getPackCompletColorsList()
+      : hasVariants && product.colors && product.colors.length > 0
         ? currentOffer.quantity === 1
           ? [selectedColor]
           : Array.from({ length: currentOffer.quantity }).map(
@@ -341,8 +443,9 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   // Direct WhatsApp Order
   const handleWhatsAppOrder = () => {
     const targetCity = city.trim() || 'Maroc';
-    const colorsText =
-      hasVariants && product.colors && product.colors.length > 0
+    const colorsText = isPackComplet
+      ? getPackCompletColorsList().join('\n  • ')
+      : hasVariants && product.colors && product.colors.length > 0
         ? currentOffer.quantity === 1
           ? selectedColor
           : Array.from({ length: currentOffer.quantity })
@@ -350,7 +453,11 @@ export const ProductPage: React.FC<ProductPageProps> = ({
               .join(', ')
         : '';
 
-    const colorLine = colorsText ? `🎨 Couleur(s) : ${colorsText}\n` : '';
+    const colorLine = colorsText
+      ? isPackComplet
+        ? `🎨 Variantes du Pack :\n  • ${colorsText}\n`
+        : `🎨 Couleur(s) : ${colorsText}\n`
+      : '';
 
     const message = encodeURIComponent(
       `Bonjour Oryven Maroc ! Je souhaite commander :\n\n` +
@@ -541,7 +648,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black mr-1.5 shadow-xs">
                       1
                     </span>
-                    {hasVariants ? 'Choisissez votre offre & couleurs :' : 'Choisissez votre offre :'}
+                    {isPackComplet ? 'Choisissez votre offre :' : (hasVariants ? 'Choisissez votre offre & couleurs :' : 'Choisissez votre offre :')}
                   </span>
                   <span className="text-[10px] text-neutral-400 font-medium">Cliquez pour sélectionner</span>
                 </div>
@@ -615,8 +722,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                           </div>
                         </div>
 
-                        {/* Integrated Variant Choice when selected (only if product has multiple color variants) */}
-                        {isSelected && hasVariants && product.colors && product.colors.length > 1 && (
+                        {/* Integrated Variant Choice when selected (only if single product has multiple color variants) */}
+                        {isSelected && !isPackComplet && hasVariants && product.colors && product.colors.length > 1 && (
                           <div
                             className="mt-3 pt-2.5 border-t border-orange-200/60 space-y-2 animate-fadeIn"
                             onClick={(e) => e.stopPropagation()}
@@ -672,11 +779,102 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                 </div>
               </div>
 
-              {/* 2. SIMPLIFIED EXPRESS DELIVERY FORM */}
+              {/* SYSTEM TO COMPLETE THE PACK COMPLET BY CHOOSING PRODUCT VARIANTS (SIMPLE & EASY) */}
+              {isPackComplet && (
+                <div className="bg-[#FAF7F2] rounded-xl p-3 sm:p-3.5 border border-orange-200/90 shadow-2xs space-y-2.5 animate-fadeIn">
+                  <div className="flex items-center justify-between border-b border-orange-100 pb-2">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-800 flex items-center">
+                      <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black mr-1.5 shadow-xs">
+                        2
+                      </span>
+                      Complétez votre pack :
+                    </span>
+                    <span className="text-[10px] text-orange-700 font-bold bg-orange-100/80 px-2 py-0.5 rounded-full border border-orange-200">
+                      4 indispensables inclus
+                    </span>
+                  </div>
+
+                  {/* If Offer is Duo (2 coffrets) */}
+                  {currentOffer.quantity > 1 && (
+                    <div className="flex gap-2">
+                      {Array.from({ length: currentOffer.quantity }).map((_, packIdx) => (
+                        <button
+                          key={packIdx}
+                          type="button"
+                          onClick={() => setActivePackIndex(packIdx)}
+                          className={`flex-1 py-1.5 px-2 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
+                            activePackIndex === packIdx
+                              ? 'bg-white border-orange-500 text-orange-700 shadow-xs'
+                              : 'bg-neutral-100/90 border-neutral-200 text-neutral-600 hover:bg-neutral-200/60'
+                          }`}
+                        >
+                          Coffret {packIdx + 1}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* 4 items with simple, 1-tap variant selection */}
+                  <div className="space-y-2">
+                    {PACK_COMPLET_ITEMS.map((item) => {
+                      const currentPackSel = packCustomSelections[activePackIndex] || packCustomSelections[0];
+                      const selectedVariant = currentPackSel?.[item.id] || item.defaultVariant;
+                      const isFixed = item.variants.length <= 1;
+
+                      return (
+                        <div
+                          key={item.id}
+                          className="bg-white rounded-lg p-2.5 border border-neutral-200/90 shadow-2xs space-y-1.5"
+                        >
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="font-bold text-neutral-900">{item.name}</span>
+                            <span className="text-[11px] font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded">
+                              {selectedVariant}
+                            </span>
+                          </div>
+
+                          {!isFixed ? (
+                            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                              {item.variants.map((v) => {
+                                const isSelected = selectedVariant === v.name;
+                                return (
+                                  <button
+                                    key={v.name}
+                                    type="button"
+                                    onClick={() => handlePackItemSelect(activePackIndex, item.id, v.name)}
+                                    className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${
+                                      isSelected
+                                        ? 'border-orange-500 bg-orange-50/80 text-orange-950 ring-1 ring-orange-400 font-bold'
+                                        : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300'
+                                    }`}
+                                  >
+                                    <span
+                                      className="w-3 h-3 rounded-full border border-neutral-300 shrink-0"
+                                      style={{ backgroundColor: v.code }}
+                                    />
+                                    <span>{v.name}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <div className="text-[11px] text-emerald-700 font-medium flex items-center gap-1 pt-0.5">
+                              <CheckCircle size={12} className="shrink-0" />
+                              <span>Toile naturelle écru signature (Inclus)</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* 2 / 3. SIMPLIFIED EXPRESS DELIVERY FORM */}
               <form onSubmit={handleSubmitOrder} className="space-y-3 pt-2 border-t border-neutral-100">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-700 flex items-center">
                   <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black mr-1.5 shadow-xs">
-                    2
+                    {isPackComplet ? 3 : 2}
                   </span>
                   Vos coordonnées de livraison :
                 </span>
@@ -813,57 +1011,59 @@ export const ProductPage: React.FC<ProductPageProps> = ({
             </div>
 
             {/* ================= 4 IMAGES & DESCRIPTIONS SECTION (UNDER ORDER FORM) ================= */}
-            <section
-              id="product-highlights-gallery"
-              aria-label="Détails et points forts en images"
-              className="bg-white rounded-2xl border border-neutral-200/90 shadow-xs overflow-hidden"
-            >
-              <div className="p-5 sm:p-6 text-center border-b border-neutral-100 bg-white">
-                <div className="inline-flex p-2 rounded-xl bg-[#7A283B]/10 text-[#7A283B] mb-2">
-                  <Sparkles size={18} />
-                </div>
-                <h3 className="text-base sm:text-lg font-black font-heading uppercase text-neutral-900 tracking-wide">
-                  Détails & Atouts en Images
-                </h3>
-                <p className="text-xs text-neutral-500 mt-1 max-w-md mx-auto">
-                  Découvrez en grand format la confection, les matières et le confort
-                </p>
-              </div>
-
-              <div className="divide-y divide-neutral-200/80">
-                {productHighlights.map((item, idx) => (
-                  <div
-                    key={idx}
-                    id={`highlight-item-${idx + 1}`}
-                    className="group bg-white overflow-hidden"
-                  >
-                    {/* Centered Title Without Numbering */}
-                    <div className="px-4 py-3.5 sm:px-6 sm:py-4 bg-white text-center">
-                      <h4 className="text-sm sm:text-base md:text-lg font-bold text-neutral-900 tracking-tight font-heading text-center">
-                        {item.title}
-                      </h4>
-                    </div>
-
-                    {/* Full-width Image Covering Entire Width of White Block - Square Format */}
-                    <div className="relative aspect-square w-full overflow-hidden bg-neutral-100">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-
-                    {/* Descriptive Text */}
-                    <div className="p-4 sm:p-5 sm:pb-6 bg-white text-center">
-                      <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed max-w-xl mx-auto">
-                        {item.description}
-                      </p>
-                    </div>
+            {!isPackComplet && (
+              <section
+                id="product-highlights-gallery"
+                aria-label="Détails et points forts en images"
+                className="bg-white rounded-2xl border border-neutral-200/90 shadow-xs overflow-hidden"
+              >
+                <div className="p-5 sm:p-6 text-center border-b border-neutral-100 bg-white">
+                  <div className="inline-flex p-2 rounded-xl bg-[#7A283B]/10 text-[#7A283B] mb-2">
+                    <Sparkles size={18} />
                   </div>
-                ))}
-              </div>
-            </section>
+                  <h3 className="text-base sm:text-lg font-black font-heading uppercase text-neutral-900 tracking-wide">
+                    Détails & Atouts en Images
+                  </h3>
+                  <p className="text-xs text-neutral-500 mt-1 max-w-md mx-auto">
+                    Découvrez en grand format la confection, les matières et le confort
+                  </p>
+                </div>
+
+                <div className="divide-y divide-neutral-200/80">
+                  {productHighlights.map((item, idx) => (
+                    <div
+                      key={idx}
+                      id={`highlight-item-${idx + 1}`}
+                      className="group bg-white overflow-hidden"
+                    >
+                      {/* Centered Title Without Numbering */}
+                      <div className="px-4 py-3.5 sm:px-6 sm:py-4 bg-white text-center">
+                        <h4 className="text-sm sm:text-base md:text-lg font-bold text-neutral-900 tracking-tight font-heading text-center">
+                          {item.title}
+                        </h4>
+                      </div>
+
+                      {/* Full-width Image Covering Entire Width of White Block - Square Format */}
+                      <div className="relative aspect-square w-full overflow-hidden bg-neutral-100">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+
+                      {/* Descriptive Text */}
+                      <div className="p-4 sm:p-5 sm:pb-6 bg-white text-center">
+                        <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed max-w-xl mx-auto">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </div>
       </div>

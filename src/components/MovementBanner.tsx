@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   ArrowRight,
   Sparkles,
@@ -14,6 +14,8 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  EyeOff,
+  Lock,
 } from 'lucide-react';
 import { IMAGES, PRODUCTS } from '../data/products';
 import { Product, ProductTag } from '../types';
@@ -47,6 +49,16 @@ export const getTagCoordinates = (tag: ProductTag): { x: number; y: number } => 
   };
 };
 
+const syncTagPrices = (tagList: ProductTag[]): ProductTag[] => {
+  return tagList.map((tag) => {
+    const prod = PRODUCTS.find((p) => p.id === tag.id || p.slug === tag.slug);
+    return {
+      ...tag,
+      price: prod ? prod.price : tag.price,
+    };
+  });
+};
+
 export const MovementBanner: React.FC<MovementBannerProps> = ({
   onExploreClick,
   onSelectProduct,
@@ -57,12 +69,12 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
       const saved = localStorage.getItem('oryven_mobile_tags_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return syncTagPrices(parsed);
       }
     } catch {
       // ignore
     }
-    return DEFAULT_PRODUCT_TAGS;
+    return syncTagPrices(DEFAULT_PRODUCT_TAGS);
   });
 
   const [isCalibrating, setIsCalibrating] = useState(false);
@@ -77,12 +89,12 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
       const saved = localStorage.getItem('oryven_desktop_tags_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return syncTagPrices(parsed);
       }
     } catch {
       // ignore
     }
-    return DEFAULT_DESKTOP_PRODUCT_TAGS;
+    return syncTagPrices(DEFAULT_DESKTOP_PRODUCT_TAGS);
   });
 
   const [isDesktopCalibrating, setIsDesktopCalibrating] = useState(false);
@@ -90,6 +102,107 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
   const [draggingDesktopTagId, setDraggingDesktopTagId] = useState<string | null>(null);
   const [desktopCopiedNotification, setDesktopCopiedNotification] = useState(false);
   const desktopBannerRef = useRef<HTMLDivElement>(null);
+
+  // Hidden admin mode: Invisible to normal store customers.
+  // Activated only by:
+  // 1. URL parameter: ?admin=true (persisted in localStorage)
+  // 2. URL hash: #admin
+  // 3. Keyboard shortcut: Shift + A
+  // 4. Secret 3 quick taps on the top-right corner
+  const [isAdmin, setIsAdmin] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const params = new URLSearchParams(window.location.search);
+      if (
+        params.get('admin') === 'true' ||
+        params.get('admin') === '1' ||
+        window.location.hash === '#admin'
+      ) {
+        localStorage.setItem('oryven_admin_mode', 'true');
+        return true;
+      }
+      if (params.get('admin') === 'false' || params.get('admin') === '0') {
+        localStorage.removeItem('oryven_admin_mode');
+        return false;
+      }
+      return localStorage.getItem('oryven_admin_mode') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const secretClickCountRef = useRef(0);
+  const secretClickTimerRef = useRef<number | null>(null);
+
+  const handleSecretAreaClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    secretClickCountRef.current += 1;
+    if (secretClickTimerRef.current) clearTimeout(secretClickTimerRef.current);
+
+    if (secretClickCountRef.current >= 3) {
+      secretClickCountRef.current = 0;
+      setIsAdmin((prev) => {
+        const next = !prev;
+        try {
+          if (next) {
+            localStorage.setItem('oryven_admin_mode', 'true');
+          } else {
+            localStorage.removeItem('oryven_admin_mode');
+            setIsCalibrating(false);
+            setIsDesktopCalibrating(false);
+          }
+        } catch {
+          // ignore
+        }
+        return next;
+      });
+    } else {
+      secretClickTimerRef.current = window.setTimeout(() => {
+        secretClickCountRef.current = 0;
+      }, 900);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Shift + A toggles admin calibration buttons
+      if (e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        setIsAdmin((prev) => {
+          const next = !prev;
+          try {
+            if (next) {
+              localStorage.setItem('oryven_admin_mode', 'true');
+            } else {
+              localStorage.removeItem('oryven_admin_mode');
+              setIsCalibrating(false);
+              setIsDesktopCalibrating(false);
+            }
+          } catch {
+            // ignore
+          }
+          return next;
+        });
+      }
+    };
+
+    const handleHashChange = () => {
+      if (window.location.hash === '#admin') {
+        setIsAdmin(true);
+        try {
+          localStorage.setItem('oryven_admin_mode', 'true');
+        } catch {
+          // ignore
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   const activeTag = tags.find((t) => t.id === selectedTagId) || tags[0];
   const activeCoords = activeTag ? getTagCoordinates(activeTag) : { x: 50, y: 50 };
@@ -305,7 +418,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
   };
 
   const handleResetTags = () => {
-    setTags(DEFAULT_PRODUCT_TAGS);
+    setTags(syncTagPrices(DEFAULT_PRODUCT_TAGS));
     try {
       localStorage.removeItem('oryven_mobile_tags_v3');
       localStorage.removeItem('oryven_mobile_tags_v2');
@@ -316,7 +429,7 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
   };
 
   const handleResetDesktopTags = () => {
-    setDesktopTags(DEFAULT_DESKTOP_PRODUCT_TAGS);
+    setDesktopTags(syncTagPrices(DEFAULT_DESKTOP_PRODUCT_TAGS));
     try {
       localStorage.removeItem('oryven_desktop_tags_v3');
       localStorage.removeItem('oryven_desktop_tags_v2');
@@ -365,33 +478,43 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
           referrerPolicy="no-referrer"
         />
 
-        {/* Small trigger button in top right of photo */}
-        <div className="absolute top-2.5 right-2.5 z-30">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsCalibrating(!isCalibrating);
-            }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold shadow-lg transition-all active:scale-95 ${
-              isCalibrating
-                ? 'bg-[#7A283B] text-white border border-[#7A283B]'
-                : 'bg-white/95 backdrop-blur-xs text-neutral-800 border border-[#EDE5DB] hover:bg-white'
-            }`}
-          >
-            {isCalibrating ? (
-              <>
-                <Check size={12} />
-                <span>Terminer</span>
-              </>
-            ) : (
-              <>
-                <SlidersHorizontal size={11} className="text-[#7A283B]" />
-                <span>Ajuster pings</span>
-              </>
-            )}
-          </button>
-        </div>
+        {/* Invisible discreet trigger zone (3 quick taps anywhere in the top-right toggles admin mode) */}
+        <div
+          onClick={handleSecretAreaClick}
+          className="absolute top-0 right-0 w-12 h-12 z-20 cursor-default opacity-0"
+          title=""
+          aria-hidden="true"
+        />
+
+        {/* Calibration button: ONLY visible in Admin Mode, strictly hidden for normal clients */}
+        {isAdmin && (
+          <div className="absolute top-2.5 right-2.5 z-30">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsCalibrating(!isCalibrating);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold shadow-lg transition-all active:scale-95 ${
+                isCalibrating
+                  ? 'bg-[#7A283B] text-white border border-[#7A283B]'
+                  : 'bg-white/95 backdrop-blur-xs text-neutral-800 border border-[#EDE5DB] hover:bg-white'
+              }`}
+            >
+              {isCalibrating ? (
+                <>
+                  <Check size={12} />
+                  <span>Terminer</span>
+                </>
+              ) : (
+                <>
+                  <SlidersHorizontal size={11} className="text-[#7A283B]" />
+                  <span>Ajuster pings</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* Interactive Shoppable Product Tags on the image */}
         {tags.map((tag) => {
@@ -538,20 +661,37 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
               <button
                 type="button"
                 onClick={handleCopyConfig}
-                className="flex items-center gap-1 px-2.5 py-1 bg-white/10 hover:bg-white/20 text-[10px] font-bold rounded transition-colors text-amber-300"
+                className="flex items-center gap-1 px-2 py-1 bg-white/10 hover:bg-white/20 text-[10px] font-bold rounded transition-colors text-amber-300"
                 title="Copier la configuration"
               >
                 <Copy size={11} />
-                <span>{copiedNotification ? 'Copié !' : 'Copier JSON'}</span>
+                <span>{copiedNotification ? 'Copié !' : 'JSON'}</span>
               </button>
               <button
                 type="button"
                 onClick={handleResetTags}
-                className="flex items-center gap-1 px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-neutral-950 text-[10px] font-black rounded transition-colors cursor-pointer shadow-sm"
+                className="flex items-center gap-1 px-2 py-1 bg-amber-400 hover:bg-amber-300 text-neutral-950 text-[10px] font-black rounded transition-colors cursor-pointer shadow-sm"
                 title="Restaurer les positions idéales officielles"
               >
                 <Sparkles size={11} />
-                <span>Positions Idéales (1 clic)</span>
+                <span>Idéales</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsCalibrating(false);
+                  setIsAdmin(false);
+                  try {
+                    localStorage.removeItem('oryven_admin_mode');
+                  } catch {
+                    // ignore
+                  }
+                }}
+                className="flex items-center gap-1 px-2 py-1 bg-red-950/70 hover:bg-red-900 border border-red-500/40 text-red-200 text-[10px] font-bold rounded transition-colors cursor-pointer"
+                title="Masquer le bouton pour les clients de la boutique"
+              >
+                <EyeOff size={11} />
+                <span>Masquer</span>
               </button>
             </div>
           </div>
@@ -733,33 +873,43 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
           referrerPolicy="no-referrer"
         />
 
-        {/* Small trigger button in top right of photo */}
-        <div className="absolute top-3.5 right-3.5 z-30 opacity-80 hover:opacity-100 transition-opacity">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsDesktopCalibrating(!isDesktopCalibrating);
-            }}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold shadow-lg transition-all active:scale-95 cursor-pointer ${
-              isDesktopCalibrating
-                ? 'bg-[#7A283B] text-white border border-[#7A283B]'
-                : 'bg-white/95 backdrop-blur-xs text-neutral-800 border border-[#EDE5DB] hover:bg-white'
-            }`}
-          >
-            {isDesktopCalibrating ? (
-              <>
-                <Check size={12} />
-                <span>Terminer</span>
-              </>
-            ) : (
-              <>
-                <SlidersHorizontal size={11} className="text-[#7A283B]" />
-                <span>Ajuster pings</span>
-              </>
-            )}
-          </button>
-        </div>
+        {/* Invisible discreet trigger zone (3 quick clicks anywhere in the top-right toggles admin mode) */}
+        <div
+          onClick={handleSecretAreaClick}
+          className="absolute top-0 right-0 w-14 h-14 z-20 cursor-default opacity-0"
+          title=""
+          aria-hidden="true"
+        />
+
+        {/* Calibration button: ONLY visible in Admin Mode, strictly hidden for normal clients */}
+        {isAdmin && (
+          <div className="absolute top-3.5 right-3.5 z-30 opacity-90 hover:opacity-100 transition-opacity">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDesktopCalibrating(!isDesktopCalibrating);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold shadow-lg transition-all active:scale-95 cursor-pointer ${
+                isDesktopCalibrating
+                  ? 'bg-[#7A283B] text-white border border-[#7A283B]'
+                  : 'bg-white/95 backdrop-blur-xs text-neutral-800 border border-[#EDE5DB] hover:bg-white'
+              }`}
+            >
+              {isDesktopCalibrating ? (
+                <>
+                  <Check size={12} />
+                  <span>Terminer</span>
+                </>
+              ) : (
+                <>
+                  <SlidersHorizontal size={11} className="text-[#7A283B]" />
+                  <span>Ajuster pings</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* Interactive Shoppable Product Tags on the desktop image */}
         {desktopTags.map((tag) => {
@@ -917,6 +1067,23 @@ export const MovementBanner: React.FC<MovementBannerProps> = ({
               >
                 <Sparkles size={11} />
                 <span>Positions Idéales (1 clic)</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDesktopCalibrating(false);
+                  setIsAdmin(false);
+                  try {
+                    localStorage.removeItem('oryven_admin_mode');
+                  } catch {
+                    // ignore
+                  }
+                }}
+                className="flex items-center gap-1 px-2.5 py-1 bg-red-950/70 hover:bg-red-900 border border-red-500/40 text-red-200 text-[10px] font-bold rounded transition-colors cursor-pointer shadow-sm"
+                title="Masquer le bouton pour les clients de la boutique"
+              >
+                <EyeOff size={11} />
+                <span>Masquer</span>
               </button>
             </div>
           </div>
