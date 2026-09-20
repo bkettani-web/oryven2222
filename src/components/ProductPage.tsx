@@ -143,27 +143,27 @@ const getProductHighlights = (product: Product): ProductVisualHighlight[] => {
       return [
         {
           image: IMAGES.studioDesktopBanner || product.image,
-          title: 'La Collection Complète des 4 Essentiels',
+          title: 'La Collection Complète : 1 Sac + 1 Visière + 2 Bandeaux',
           description:
-            'Tote Bag spacieux 28L, visière de protection UPF 50+, bandeau absorbant doux et chaussettes antidérapantes réunies dans un seul coffret.',
+            'Tote Bag spacieux 28L en toile bio, visière athlétique UPF 50+ et 2 bandeaux absorbants ultra-doux réunis dans un seul coffret.',
         },
         {
           image: IMAGES.tote,
-          title: 'Oryven Tote Bag Toile Épaisse 480 g/m²',
+          title: '1x Oryven Tote Bag Toile Épaisse 480 g/m²',
           description:
             'Le cabas grande contenance avec pochettes dédiées pour votre gourde, tapis de yoga et vos indispensables quotidiens.',
         },
         {
           image: IMAGES.visor,
-          title: 'Visière Sport UV & Bandeau Microfibre',
+          title: '1x Visière Sport Athlétique UPF 50+',
           description:
-            'La protection solaire athlétique et le bandeau extensible qui reste parfaitement en place pendant vos séances.',
+            'La protection solaire athlétique avec bandeau éponge doux qui reste parfaitement en place pendant vos séances.',
         },
         {
-          image: IMAGES.socks,
-          title: 'Chaussettes Pilates Grip Antidérapantes',
+          image: IMAGES.headband,
+          title: '2x Bandeaux Yoga Headband au Choix',
           description:
-            'Picots en silicone adhérents et maintien de voûte plantaire idéal pour les séances sur reformer, tapis et barre.',
+            'Deux bandeaux élastiques au maintien seconde peau et séchage QuickDry aux coloris de votre choix.',
         },
       ];
 
@@ -206,8 +206,16 @@ interface PackItemVariantConfig {
 
 const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
   {
+    id: 'tote',
+    name: '1x Sac Tote Bag Grand Format 28L',
+    variants: [
+      { name: 'Toile Écru Naturelle', code: '#DACFB9' },
+    ],
+    defaultVariant: 'Toile Écru Naturelle',
+  },
+  {
     id: 'visor',
-    name: 'Visière Sport UPF 50+',
+    name: '1x Visière Sport UPF 50+',
     variants: [
       { name: 'Noir Intense', code: '#171717' },
       { name: 'Bleu Glacier', code: '#8FA9BA' },
@@ -218,8 +226,8 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
     defaultVariant: 'Noir Intense',
   },
   {
-    id: 'headband',
-    name: 'Bandeau Yoga Headband',
+    id: 'headband1',
+    name: '1er Bandeau Yoga Headband',
     variants: [
       { name: 'Lavande Glacée', code: '#C8C2E6' },
       { name: 'Bleu Ciel', code: '#97C4E8' },
@@ -231,22 +239,17 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
     defaultVariant: 'Lavande Glacée',
   },
   {
-    id: 'socks',
-    name: 'Chaussettes Pilates Grip',
+    id: 'headband2',
+    name: '2ème Bandeau Yoga Headband',
     variants: [
-      { name: 'Orange Sunset', code: '#E25F2E' },
+      { name: 'Bleu Ciel', code: '#97C4E8' },
+      { name: 'Lavande Glacée', code: '#C8C2E6' },
       { name: 'Noir Intense', code: '#171717' },
-      { name: 'Blanc Studio', code: '#F8F6F0' },
+      { name: 'Corail Énergie', code: '#F26D5B' },
+      { name: 'Vert Forêt', code: '#2E543D' },
+      { name: 'Beige Sable', code: '#DACFB9' },
     ],
-    defaultVariant: 'Orange Sunset',
-  },
-  {
-    id: 'tote',
-    name: 'Tote Bag Grand Format 28L',
-    variants: [
-      { name: 'Toile Écru Naturelle', code: '#DACFB9' },
-    ],
-    defaultVariant: 'Toile Écru Naturelle',
+    defaultVariant: 'Bleu Ciel',
   },
 ];
 
@@ -277,21 +280,21 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   // Check if product has multiple color variants
   const hasVariants = Boolean(product.colors && product.colors.length > 1);
 
-  // Pack item variant custom selections (for pack-complet-oryven)
+  // Pack item variant custom selections (for pack-complet-oryven: 1 sac, 1 visière, 2 bandeaux)
   const [packCustomSelections, setPackCustomSelections] = useState<{
     [packIndex: number]: { [itemId: string]: string };
   }>({
     0: {
-      visor: 'Noir Intense',
-      headband: 'Lavande Glacée',
-      socks: 'Orange Sunset',
       tote: 'Toile Écru Naturelle',
+      visor: 'Noir Intense',
+      headband1: 'Lavande Glacée',
+      headband2: 'Bleu Ciel',
     },
     1: {
-      visor: 'Rose Framboise',
-      headband: 'Bleu Ciel',
-      socks: 'Noir Intense',
       tote: 'Toile Écru Naturelle',
+      visor: 'Rose Framboise',
+      headband1: 'Noir Intense',
+      headband2: 'Corail Énergie',
     },
   });
   const [activePackIndex, setActivePackIndex] = useState(0);
@@ -313,10 +316,10 @@ export const ProductPage: React.FC<ProductPageProps> = ({
       const p = packCustomSelections[i] || packCustomSelections[0];
       const prefix = qty > 1 ? `[Coffret ${i + 1}] ` : '';
       list.push(
+        `${prefix}Sac : Toile Écru Naturelle`,
         `${prefix}Visière : ${p?.visor || 'Noir Intense'}`,
-        `${prefix}Bandeau : ${p?.headband || 'Lavande Glacée'}`,
-        `${prefix}Chaussettes : ${p?.socks || 'Orange Sunset'}`,
-        `${prefix}Tote Bag : Toile Écru Naturelle`
+        `${prefix}1er Bandeau : ${p?.headband1 || 'Lavande Glacée'}`,
+        `${prefix}2ème Bandeau : ${p?.headband2 || 'Bleu Ciel'}`
       );
     }
     return list;
@@ -790,7 +793,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                       Complétez votre pack :
                     </span>
                     <span className="text-[10px] text-orange-700 font-bold bg-orange-100/80 px-2 py-0.5 rounded-full border border-orange-200">
-                      4 indispensables inclus
+                      1 Sac + 1 Visière + 2 Bandeaux inclus
                     </span>
                   </div>
 

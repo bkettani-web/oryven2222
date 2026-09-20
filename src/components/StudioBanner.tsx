@@ -33,13 +33,13 @@ export const StudioBanner: React.FC<StudioBannerProps> = ({ onSelectProduct, onU
           handleClick();
         }
       }}
-      aria-label="Découvrir le Pack Complet 4 Essentiels Oryven"
+      aria-label="Découvrir le Pack Complet Oryven (1 Sac + 1 Visière + 2 Bandeaux)"
     >
       {/* Mobile Banner: 4:5 / vertical aspect suited for mobile screens */}
       <div className="block sm:hidden w-full overflow-hidden">
         <img
           src={IMAGES.studioMobileBanner}
-          alt="Pack Complet Oryven - Les 4 Essentiels (Bannière Mobile)"
+          alt="Pack Complet Oryven - 1 Sac, 1 Visière, 2 Bandeaux (Bannière Mobile)"
           className="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-[1.01]"
           referrerPolicy="no-referrer"
           loading="lazy"
@@ -50,7 +50,7 @@ export const StudioBanner: React.FC<StudioBannerProps> = ({ onSelectProduct, onU
       <div className="hidden sm:block w-full overflow-hidden">
         <img
           src={IMAGES.studioDesktopBanner}
-          alt="Pack Complet Oryven - Les 4 Essentiels (Bannière Desktop)"
+          alt="Pack Complet Oryven - 1 Sac, 1 Visière, 2 Bandeaux (Bannière Desktop)"
           className="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-[1.008]"
           referrerPolicy="no-referrer"
           loading="lazy"
