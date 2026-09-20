@@ -215,12 +215,14 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
   {
     id: 'tote',
     name: '1x Sac Tote Bag Grand Format 28L',
-    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789744916/vf21tchknrdevrjf5ct1_ir5iuw.webp',
+    defaultImage:
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911773/ChatGPT_Image_20_sept._2026_14_42_24_mlkskn.webp',
     variants: [
       {
         name: 'Toile Écru Naturelle',
         code: '#DACFB9',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789744916/vf21tchknrdevrjf5ct1_ir5iuw.webp',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911773/ChatGPT_Image_20_sept._2026_14_42_24_mlkskn.webp',
       },
     ],
     defaultVariant: 'Toile Écru Naturelle',
@@ -228,32 +230,38 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
   {
     id: 'visor',
     name: '1x Visière Sport UPF 50+',
-    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
+    defaultImage:
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
     variants: [
       {
         name: 'Noir Intense',
         code: '#171717',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
       },
       {
         name: 'Bleu Glacier',
         code: '#8FA9BA',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657376/rctgcnwr21zh1glry8ql_zghrzb.webp',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
       },
       {
         name: 'Rose Framboise',
         code: '#B8395B',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657375/up2ffm3dwarna3yejibg_wpugyi.webp',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_2_s702mz.webp',
       },
       {
         name: 'Mauve Nude',
         code: '#A88B96',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657378/j8fjvhrm390ajxr44cvn_h1md8u.webp',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911354/ChatGPT_Image_20_sept._2026_14_32_19_3_afxtpd.webp',
       },
       {
         name: 'Blanc Perle',
         code: '#F5F3ED',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_4_qh8xk2.webp',
       },
     ],
     defaultVariant: 'Noir Intense',
