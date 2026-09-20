@@ -197,10 +197,17 @@ const getProductHighlights = (product: Product): ProductVisualHighlight[] => {
   }
 };
 
+interface PackItemVariant {
+  name: string;
+  code: string;
+  image: string;
+}
+
 interface PackItemVariantConfig {
   id: string;
   name: string;
-  variants: { name: string; code: string }[];
+  defaultImage: string;
+  variants: PackItemVariant[];
   defaultVariant: string;
 }
 
@@ -208,46 +215,122 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
   {
     id: 'tote',
     name: '1x Sac Tote Bag Grand Format 28L',
+    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789744916/vf21tchknrdevrjf5ct1_ir5iuw.webp',
     variants: [
-      { name: 'Toile Écru Naturelle', code: '#DACFB9' },
+      {
+        name: 'Toile Écru Naturelle',
+        code: '#DACFB9',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789744916/vf21tchknrdevrjf5ct1_ir5iuw.webp',
+      },
     ],
     defaultVariant: 'Toile Écru Naturelle',
   },
   {
     id: 'visor',
     name: '1x Visière Sport UPF 50+',
+    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
     variants: [
-      { name: 'Noir Intense', code: '#171717' },
-      { name: 'Bleu Glacier', code: '#8FA9BA' },
-      { name: 'Rose Framboise', code: '#B8395B' },
-      { name: 'Mauve Nude', code: '#A88B96' },
-      { name: 'Blanc Perle', code: '#F5F3ED' },
+      {
+        name: 'Noir Intense',
+        code: '#171717',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
+      },
+      {
+        name: 'Bleu Glacier',
+        code: '#8FA9BA',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657376/rctgcnwr21zh1glry8ql_zghrzb.webp',
+      },
+      {
+        name: 'Rose Framboise',
+        code: '#B8395B',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657375/up2ffm3dwarna3yejibg_wpugyi.webp',
+      },
+      {
+        name: 'Mauve Nude',
+        code: '#A88B96',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657378/j8fjvhrm390ajxr44cvn_h1md8u.webp',
+      },
+      {
+        name: 'Blanc Perle',
+        code: '#F5F3ED',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
+      },
     ],
     defaultVariant: 'Noir Intense',
   },
   {
     id: 'headband1',
     name: '1er Bandeau Yoga Headband',
+    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
     variants: [
-      { name: 'Lavande Glacée', code: '#C8C2E6' },
-      { name: 'Bleu Ciel', code: '#97C4E8' },
-      { name: 'Noir Intense', code: '#171717' },
-      { name: 'Corail Énergie', code: '#F26D5B' },
-      { name: 'Vert Forêt', code: '#2E543D' },
-      { name: 'Beige Sable', code: '#DACFB9' },
+      {
+        name: 'Lavande Glacée',
+        code: '#C8C2E6',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+      },
+      {
+        name: 'Bleu Ciel',
+        code: '#97C4E8',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
+      },
+      {
+        name: 'Noir Intense',
+        code: '#171717',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+      },
+      {
+        name: 'Corail Énergie',
+        code: '#F26D5B',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/djtckeltvqfk2wjohbpg_jadrig.webp',
+      },
+      {
+        name: 'Vert Forêt',
+        code: '#2E543D',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+      },
+      {
+        name: 'Beige Sable',
+        code: '#DACFB9',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+      },
     ],
     defaultVariant: 'Lavande Glacée',
   },
   {
     id: 'headband2',
     name: '2ème Bandeau Yoga Headband',
+    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
     variants: [
-      { name: 'Bleu Ciel', code: '#97C4E8' },
-      { name: 'Lavande Glacée', code: '#C8C2E6' },
-      { name: 'Noir Intense', code: '#171717' },
-      { name: 'Corail Énergie', code: '#F26D5B' },
-      { name: 'Vert Forêt', code: '#2E543D' },
-      { name: 'Beige Sable', code: '#DACFB9' },
+      {
+        name: 'Bleu Ciel',
+        code: '#97C4E8',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
+      },
+      {
+        name: 'Lavande Glacée',
+        code: '#C8C2E6',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+      },
+      {
+        name: 'Noir Intense',
+        code: '#171717',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+      },
+      {
+        name: 'Corail Énergie',
+        code: '#F26D5B',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/djtckeltvqfk2wjohbpg_jadrig.webp',
+      },
+      {
+        name: 'Vert Forêt',
+        code: '#2E543D',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
+      },
+      {
+        name: 'Beige Sable',
+        code: '#DACFB9',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+      },
     ],
     defaultVariant: 'Bleu Ciel',
   },
@@ -817,55 +900,81 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     </div>
                   )}
 
-                  {/* 4 items with simple, 1-tap variant selection */}
-                  <div className="space-y-2">
+                  {/* 4 items with small square preview image of selected color and quick variant buttons */}
+                  <div className="space-y-2.5">
                     {PACK_COMPLET_ITEMS.map((item) => {
                       const currentPackSel = packCustomSelections[activePackIndex] || packCustomSelections[0];
                       const selectedVariant = currentPackSel?.[item.id] || item.defaultVariant;
+                      const selectedVariantObj = item.variants.find((v) => v.name === selectedVariant);
+                      const selectedImage = selectedVariantObj?.image || item.defaultImage;
                       const isFixed = item.variants.length <= 1;
 
                       return (
                         <div
                           key={item.id}
-                          className="bg-white rounded-lg p-2.5 border border-neutral-200/90 shadow-2xs space-y-1.5"
+                          className="bg-white rounded-xl p-2.5 sm:p-3 border border-neutral-200/90 shadow-2xs transition-all hover:border-orange-300/80"
                         >
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="font-bold text-neutral-900">{item.name}</span>
-                            <span className="text-[11px] font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded">
-                              {selectedVariant}
-                            </span>
-                          </div>
+                          <div className="flex items-start gap-2.5 sm:gap-3">
+                            {/* Small square preview image showing the product in selected color */}
+                            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-lg overflow-hidden border border-neutral-200 shadow-2xs shrink-0 bg-neutral-100 group">
+                              <img
+                                src={selectedImage}
+                                alt={`${item.name} - ${selectedVariant}`}
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                referrerPolicy="no-referrer"
+                              />
+                              {selectedVariantObj && (
+                                <span
+                                  className="absolute bottom-1 right-1 w-3 h-3 rounded-full border border-white shadow-xs"
+                                  style={{ backgroundColor: selectedVariantObj.code }}
+                                  title={selectedVariant}
+                                />
+                              )}
+                            </div>
 
-                          {!isFixed ? (
-                            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                              {item.variants.map((v) => {
-                                const isSelected = selectedVariant === v.name;
-                                return (
-                                  <button
-                                    key={v.name}
-                                    type="button"
-                                    onClick={() => handlePackItemSelect(activePackIndex, item.id, v.name)}
-                                    className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${
-                                      isSelected
-                                        ? 'border-orange-500 bg-orange-50/80 text-orange-950 ring-1 ring-orange-400 font-bold'
-                                        : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300'
-                                    }`}
-                                  >
-                                    <span
-                                      className="w-3 h-3 rounded-full border border-neutral-300 shrink-0"
-                                      style={{ backgroundColor: v.code }}
-                                    />
-                                    <span>{v.name}</span>
-                                  </button>
-                                );
-                              })}
+                            {/* Product Info & Variant Options */}
+                            <div className="flex-1 min-w-0 space-y-1.5">
+                              <div className="flex items-center justify-between gap-1.5">
+                                <span className="text-xs font-bold text-neutral-900 leading-tight">
+                                  {item.name}
+                                </span>
+                                <span className="text-[10px] sm:text-[11px] font-bold text-neutral-700 bg-neutral-100 px-2 py-0.5 rounded shrink-0">
+                                  {selectedVariant}
+                                </span>
+                              </div>
+
+                              {!isFixed ? (
+                                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                                  {item.variants.map((v) => {
+                                    const isSelected = selectedVariant === v.name;
+                                    return (
+                                      <button
+                                        key={v.name}
+                                        type="button"
+                                        onClick={() => handlePackItemSelect(activePackIndex, item.id, v.name)}
+                                        className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-[11px] font-semibold border transition-all cursor-pointer ${
+                                          isSelected
+                                            ? 'border-orange-500 bg-orange-50/80 text-orange-950 ring-1 ring-orange-400 font-bold'
+                                            : 'border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300'
+                                        }`}
+                                      >
+                                        <span
+                                          className="w-2.5 h-2.5 rounded-full border border-neutral-300 shrink-0"
+                                          style={{ backgroundColor: v.code }}
+                                        />
+                                        <span>{v.name}</span>
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              ) : (
+                                <div className="text-[11px] text-emerald-700 font-medium flex items-center gap-1 pt-0.5">
+                                  <CheckCircle size={12} className="shrink-0 text-emerald-600" />
+                                  <span>Toile naturelle écru signature (Inclus)</span>
+                                </div>
+                              )}
                             </div>
-                          ) : (
-                            <div className="text-[11px] text-emerald-700 font-medium flex items-center gap-1 pt-0.5">
-                              <CheckCircle size={12} className="shrink-0" />
-                              <span>Toile naturelle écru signature (Inclus)</span>
-                            </div>
-                          )}
+                          </div>
                         </div>
                       );
                     })}
