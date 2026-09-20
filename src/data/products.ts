@@ -19,9 +19,9 @@ export const IMAGES = {
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789778673/ChatGPT_Image_19_sept._2026_01_43_27_qqwrjj.webp',
   wideLifestyleBanner: wideLifestyleBannerImg,
   studioDesktopBanner:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_46_58_f8jcgl.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789935767/ChatGPT_Image_20_sept._2026_21_21_57_y3bz4z.webp',
   studioMobileBanner:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_48_24_ttofyg.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789935767/ChatGPT_Image_20_sept._2026_21_21_55_ck38pg.webp',
   wideMovementBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789816142/ChatGPT_Image_19_sept._2026_12_08_46_mvaybv.webp',
   mobileMovementBanner:
