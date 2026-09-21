@@ -20,7 +20,7 @@ export const IMAGES = {
   newsletterBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789985797/ChatGPT_Image_21_sept._2026_11_15_20_dri9ht.webp',
   newsletterMobileBanner:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789985797/ChatGPT_Image_21_sept._2026_11_15_20_dri9ht.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1790024685/ChatGPT_Image_21_sept._2026_22_04_20_kes1jp.webp',
   wideLifestyleBanner: wideLifestyleBannerImg,
   studioDesktopBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789935767/ChatGPT_Image_20_sept._2026_21_21_57_y3bz4z.webp',

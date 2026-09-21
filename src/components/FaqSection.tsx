@@ -23,7 +23,7 @@ export const FaqSection: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="py-14 sm:py-20 bg-white border-b border-[#F0EAE1]">
+    <section id="faq" className="py-14 sm:py-20 bg-white border-none">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Centered Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14 space-y-2.5">

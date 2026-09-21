@@ -14,15 +14,21 @@ export const NewsletterSection: React.FC = () => {
   };
 
   return (
-    <section className="relative w-full overflow-hidden border-b border-neutral-800 py-7 sm:py-20 lg:py-24 flex items-center justify-center">
-      {/* Background Image: Rectangular Horizontal Banner on all devices */}
+    <section className="relative w-full overflow-hidden border-none py-7 sm:py-20 lg:py-24 flex items-center justify-center">
+      {/* Background Image: Mobile & Desktop */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <img
-          src={IMAGES.newsletterBanner}
-          alt="Le Club Oryven"
-          className="w-full h-full object-cover object-center block"
-          referrerPolicy="no-referrer"
-        />
+        <picture className="w-full h-full block">
+          <source
+            media="(max-width: 640px)"
+            srcSet={IMAGES.newsletterMobileBanner}
+          />
+          <img
+            src={IMAGES.newsletterBanner}
+            alt="Le Club Oryven"
+            className="w-full h-full object-cover object-center block"
+            referrerPolicy="no-referrer"
+          />
+        </picture>
         {/* Balanced contrast overlay keeping the vibrant blue padel court and lights visible */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/35 sm:from-black/75 sm:via-black/45 sm:to-black/25" />
       </div>
