@@ -22,6 +22,7 @@ import { WishlistDrawer } from './components/WishlistDrawer';
 import { SearchModal } from './components/SearchModal';
 import { OrderSuccessModal } from './components/OrderSuccessModal';
 import { GoogleSheetsModal } from './components/GoogleSheetsModal';
+import { ThankYouPage } from './components/ThankYouPage';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { PRODUCTS } from './data/products';
 import { Product, CartItem, ProductOffer, CustomerOrder } from './types';
@@ -71,8 +72,21 @@ const normalizeSlug = (raw: string): string => {
 
 const resolveRoute = (
   pathname: string
-): { view: 'home' | 'product' | 'sitemap' | 'products'; product: Product | null } => {
+): { view: 'home' | 'product' | 'sitemap' | 'products' | 'thankyou'; product: Product | null } => {
   const path = pathname.toLowerCase();
+
+  if (
+    path === '/thankyoupage' ||
+    path === '/thankyoupage/' ||
+    path === '/thank-you' ||
+    path === '/thank-you/' ||
+    path === '/thankyou' ||
+    path === '/thankyou/' ||
+    path === '/merci' ||
+    path === '/merci/'
+  ) {
+    return { view: 'thankyou', product: null };
+  }
 
   if (path === '/plan-du-site' || path === '/sitemap' || path === '/sitemap.html') {
     return { view: 'sitemap', product: null };
@@ -106,7 +120,7 @@ const resolveRoute = (
 
 export default function App() {
   const initialRoute = resolveRoute(typeof window !== 'undefined' ? window.location.pathname : '/');
-  const [currentView, setCurrentView] = useState<'home' | 'product' | 'sitemap' | 'products'>(initialRoute.view);
+  const [currentView, setCurrentView] = useState<'home' | 'product' | 'sitemap' | 'products' | 'thankyou'>(initialRoute.view);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(initialRoute.product);
 
   // Cart & Wishlist local state
@@ -133,7 +147,14 @@ export default function App() {
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isGoogleSheetsOpen, setIsGoogleSheetsOpen] = useState(false);
-  const [confirmedOrder, setConfirmedOrder] = useState<CustomerOrder | null>(null);
+  const [confirmedOrder, setConfirmedOrder] = useState<CustomerOrder | null>(() => {
+    try {
+      const saved = localStorage.getItem('oryven_latest_order');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Save Cart to localStorage
@@ -301,6 +322,15 @@ export default function App() {
           'Plan du site officiel Oryven Maroc : explorez l’ensemble de nos fiches produits dédiées, collections yoga & pilates, informations de livraison et service client.'
         );
       }
+    } else if (currentView === 'thankyou') {
+      document.title = 'Merci pour votre commande | Oryven Maroc';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'Confirmation de votre commande Oryven Maroc avec récapitulatif des articles, adresse de livraison et bouton de confirmation direct WhatsApp.'
+        );
+      }
     } else {
       document.title = 'Oryven Maroc | Boutique Officielle - Les 4 Essentiels';
       const metaDesc = document.querySelector('meta[name="description"]');
@@ -367,8 +397,19 @@ export default function App() {
 
   const handleOrderSuccess = (order: CustomerOrder) => {
     setConfirmedOrder(order);
-    // Clear cart or relevant item
+    try {
+      localStorage.setItem('oryven_latest_order', JSON.stringify(order));
+    } catch {
+      // ignore
+    }
+    // Clear cart
     setCartItems([]);
+    // Direct navigate to /thankyoupage
+    setCurrentView('thankyou');
+    if (typeof window !== 'undefined') {
+      window.history.pushState({ view: 'thankyou' }, '', '/thankyoupage');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleProceedCheckoutFromCart = () => {
@@ -470,6 +511,13 @@ export default function App() {
             onNavigateHome={handleBackToHome}
             onNavigateSection={handleNavigateSection}
           />
+        ) : currentView === 'thankyou' ? (
+          <ThankYouPage
+            order={confirmedOrder}
+            onNavigateHome={handleBackToHome}
+            onNavigateProducts={handleOpenProductsPage}
+            onOpenGoogleSheets={() => setIsGoogleSheetsOpen(true)}
+          />
         ) : selectedProduct ? (
           <ProductPage
             product={selectedProduct}
@@ -545,7 +593,7 @@ export default function App() {
       />
 
       {/* Order Success Celebration Modal */}
-      {confirmedOrder && (
+      {confirmedOrder && currentView !== 'thankyou' && (
         <OrderSuccessModal
           order={confirmedOrder}
           onClose={() => setConfirmedOrder(null)}

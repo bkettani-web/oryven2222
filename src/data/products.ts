@@ -14,9 +14,13 @@ import { Product, Testimonial, FaqItem } from '../types';
 export const IMAGES = {
   heroScene: heroSceneImg,
   wideHeroBanner:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789778742/ChatGPT_Image_19_sept._2026_01_45_02_i6vziz.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789948927/ChatGPT_Image_21_sept._2026_01_01_22_z7vm81.webp',
   mobileHeroBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789778673/ChatGPT_Image_19_sept._2026_01_43_27_qqwrjj.webp',
+  newsletterBanner:
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789985797/ChatGPT_Image_21_sept._2026_11_15_20_dri9ht.webp',
+  newsletterMobileBanner:
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789988421/ChatGPT_Image_21_sept._2026_11_59_58_nhuvkh.webp',
   wideLifestyleBanner: wideLifestyleBannerImg,
   studioDesktopBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789935767/ChatGPT_Image_20_sept._2026_21_21_57_y3bz4z.webp',
