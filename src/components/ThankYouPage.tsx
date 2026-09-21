@@ -192,16 +192,6 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({
               <Printer size={14} />
               <span className="hidden sm:inline">Imprimer</span>
             </button>
-
-            {onOpenGoogleSheets && (
-              <button
-                type="button"
-                onClick={onOpenGoogleSheets}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 text-xs font-semibold hover:bg-emerald-100 transition-colors cursor-pointer"
-              >
-                <span>Google Sheets</span>
-              </button>
-            )}
           </div>
         </div>
 

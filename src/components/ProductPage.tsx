@@ -11,13 +11,11 @@ import {
   Star,
   ShoppingBag,
   ArrowRight,
-  FileSpreadsheet,
 } from 'lucide-react';
 import { Product, ProductOffer, CustomerOrder } from '../types';
 import { MOROCCAN_CITIES, IMAGES, PRODUCTS } from '../data/products';
 import {
   sendOrderToGoogleSheets,
-  getProductSheetName,
   getAppsScriptUrl,
 } from '../services/googleSheetsService';
 
@@ -1165,30 +1163,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                   </span>
                   <span>•</span>
                   <span>Échange 14 jours</span>
-                </div>
-
-                {/* Google Sheets Live Link Info */}
-                <div className="pt-1">
-                  <div className="bg-[#FAF8F5] border border-neutral-200/80 rounded-lg p-2 flex items-center justify-between text-[11px] text-neutral-600">
-                    <div className="flex items-center gap-1.5">
-                      <FileSpreadsheet size={13} className="text-emerald-600 shrink-0" />
-                      <span>
-                        Envoi vers feuille :{' '}
-                        <strong className="text-neutral-800">
-                          « {getProductSheetName(product.id || product.slug)} »
-                        </strong>
-                      </span>
-                    </div>
-                    {onOpenGoogleSheets && (
-                      <button
-                        type="button"
-                        onClick={onOpenGoogleSheets}
-                        className="text-[10px] font-bold text-[#7A283B] hover:underline cursor-pointer"
-                      >
-                        Paramètres Sheets
-                      </button>
-                    )}
-                  </div>
                 </div>
               </form>
             </div>
