@@ -12,7 +12,6 @@ import {
   ShoppingBag,
   ArrowRight,
   FileSpreadsheet,
-  Wand2,
 } from 'lucide-react';
 import { Product, ProductOffer, CustomerOrder } from '../types';
 import { MOROCCAN_CITIES, IMAGES, PRODUCTS } from '../data/products';
@@ -501,14 +500,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
     if (!address.trim()) errors.address = 'Veuillez indiquer votre adresse de livraison';
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
-  };
-
-  const handleFillTestData = () => {
-    setFullName('Kawtar Benjelloun (Test)');
-    setPhone('0661234567');
-    setCity('Casablanca');
-    setAddress('12 Boulevard d’Anfa, Gauthier');
-    setFormErrors({});
   };
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
@@ -1045,15 +1036,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     </span>
                     Vos coordonnées de livraison :
                   </span>
-                  <button
-                    type="button"
-                    onClick={handleFillTestData}
-                    className="text-[10px] font-bold text-neutral-500 hover:text-[#7A283B] flex items-center gap-1 px-2 py-0.5 rounded bg-neutral-100 hover:bg-neutral-200 transition-colors cursor-pointer"
-                    title="Remplir automatiquement avec des données de test marocaines"
-                  >
-                    <Wand2 size={11} />
-                    <span>Remplir pour test</span>
-                  </button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
