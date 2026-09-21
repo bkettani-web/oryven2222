@@ -1,5 +1,5 @@
 import React from 'react';
-import { Instagram, MessageCircle, FileSpreadsheet } from 'lucide-react';
+import { Instagram, MessageCircle } from 'lucide-react';
 
 interface FooterProps {
   onNavigateSection: (sectionId: string) => void;
@@ -125,14 +125,6 @@ export const Footer: React.FC<FooterProps> = ({
                   Les 4 Essentiels (Boutique)
                 </button>
               </li>
-              <li>
-                <button
-                  onClick={onNavigateSitemap}
-                  className="hover:text-white text-rose-300/90 font-medium transition-colors flex items-center gap-1"
-                >
-                  <span>Plan du site (Sitemap)</span>
-                </button>
-              </li>
             </ul>
           </div>
 
@@ -185,17 +177,6 @@ export const Footer: React.FC<FooterProps> = ({
                   Nous contacter (WhatsApp)
                 </a>
               </li>
-              {onOpenGoogleSheets && (
-                <li>
-                  <button
-                    onClick={onOpenGoogleSheets}
-                    className="hover:text-emerald-400 text-emerald-500 font-medium transition-colors flex items-center gap-1.5 pt-1"
-                  >
-                    <FileSpreadsheet size={13} />
-                    <span>Google Sheets App Script</span>
-                  </button>
-                </li>
-              )}
             </ul>
           </div>
 
@@ -246,20 +227,6 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-500 gap-4">
           <p>© 2024 Oryven Maroc. Tous droits réservés.</p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <button
-              onClick={onNavigateSitemap}
-              className="hover:text-neutral-300 transition-colors cursor-pointer"
-            >
-              Plan du site (HTML)
-            </button>
-            <a
-              href="/sitemap.xml"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-neutral-300 transition-colors cursor-pointer"
-            >
-              Sitemap XML
-            </a>
             <span className="hover:text-neutral-400 transition-colors cursor-pointer">
               Conditions générales
             </span>
