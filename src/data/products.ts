@@ -14,7 +14,7 @@ import { Product, Testimonial, FaqItem } from '../types';
 export const IMAGES = {
   heroScene: heroSceneImg,
   wideHeroBanner:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1790026279/ChatGPT_Image_21_sept._2026_22_30_32_qz82wr.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1790028760/ChatGPT_Image_21_sept._2026_22_43_39_imf9oy.webp',
   mobileHeroBanner:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1790024368/ChatGPT_Image_21_sept._2026_21_58_56_cmpkr0.webp',
   newsletterBanner:
