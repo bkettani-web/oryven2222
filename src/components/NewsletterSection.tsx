@@ -101,7 +101,7 @@ export const NewsletterSection: React.FC = () => {
                   <button
                     id="newsletter-submit-btn"
                     type="submit"
-                    className="w-full h-11 sm:h-15 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#D7E9F7] via-[#DCEBFA] to-[#CBE2F6] hover:from-[#cbe2f6] hover:to-[#bedbf2] text-[#0d2238] font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0"
+                    className="w-full h-11 sm:h-15 rounded-xl sm:rounded-2xl bg-[#7A283B] hover:bg-[#631c2d] text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0 border border-white/15"
                   >
                     <span>JE PROFITE DE -10 %</span>
                     <ArrowRight size={16} strokeWidth={2.5} />
