@@ -4,14 +4,27 @@ export const STORAGE_KEY_APPS_SCRIPT_URL = 'oryven_apps_script_url';
 export const STORAGE_KEY_ORDERS_HISTORY = 'oryven_orders_history';
 
 /**
- * Récupère l'URL Web App Google Apps Script
+ * URL de production par défaut du Webhook Google Apps Script.
+ * Si un client commande depuis son smartphone, cette URL sera utilisée automatiquement.
+ */
+export const DEFAULT_PRODUCTION_WEBHOOK_URL =
+  'https://script.google.com/macros/s/AKfycbx-ivdfcNdRAA2-W20ZDxehYohxfqUadGZLCMxy6HcHiHGs0GGuv9UAM-kfUzqxwgZVfQ/exec';
+
+/**
+ * Récupère l'URL Web App Google Apps Script :
+ * 1. Vérifie si une URL personnalisée a été enregistrée en local (Dashboard admin)
+ * 2. Vérifie la variable d'environnement Vercel (VITE_GOOGLE_APPS_SCRIPT_URL)
+ * 3. Utilise l'URL de production par défaut
  */
 export function getAppsScriptUrl(): string {
   if (typeof window !== 'undefined') {
     const local = localStorage.getItem(STORAGE_KEY_APPS_SCRIPT_URL);
     if (local && local.trim()) return local.trim();
   }
-  return (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL as string) || '';
+  const envUrl = (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL as string) || '';
+  if (envUrl && envUrl.trim()) return envUrl.trim();
+
+  return DEFAULT_PRODUCTION_WEBHOOK_URL;
 }
 
 /**
