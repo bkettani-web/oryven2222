@@ -20,7 +20,6 @@ import { SitemapPage } from './components/SitemapPage';
 import { CartDrawer } from './components/CartDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { SearchModal } from './components/SearchModal';
-import { OrderSuccessModal } from './components/OrderSuccessModal';
 import { GoogleSheetsModal } from './components/GoogleSheetsModal';
 import { ThankYouPage } from './components/ThankYouPage';
 import { WhatsAppButton } from './components/WhatsAppButton';
@@ -591,15 +590,6 @@ export default function App() {
         products={PRODUCTS}
         onSelectProduct={handleSelectProduct}
       />
-
-      {/* Order Success Celebration Modal */}
-      {confirmedOrder && currentView !== 'thankyou' && (
-        <OrderSuccessModal
-          order={confirmedOrder}
-          onClose={() => setConfirmedOrder(null)}
-          onOpenGoogleSheets={() => setIsGoogleSheetsOpen(true)}
-        />
-      )}
 
       {/* Google Sheets Integration Modal */}
       <GoogleSheetsModal
