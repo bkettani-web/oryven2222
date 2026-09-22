@@ -405,7 +405,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     { col: 'I', name: 'Quantité', example: '2' },
                     { col: 'J', name: 'Variantes / Couleurs', example: '1x Lavande Glacée, 1x Bleu Ciel' },
                     { col: 'K', name: 'Prix Total (DH)', example: '289 DH' },
-                    { col: 'L', name: 'Confirmation WhatsApp', example: '=HYPERLINK("https://wa.me/212661234567?text=Bonjour...", "📱 Confirmer sur WhatsApp")' },
+                    { col: 'L', name: 'Confirmation WhatsApp', example: '=HYPERLINK("https://api.whatsapp.com/send?phone=212661234567&text=Bonjour...", "📱 Confirmer sur WhatsApp")' },
                   ].map((c) => (
                     <div key={c.col} className="px-3.5 py-1.5 flex items-center justify-between gap-2 hover:bg-neutral-50">
                       <div className="flex items-center space-x-2">

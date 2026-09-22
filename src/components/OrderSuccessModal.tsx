@@ -16,7 +16,7 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({ order, onC
   const handleWhatsAppConfirm = () => {
     const item = order.items[0];
     const text = encodeURIComponent(
-      `Bonjour Oryven Maroc ! Je confirme ma commande #${order.orderId}.\n\n` +
+      `Bonjour Oryven Maroc ! Je confirme ma commande N° ${order.orderId}.\n\n` +
         `📦 Produit : ${item.product.name} - ${item.offer.title}\n` +
         `💰 Montant : ${order.totalAmount} MAD (Paiement à la livraison)\n` +
         `👤 Destinataire : ${order.fullName} (${order.phone})\n` +

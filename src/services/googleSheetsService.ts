@@ -81,7 +81,7 @@ export function generateWhatsAppConfirmationMessage(order: {
 }): string {
   return (
     `Bonjour ${order.fullName || 'cher(e) client(e)'} ! 🌿\n\n` +
-    `C'est l'équipe Oryven Maroc concernant votre commande #${order.orderId}.\n\n` +
+    `C'est l'équipe Oryven Maroc concernant votre commande N° ${order.orderId}.\n\n` +
     `📦 Commande : ${order.productDetails}\n` +
     `💰 Montant total : ${order.totalAmount} MAD (Paiement à la livraison)\n` +
     `📍 Adresse de livraison : ${order.address}, ${order.city}\n\n` +
@@ -177,7 +177,8 @@ export function buildGoogleSheetPayload(order: CustomerOrder, isTest = false): G
     address: order.address,
   });
 
-  const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waMsg)}`;
+  const encodedMsg = encodeURIComponent(waMsg);
+  const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedMsg}`;
   const waFormula = `=HYPERLINK("${waUrl}"; "📱 Confirmer sur WhatsApp")`;
 
   return {
@@ -334,7 +335,8 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       address,
     });
 
-    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waMsg)}`;
+    const encodedMsg = encodeURIComponent(waMsg);
+    const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedMsg}`;
     const waFormula = `=HYPERLINK("${waUrl}"; "📱 Confirmer sur WhatsApp")`;
 
     return {
@@ -484,7 +486,8 @@ function doPost(e) {
 
       // 3. Message de confirmation WhatsApp pré-rempli
       var waMsg = order.whatsappMessage || generateWhatsAppMsg(order);
-      var waUrl = "https://wa.me/" + cleanPhone + "?text=" + encodeURIComponent(waMsg);
+      var encodedMsg = encodeURIComponent(waMsg);
+      var waUrl = "https://api.whatsapp.com/send?phone=" + cleanPhone + "&text=" + encodedMsg;
 
       // Formule Google Sheets HYPERLINK pour clic direct
       var waFormula = '=HYPERLINK("' + waUrl + '"; "📱 Confirmer sur WhatsApp")';
@@ -699,7 +702,7 @@ function generateWhatsAppMsg(order) {
     details = p + o + v;
   }
   return "Bonjour " + (order.fullName || "cher(e) client(e)") + " ! 🌿\\n\\n" +
-    "C'est l'équipe Oryven Maroc concernant votre commande #" + (order.orderId || "") + ".\\n\\n" +
+    "C'est l'équipe Oryven Maroc concernant votre commande N° " + (order.orderId || "") + ".\\n\\n" +
     "📦 Commande : " + details + "\\n" +
     "💰 Montant total : " + (order.totalAmount ? order.totalAmount + " MAD" : "Paiement à la livraison") + "\\n" +
     "📍 Adresse de livraison : " + (order.address || "") + ", " + (order.city || "") + "\\n\\n" +
