@@ -129,6 +129,8 @@ export interface GoogleSheetOrderPayload {
   variants: string;
   totalAmount: number;
   productDetails: string;
+  orderStatus: string;
+  deliveryStatus: string;
   whatsappMessage: string;
   whatsappUrl: string;
   whatsappFormula: string;
@@ -177,9 +179,27 @@ export function buildGoogleSheetPayload(order: CustomerOrder, isTest = false): G
     address: order.address,
   });
 
-  const encodedMsg = encodeURIComponent(waMsg);
-  const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedMsg}`;
-  const waFormula = `=HYPERLINK("${waUrl}"; "📱 Confirmer sur WhatsApp")`;
+  const escapeFormulaText = (str: string) => (str || '').replace(/"/g, '""').replace(/\r?\n/g, ' ');
+  const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(waMsg)}`;
+  const waLines = [
+    `"Bonjour ${escapeFormulaText(order.fullName || 'cher(e) client(e)')} ! 🌿"`,
+    'CHAR(10)',
+    'CHAR(10)',
+    `"C'est l'équipe Oryven Maroc concernant votre commande N° ${escapeFormulaText(order.orderId)}."`,
+    'CHAR(10)',
+    'CHAR(10)',
+    `"📦 Commande : ${escapeFormulaText(productName)} [${escapeFormulaText(offerTitle)}] - Variantes : ${escapeFormulaText(variants)}"`,
+    'CHAR(10)',
+    `"💰 Montant total : ${order.totalAmount} MAD (Paiement à la livraison)"`,
+    'CHAR(10)',
+    `"📍 Adresse de livraison : ${escapeFormulaText(order.address || '')}, ${escapeFormulaText(order.city || '')}"`,
+    'CHAR(10)',
+    'CHAR(10)',
+    `"Pouvez-vous s'il vous plaît nous confirmer cette commande afin de programmer l'expédition dès aujourd'hui ?"`,
+    'CHAR(10)',
+    `"Merci pour votre confiance ! ✨"`,
+  ];
+  const waFormula = `=HYPERLINK("https://api.whatsapp.com/send?phone=${cleanPhone}&text=" & ENCODEURL(${waLines.join(' & ')}); "📱 Confirmer sur WhatsApp")`;
 
   return {
     sheetName,
@@ -195,6 +215,8 @@ export function buildGoogleSheetPayload(order: CustomerOrder, isTest = false): G
     variants,
     totalAmount: order.totalAmount,
     productDetails,
+    orderStatus: 'Nouveau',
+    deliveryStatus: 'En attente',
     whatsappMessage: waMsg,
     whatsappUrl: waUrl,
     whatsappFormula: waFormula,
@@ -262,7 +284,7 @@ export async function sendOrderToGoogleSheets(
 }
 
 /**
- * Données d'exemple pour initialiser les 5 feuilles lors d'une commande de test
+ * Données d'exemple pour initialiser les feuilles lors d'une commande de test
  */
 export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
   const now = new Date();
@@ -353,6 +375,8 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       variants: item.variants,
       totalAmount: item.total,
       productDetails,
+      orderStatus: 'Nouveau',
+      deliveryStatus: 'En attente',
       whatsappMessage: waMsg,
       whatsappUrl: waUrl,
       whatsappFormula: waFormula,
@@ -393,7 +417,7 @@ export async function sendTestOrdersForAllProducts(
     return {
       success: true,
       count: testOrders.length,
-      message: '5 commandes de test envoyées avec succès ! Les 5 feuilles vont être créées avec les colonnes détaillées.',
+      message: '5 commandes de test envoyées avec succès ! Les feuilles produits et le Tableau de bord vont être créés.',
     };
   } catch (error) {
     return {
@@ -404,387 +428,5 @@ export async function sendTestOrdersForAllProducts(
   }
 }
 
-/**
- * Code source complet du script Google Apps Script (Code.gs)
- * prêt à être copié-collé par l'administrateur de la boutique dans Google Sheets.
- */
-export const APPS_SCRIPT_CODE_TEMPLATE = `/**
- * ==============================================================================
- * 🌸 ORYVEN MAROC - GOOGLE APPS SCRIPT WEBHOOK AUTOMATIQUE (VERSION DÉTAILLÉE)
- * ==============================================================================
- * Ce script reçoit les commandes en temps réel depuis le site Oryven et les classe
- * automatiquement dans la feuille dédiée au produit commandé :
- *   1. Bandeau
- *   2. Visière
- *   3. Tote Bag
- *   4. Chaussettes
- *   5. Pack 4 Produits
- *
- * ✨ CRÉATION AUTOMATIQUE :
- * Si la feuille du produit n'existe pas encore dans votre classeur Google Sheet,
- * elle est créée automatiquement avec ses 12 colonnes distinctes et son design bordeaux Oryven !
- *
- * 📋 LES 12 COLONNES CRÉÉES DANS CHAQUE FEUILLE :
- *   1. Date
- *   2. N° commande
- *   3. Nom complet
- *   4. Téléphone
- *   5. Ville
- *   6. Adresse
- *   7. Produit
- *   8. Formule / Offre
- *   9. Quantité
- *   10. Variantes / Couleurs
- *   11. Prix Total (DH)
- *   12. Confirmation WhatsApp (Lien cliquable avec message pré-rempli)
- * ==============================================================================
- */
-
-function doPost(e) {
-  var lock = LockService.getScriptLock();
-  // Verrouillage pour éviter les conflits lors de commandes simultanées
-  lock.tryLock(10000);
-
-  try {
-    if (!e || !e.postData || !e.postData.contents) {
-      return ContentService.createTextOutput(JSON.stringify({
-        status: "error",
-        message: "Aucune donnée reçue (payload vide)"
-      })).setMimeType(ContentService.MimeType.JSON);
-    }
-
-    var rawData = e.postData.contents;
-    var data = JSON.parse(rawData);
-
-    // Support d'une commande unique ou d'une liste de commandes (test multi-feuilles)
-    var orders = Array.isArray(data) ? data : [data];
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var results = [];
-
-    for (var i = 0; i < orders.length; i++) {
-      var order = orders[i];
-      var sheetName = determineSheetName(order);
-      var sheet = ss.getSheetByName(sheetName);
-
-      // 1. Création automatique de la feuille si elle n'existe pas encore
-      if (!sheet) {
-        sheet = ss.insertSheet(sheetName);
-        setupSheetHeaders(sheet);
-      } else {
-        // Si la feuille est totalement vide ou n'a que l'ancien en-tête à 8 colonnes
-        if (sheet.getLastRow() === 0) {
-          setupSheetHeaders(sheet);
-        } else if (sheet.getLastRow() === 1 && sheet.getLastColumn() <= 8) {
-          // Mise à niveau automatique des en-têtes si la feuille n'a qu'une seule ligne
-          sheet.clear();
-          setupSheetHeaders(sheet);
-        }
-      }
-
-      // 2. Formatage du numéro de téléphone marocain (+212)
-      var cleanPhone = formatMoroccanPhone(order.phone);
-
-      // 3. Message de confirmation WhatsApp pré-rempli
-      var waMsg = order.whatsappMessage || generateWhatsAppMsg(order);
-      var encodedMsg = encodeURIComponent(waMsg);
-      var waUrl = "https://api.whatsapp.com/send?phone=" + cleanPhone + "&text=" + encodedMsg;
-
-      // Formule Google Sheets HYPERLINK pour clic direct
-      var waFormula = '=HYPERLINK("' + waUrl + '"; "📱 Confirmer sur WhatsApp")';
-
-      // 4. Extraction détaillée des colonnes produits
-      var prodName = order.productName || extractProductName(order);
-      var offer = order.offerTitle || extractOfferTitle(order);
-      var qty = order.quantity || extractQuantity(order);
-      var variants = order.variants || extractVariants(order);
-      var priceFormatted = (order.totalAmount != null ? order.totalAmount + " DH" : "");
-
-      // 5. Construction de la ligne avec les 12 colonnes détaillées :
-      var rowData = [
-        order.date || Utilities.formatDate(new Date(), "GMT+1", "dd/MM/yyyy HH:mm"),
-        order.orderId || "",
-        order.fullName || "",
-        order.phone ? "'" + order.phone : "",
-        order.city || "",
-        order.address || "",
-        prodName,
-        offer,
-        qty,
-        variants,
-        priceFormatted,
-        waFormula
-      ];
-
-      sheet.appendRow(rowData);
-      var lastRow = sheet.getLastRow();
-
-      // Styliser la ligne insérée
-      var dataRange = sheet.getRange(lastRow, 1, 1, 12);
-      dataRange.setVerticalAlignment("middle");
-      dataRange.setFontFamily("Arial");
-      dataRange.setFontSize(10);
-      dataRange.setWrap(true);
-
-      // Alignements spécifiques pour une lecture fluide
-      sheet.getRange(lastRow, 9).setHorizontalAlignment("center"); // Quantité
-      sheet.getRange(lastRow, 11).setHorizontalAlignment("center"); // Prix
-      sheet.getRange(lastRow, 11).setFontWeight("bold");
-
-      // Mettre en évidence la cellule WhatsApp en vert doux
-      var waCell = sheet.getRange(lastRow, 12);
-      waCell.setBackground("#E8F5E9");
-      waCell.setFontColor("#1B5E20");
-      waCell.setFontWeight("bold");
-      waCell.setHorizontalAlignment("center");
-
-      results.push({
-        orderId: order.orderId,
-        sheet: sheetName,
-        success: true
-      });
-    }
-
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "success",
-      message: "Commande(s) enregistrée(s) avec succès dans Google Sheets",
-      results: results
-    })).setMimeType(ContentService.MimeType.JSON);
-
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: "error",
-      message: err.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-/**
- * Configure la ligne d'en-tête avec les 12 colonnes distinctes et fixe les largeurs
- */
-function setupSheetHeaders(sheet) {
-  var headers = [
-    "Date",
-    "N° commande",
-    "Nom complet",
-    "Téléphone",
-    "Ville",
-    "Adresse",
-    "Produit",
-    "Formule / Offre",
-    "Quantité",
-    "Variantes / Couleurs",
-    "Prix Total (DH)",
-    "Confirmation WhatsApp"
-  ];
-
-  sheet.appendRow(headers);
-  var headerRange = sheet.getRange(1, 1, 1, headers.length);
-  headerRange.setBackground("#7A283B"); // Marron bordeaux Oryven
-  headerRange.setFontColor("#FFFFFF");
-  headerRange.setFontWeight("bold");
-  headerRange.setFontFamily("Arial");
-  headerRange.setFontSize(11);
-  headerRange.setHorizontalAlignment("center");
-  headerRange.setVerticalAlignment("middle");
-  sheet.setRowHeight(1, 40);
-
-  // Figer la 1ère ligne pour garder les titres visibles lors du défilement
-  sheet.setFrozenRows(1);
-
-  // Largeurs optimisées des 12 colonnes
-  sheet.setColumnWidth(1, 140); // Date
-  sheet.setColumnWidth(2, 150); // N° commande
-  sheet.setColumnWidth(3, 170); // Nom complet
-  sheet.setColumnWidth(4, 130); // Téléphone
-  sheet.setColumnWidth(5, 120); // Ville
-  sheet.setColumnWidth(6, 220); // Adresse
-  sheet.setColumnWidth(7, 180); // Produit
-  sheet.setColumnWidth(8, 170); // Formule / Offre
-  sheet.setColumnWidth(9, 90);  // Quantité
-  sheet.setColumnWidth(10, 240); // Variantes / Couleurs
-  sheet.setColumnWidth(11, 120); // Prix Total (DH)
-  sheet.setColumnWidth(12, 220); // Confirmation WhatsApp
-}
-
-/**
- * Détermine le nom de la feuille dédiée selon le produit
- */
-function determineSheetName(order) {
-  if (order.sheetName && order.sheetName.trim()) {
-    return order.sheetName.trim();
-  }
-  var str = ((order.productDetails || "") + " " + (order.productName || "") + " " + (order.productId || "")).toLowerCase();
-  if (str.indexOf("pack") !== -1 || str.indexOf("4 produits") !== -1) return "Pack 4 Produits";
-  if (str.indexOf("headband") !== -1 || str.indexOf("bandeau") !== -1) return "Bandeau";
-  if (str.indexOf("visor") !== -1 || str.indexOf("visiere") !== -1 || str.indexOf("visière") !== -1) return "Visière";
-  if (str.indexOf("tote") !== -1 || str.indexOf("sac") !== -1) return "Tote Bag";
-  if (str.indexOf("sock") !== -1 || str.indexOf("chaussette") !== -1) return "Chaussettes";
-  return "Pack 4 Produits";
-}
-
-/**
- * Fonctions d'extraction pour compatibilité ascendante si données composites
- */
-function extractProductName(order) {
-  if (order.productName) return order.productName;
-  if (!order.productDetails) return "Produit Oryven";
-  var bracketIdx = order.productDetails.indexOf("[");
-  if (bracketIdx !== -1) {
-    return order.productDetails.substring(0, bracketIdx).trim();
-  }
-  var dashIdx = order.productDetails.indexOf("-");
-  if (dashIdx !== -1) {
-    return order.productDetails.substring(0, dashIdx).trim();
-  }
-  return order.productDetails;
-}
-
-function extractOfferTitle(order) {
-  if (order.offerTitle) return order.offerTitle;
-  if (!order.productDetails) return "Solo";
-  var m = order.productDetails.match(/\\[(.*?)\\]/);
-  if (m && m[1]) {
-    return m[1].replace(/Offre:\\s*/i, "").trim();
-  }
-  return "Solo";
-}
-
-function extractQuantity(order) {
-  if (order.quantity) return order.quantity;
-  if (!order.productDetails) return 1;
-  var m = order.productDetails.match(/\\(Qté:\\s*(\\d+)\\)/i);
-  if (m && m[1]) return parseInt(m[1], 10);
-  if (order.productDetails.toLowerCase().indexOf("duo") !== -1) return 2;
-  if (order.productDetails.toLowerCase().indexOf("trio") !== -1) return 3;
-  if (order.productDetails.toLowerCase().indexOf("4 produits") !== -1 || order.productDetails.toLowerCase().indexOf("pack complet") !== -1) return 4;
-  return 1;
-}
-
-function extractVariants(order) {
-  if (order.variants) return order.variants;
-  if (!order.productDetails) return "-";
-  var varIdx = order.productDetails.indexOf("Variantes :");
-  if (varIdx !== -1) {
-    return order.productDetails.substring(varIdx + 11).trim();
-  }
-  var colIdx = order.productDetails.indexOf("Couleur :");
-  if (colIdx !== -1) {
-    return order.productDetails.substring(colIdx + 9).trim();
-  }
-  return "-";
-}
-
-/**
- * Nettoyage et formatage du numéro marocain pour WhatsApp
- */
-function formatMoroccanPhone(phone) {
-  if (!phone) return "";
-  var clean = ("" + phone).replace(/[^0-9]/g, "");
-  if (clean.indexOf("0") === 0) {
-    clean = "212" + clean.substring(1);
-  } else if (clean.indexOf("212") !== 0) {
-    clean = "212" + clean;
-  }
-  return clean;
-}
-
-/**
- * Génère le message WhatsApp pré-rempli
- */
-function generateWhatsAppMsg(order) {
-  var details = order.productDetails;
-  if (!details) {
-    var p = order.productName || "Produit Oryven";
-    var o = order.offerTitle ? " [" + order.offerTitle + "]" : "";
-    var v = order.variants ? " - " + order.variants : "";
-    details = p + o + v;
-  }
-  return "Bonjour " + (order.fullName || "cher(e) client(e)") + " ! 🌿\\n\\n" +
-    "C'est l'équipe Oryven Maroc concernant votre commande N° " + (order.orderId || "") + ".\\n\\n" +
-    "📦 Commande : " + details + "\\n" +
-    "💰 Montant total : " + (order.totalAmount ? order.totalAmount + " MAD" : "Paiement à la livraison") + "\\n" +
-    "📍 Adresse de livraison : " + (order.address || "") + ", " + (order.city || "") + "\\n\\n" +
-    "Pouvez-vous s'il vous plaît nous confirmer cette commande afin de programmer l'expédition dès aujourd'hui ?\\n" +
-    "Merci pour votre confiance ! ✨";
-}
-
-/**
- * Fonction de test manuelle exécutable directement depuis l'éditeur Apps Script
- */
-function testerCreationFeuilles() {
-  var e = {
-    postData: {
-      contents: JSON.stringify([
-        {
-          sheetName: "Bandeau",
-          orderId: "TEST-001",
-          fullName: "Sara Alami (Test)",
-          phone: "0661112233",
-          city: "Casablanca",
-          address: "Gauthier",
-          productName: "Oryven Yoga Headband",
-          offerTitle: "Duo Collection (2 Bandeaux)",
-          quantity: 2,
-          variants: "1x Lavande Glacée, 1x Bleu Ciel",
-          totalAmount: 289
-        },
-        {
-          sheetName: "Visière",
-          orderId: "TEST-002",
-          fullName: "Lina Berrada (Test)",
-          phone: "0662223344",
-          city: "Rabat",
-          address: "Agdal",
-          productName: "Oryven Visor UPF 50+",
-          offerTitle: "Solo (1 Visière)",
-          quantity: 1,
-          variants: "Bleu Glacier",
-          totalAmount: 199
-        },
-        {
-          sheetName: "Tote Bag",
-          orderId: "TEST-003",
-          fullName: "Ghita Bennani (Test)",
-          phone: "0663334455",
-          city: "Marrakech",
-          address: "Guéliz",
-          productName: "Oryven Tote Bag 28L",
-          offerTitle: "Pack Solo (1 Sac)",
-          quantity: 1,
-          variants: "Toile Écru Naturelle",
-          totalAmount: 349
-        },
-        {
-          sheetName: "Chaussettes",
-          orderId: "TEST-004",
-          fullName: "Yasmine Tazi (Test)",
-          phone: "0664445566",
-          city: "Tanger",
-          address: "Malabata",
-          productName: "Oryven Non-Slip Grip Socks",
-          offerTitle: "Duo (2 Paires)",
-          quantity: 2,
-          variants: "1x Blanc Studio, 1x Noir Onyx",
-          totalAmount: 179
-        },
-        {
-          sheetName: "Pack 4 Produits",
-          orderId: "TEST-005",
-          fullName: "Kawtar Fassi (Test)",
-          phone: "0665556677",
-          city: "Casablanca",
-          address: "Anfa",
-          productName: "Pack Complet Oryven (4 Produits)",
-          offerTitle: "Pack Solo Essentiels",
-          quantity: 4,
-          variants: "Visière: Noir Intense, Sac: Écru, 1er Bandeau: Bleu Ciel, 2ème Bandeau: Lavande Glacée",
-          totalAmount: 590
-        }
-      ])
-    }
-  };
-  doPost(e);
-}
-`;
+// Ré-exporte le code template Apps Script
+export { APPS_SCRIPT_CODE_TEMPLATE } from './appsScriptTemplate';

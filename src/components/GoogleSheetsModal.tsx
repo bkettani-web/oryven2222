@@ -92,7 +92,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
             <div>
               <div className="flex items-center space-x-2">
                 <h3 className="text-lg font-bold font-heading uppercase tracking-wider">
-                  Google Sheets App Script
+                  Google Sheets & Tableau de bord
                 </h3>
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
@@ -105,7 +105,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                 </span>
               </div>
               <p className="text-xs text-rose-100 mt-0.5">
-                Réception automatique des commandes sur 5 feuilles dédiées par produit
+                Tableau de bord en direct + 5 feuilles produits avec statuts de commande et livraison
               </p>
             </div>
           </div>
@@ -140,7 +140,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   : 'text-rose-100 hover:bg-white/10'
               }`}
             >
-              3. Feuilles & Colonnes
+              3. Dashboard & 14 Colonnes
             </button>
           </div>
         </div>
@@ -171,7 +171,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   </div>
                   <p className="text-neutral-600 leading-relaxed">
                     {isConnected
-                      ? 'Toutes les nouvelles commandes passées sur la boutique sont envoyées directement vers votre Google Sheet dans l’onglet dédié du produit.'
+                      ? 'Toutes les nouvelles commandes passées sur la boutique sont envoyées directement vers votre Google Sheet avec statut "Nouveau" et "En attente", et le Tableau de bord se met à jour en temps réel.'
                       : 'Collez ci-dessous l’URL de votre application Web Google Apps Script générée après le déploiement de votre script.'}
                   </p>
                 </div>
@@ -211,17 +211,19 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-900 flex items-center gap-1.5">
                       <Play size={14} className="text-[#7A283B]" />
-                      <span>Création automatique des 5 feuilles de commande</span>
+                      <span>Création automatique du Tableau de bord & des 5 feuilles</span>
                     </h4>
                     <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
                       En cliquant ci-dessous, le système envoie immédiatement une commande de test pour
-                      chacun des 5 produits. Le script va <strong>créer automatiquement les 5 onglets</strong> s'ils
-                      n'existent pas encore dans votre Google Sheet avec les en-têtes et le bouton de confirmation WhatsApp !
+                      chacun des 5 produits. Le script va <strong>créer automatiquement la feuille "Tableau de bord" en tête</strong> ainsi que les 5 onglets produits avec leurs 14 colonnes (menus déroulants de statuts et boutons WhatsApp) !
                     </p>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 pt-1">
+                  <span className="px-2.5 py-1 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-[11px] font-bold shadow-2xs">
+                    📊 Tableau de bord (Dashboard)
+                  </span>
                   {['Bandeau', 'Visière', 'Tote Bag', 'Chaussettes', 'Pack 4 Produits'].map((sheet) => (
                     <span
                       key={sheet}
@@ -236,7 +238,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   <button
                     onClick={handleRunTestOrders}
                     disabled={isTesting}
-                    className="w-full sm:w-auto px-5 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-xs flex items-center justify-center space-x-2 transition-all"
+                    className="w-full sm:w-auto px-5 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-xs flex items-center justify-center space-x-2 transition-all cursor-pointer"
                   >
                     {isTesting ? (
                       <>
@@ -246,7 +248,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     ) : (
                       <>
                         <Play size={15} />
-                        <span>Passer la commande de test (Initialiser les 5 feuilles)</span>
+                        <span>Passer la commande de test (Initialiser Dashboard & Feuilles)</span>
                       </>
                     )}
                   </button>
@@ -269,8 +271,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                       <div className="font-bold">{testResult.message}</div>
                       {testResult.success && (
                         <p className="text-[11px] text-emerald-700 mt-1">
-                          Consultez dès maintenant votre Google Sheet : vous y verrez les onglets créés
-                          avec les colonnes formatées et le lien WhatsApp pré-rempli !
+                          Consultez dès maintenant votre Google Sheet : vous y découvrirez le <strong>Tableau de bord</strong> complet avec ses compteurs en direct, ainsi que les onglets de vos produits avec menus déroulants et boutons WhatsApp !
                         </p>
                       )}
                     </div>
@@ -282,14 +283,14 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
               <div className="border-t border-neutral-100 pt-3 space-y-2">
                 <h5 className="text-[11px] font-bold uppercase tracking-wider text-neutral-600 flex items-center gap-1.5">
                   <HelpCircle size={13} />
-                  <span>Comment récupérer l'URL Apps Script en 3 étapes :</span>
+                  <span>Comment installer le script en 3 étapes :</span>
                 </h5>
                 <ol className="text-xs text-neutral-600 space-y-1.5 list-decimal pl-4 leading-relaxed">
                   <li>Ouvrez votre Google Sheet, allez dans <strong>Extensions &gt; Apps Script</strong>.</li>
                   <li>Copiez-collez le code fourni dans l'onglet <strong>« 2. Code Apps Script »</strong>.</li>
                   <li>
                     Cliquez sur <strong>Déployer &gt; Nouveau déploiement</strong>, sélectionnez le type{' '}
-                    <strong>Application Web</strong>, choisissez <em>« Qui a accès : Tout le monde »</em>, puis collez l'URL fournie ici.
+                    <strong>Application Web</strong>, choisissez <em>« Qui a accès : Tout le monde »</em>, puis collez l'URL générée ici.
                   </li>
                 </ol>
               </div>
@@ -305,12 +306,12 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     Fichier Code.gs pour Google Apps Script
                   </h4>
                   <p className="text-xs text-neutral-500">
-                    Copiez l'intégralité de ce code et remplacez le contenu de votre éditeur Apps Script.
+                    Copiez l'intégralité de ce code et collez-le dans votre éditeur Apps Script.
                   </p>
                 </div>
                 <button
                   onClick={handleCopyCode}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all shadow-xs ${
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition-all shadow-xs cursor-pointer ${
                     copiedCode
                       ? 'bg-emerald-600 text-white'
                       : 'bg-[#7A283B] hover:bg-[#621f2e] text-white'
@@ -344,7 +345,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   <span>Important lors du déploiement :</span>
                 </div>
                 <p>
-                  Dans la fenêtre de déploiement Google Apps Script :
+                  Dans la boîte de déploiement Google Apps Script :
                 </p>
                 <ul className="list-disc pl-5 space-y-1 text-neutral-600">
                   <li><strong>Type :</strong> Application Web (icône roue dentée ⚙️)</li>
@@ -360,37 +361,84 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
             <div className="space-y-4">
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-900">
-                  Structure des 5 feuilles et colonnes générées
+                  Tableau de bord & 14 Colonnes par produit
                 </h4>
                 <p className="text-xs text-neutral-500 mt-0.5">
-                  Conformément à votre demande, chaque produit dispose de sa feuille dédiée avec les 8 colonnes exactes.
+                  Organisation automatique avec statuts modifiables en un clic et mise à jour instantanée du Tableau de bord.
                 </p>
               </div>
 
-              {/* 5 Sheets display */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {[
-                  { name: 'Bandeau', desc: 'Commandes du Oryven Yoga Headband (Solo & Packs Duo/Trio)', color: 'bg-indigo-50 border-indigo-200 text-indigo-900' },
-                  { name: 'Visière', desc: 'Commandes de la Visière Sport Oryven UPF 50+', color: 'bg-sky-50 border-sky-200 text-sky-900' },
-                  { name: 'Tote Bag', desc: 'Commandes du Sac Oryven Tote Bag 28L', color: 'bg-amber-50 border-amber-200 text-amber-900' },
-                  { name: 'Chaussettes', desc: 'Commandes des chaussettes antidérapantes Non-Slip Grip Socks', color: 'bg-emerald-50 border-emerald-200 text-emerald-900' },
-                  { name: 'Pack 4 Produits', desc: 'Commandes du Pack Complet Oryven (Sac + Visière + 2 Bandeaux)', color: 'bg-rose-50 border-rose-200 text-rose-900' },
-                ].map((s) => (
-                  <div key={s.name} className={`p-3 rounded-xl border ${s.color} space-y-1`}>
-                    <div className="font-bold text-xs flex items-center gap-1.5">
-                      <FileSpreadsheet size={14} />
-                      <span>Feuille « {s.name} »</span>
-                    </div>
-                    <p className="text-[11px] opacity-80">{s.desc}</p>
+              {/* Tableau de bord highlight card */}
+              <div className="p-4 bg-gradient-to-r from-stone-900 to-[#531B28] text-white rounded-xl shadow-xs space-y-2.5 border border-[#7A283B]">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-lg">📊</span>
+                    <span className="font-bold text-sm font-heading">Tableau de bord : Commandes & Chiffre d'Affaires (MAD)</span>
                   </div>
-                ))}
+                  <span className="text-[10px] bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 px-2 py-0.5 rounded-full font-bold">
+                    Temps Réel + Finances
+                  </span>
+                </div>
+                <p className="text-xs text-rose-100 leading-relaxed">
+                  Calcule automatiquement en direct vos gains : <strong>Total MAD encaissé (Livrées)</strong>, chiffre d'affaires <strong>par jour</strong> (aujourd'hui, hier, etc.), chiffre d'affaires <strong>par semaine (7 jours)</strong> et <strong>par produit</strong> !
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-center">
+                  <div className="bg-emerald-950/60 border border-emerald-500/30 p-2 rounded-lg">
+                    <div className="text-[10px] text-emerald-300 font-bold">💰 Total Encaissé</div>
+                    <div className="text-xs font-extrabold text-emerald-100">MAD Livré en poche</div>
+                  </div>
+                  <div className="bg-white/10 p-2 rounded-lg">
+                    <div className="text-[10px] text-rose-200">📅 Gains / Jour</div>
+                    <div className="text-xs font-bold">Aujourd'hui & 7j</div>
+                  </div>
+                  <div className="bg-white/10 p-2 rounded-lg">
+                    <div className="text-[10px] text-rose-200">📈 Total Semaine</div>
+                    <div className="text-xs font-bold">7 derniers jours</div>
+                  </div>
+                  <div className="bg-white/10 p-2 rounded-lg">
+                    <div className="text-[10px] text-rose-200">🏷️ CA par Produit</div>
+                    <div className="text-xs font-bold">Bandeau, Visière...</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2 Status columns highlight */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-xl space-y-1">
+                  <div className="font-bold text-xs text-blue-900 flex items-center gap-1.5">
+                    <span>📌</span>
+                    <span>Colonne L : Statut commande</span>
+                  </div>
+                  <p className="text-[11px] text-blue-800">Menu déroulant automatique :</p>
+                  <div className="flex flex-wrap gap-1 pt-0.5">
+                    <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded font-semibold text-[10px]">Nouveau</span>
+                    <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold text-[10px]">Confirmé</span>
+                    <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded font-semibold text-[10px]">Injoignable</span>
+                    <span className="px-1.5 py-0.5 bg-rose-100 text-rose-800 rounded font-semibold text-[10px]">Annulé</span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1">
+                  <div className="font-bold text-xs text-amber-900 flex items-center gap-1.5">
+                    <span>🚚</span>
+                    <span>Colonne M : Statut livraison</span>
+                  </div>
+                  <p className="text-[11px] text-amber-800">Menu déroulant automatique :</p>
+                  <div className="flex flex-wrap gap-1 pt-0.5">
+                    <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded font-semibold text-[10px]">En attente</span>
+                    <span className="px-1.5 py-0.5 bg-yellow-100 text-yellow-800 rounded font-semibold text-[10px]">En préparation</span>
+                    <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded font-semibold text-[10px]">Expédié</span>
+                    <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold text-[10px]">Livré</span>
+                    <span className="px-1.5 py-0.5 bg-pink-100 text-pink-800 rounded font-semibold text-[10px]">Retour</span>
+                  </div>
+                </div>
               </div>
 
               {/* Column details table */}
               <div className="border border-neutral-200 rounded-xl overflow-hidden">
                 <div className="bg-[#7A283B] text-white px-3 py-2 text-xs font-bold uppercase tracking-wider flex items-center justify-between">
-                  <span>Les 12 Colonnes détaillées de chaque feuille :</span>
-                  <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-normal">Colonnes séparées</span>
+                  <span>Les 14 Colonnes de chaque feuille produit :</span>
+                  <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-normal">14 Colonnes ordonnées</span>
                 </div>
                 <div className="divide-y divide-neutral-100 text-xs">
                   {[
@@ -405,14 +453,18 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     { col: 'I', name: 'Quantité', example: '2' },
                     { col: 'J', name: 'Variantes / Couleurs', example: '1x Lavande Glacée, 1x Bleu Ciel' },
                     { col: 'K', name: 'Prix Total (DH)', example: '289 DH' },
-                    { col: 'L', name: 'Confirmation WhatsApp', example: '=HYPERLINK("https://api.whatsapp.com/send?phone=212661234567&text=Bonjour...", "📱 Confirmer sur WhatsApp")' },
+                    { col: 'L', name: 'Statut commande', example: 'Nouveau (Menu déroulant)' },
+                    { col: 'M', name: 'Statut livraison', example: 'En attente (Menu déroulant)' },
+                    { col: 'N', name: 'Confirmation WhatsApp', example: '=HYPERLINK("https://wa.me/212661234567?text=" & ENCODEURL(...), "📱 Confirmer sur WhatsApp")' },
                   ].map((c) => (
                     <div key={c.col} className="px-3.5 py-1.5 flex items-center justify-between gap-2 hover:bg-neutral-50">
                       <div className="flex items-center space-x-2">
                         <span className="w-5 h-5 rounded-full bg-neutral-200 font-bold text-[10px] flex items-center justify-center text-neutral-700">
                           {c.col}
                         </span>
-                        <span className="font-bold text-neutral-800">{c.name}</span>
+                        <span className={`font-bold ${c.col === 'L' || c.col === 'M' ? 'text-[#7A283B]' : 'text-neutral-800'}`}>
+                          {c.name}
+                        </span>
                       </div>
                       <span className="text-[11px] font-mono text-neutral-500 truncate max-w-[260px] text-right">
                         {c.example}
@@ -426,25 +478,10 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
               <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1.5">
                 <div className="font-bold flex items-center gap-1.5 text-amber-950">
                   <AlertCircle size={15} className="text-amber-700 shrink-0" />
-                  <span>Dois-je supprimer les feuilles existantes dans Google Sheets ?</span>
+                  <span>Conseil de mise à niveau :</span>
                 </div>
                 <p className="text-[11px] text-amber-900 leading-relaxed">
-                  <strong>Oui, c'est vivement conseillé !</strong> Supprimez simplement vos feuilles actuelles (comme <em>Bandeau</em>, <em>Visière</em>, etc.) dans votre classeur Google Sheets. Dès que vous collez le nouveau script et recevez une commande ou lancez le test, les feuilles sont <strong>recréées automatiquement à neuf avec ces 12 colonnes propres</strong>.
-                </p>
-              </div>
-
-              {/* WhatsApp explanation */}
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 space-y-1">
-                <div className="font-bold flex items-center gap-1.5">
-                  <CheckCircle2 size={14} className="text-emerald-700" />
-                  <span>Formule cliquable WhatsApp directe</span>
-                </div>
-                <p className="text-[11px] text-neutral-600 leading-relaxed">
-                  Dans la colonne <strong>Confirmation WhatsApp</strong>, le script génère un lien cliquable{' '}
-                  <code className="bg-white px-1 py-0.5 rounded border border-emerald-200 text-emerald-800 font-mono text-[10px]">
-                    =HYPERLINK(...)
-                  </code>{' '}
-                  contenant un message WhatsApp pré-rempli avec le nom, le numéro de commande, le détail des articles commandés, la ville et l'adresse. Un simple clic dans votre feuille ouvre instantanément la conversation avec le client !
+                  Pour profiter de ce nouveau système à 14 colonnes et du <strong>Tableau de bord</strong>, collez le nouveau code dans votre éditeur Apps Script, enregistrez et déployez. Supprimez ensuite vos anciennes feuilles (ou lancez le bouton de test) pour laisser le script recréer automatiquement le <strong>Tableau de bord</strong> et les 5 feuilles propres avec leurs menus déroulants !
                 </p>
               </div>
             </div>
@@ -458,7 +495,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-colors shadow-xs"
+            className="px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-colors shadow-xs cursor-pointer"
           >
             Fermer
           </button>

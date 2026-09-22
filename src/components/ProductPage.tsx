@@ -146,7 +146,7 @@ const getProductHighlights = (product: Product): ProductVisualHighlight[] => {
     case 'pack-complet-oryven':
       return [
         {
-          image: IMAGES.studioDesktopBanner || product.image,
+          image: product.image || IMAGES.studioDesktopBanner,
           title: 'La Collection Complète : 1 Sac + 1 Visière + 2 Bandeaux',
           description:
             'Tote Bag spacieux 28L en toile bio, visière athlétique UPF 50+ et 2 bandeaux absorbants ultra-doux réunis dans un seul coffret.',

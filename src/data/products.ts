@@ -355,9 +355,9 @@ export const PRODUCTS: Product[] = [
     reviewCount: 142,
     badge: 'Offre Complète Exclusive -25%',
     image:
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_48_24_ttofyg.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1790114072/ChatGPT_Image_22_sept._2026_22_54_08_yafylq.webp',
     gallery: [
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789904981/ChatGPT_Image_20_sept._2026_12_48_24_ttofyg.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1790114072/ChatGPT_Image_22_sept._2026_22_54_08_yafylq.webp',
     ],
     colors: [],
     description:
