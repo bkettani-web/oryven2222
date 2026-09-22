@@ -8,7 +8,7 @@ export const WhatsAppButton: React.FC = () => {
     const text = encodeURIComponent(
       "Bonjour Oryven Maroc ! J'aimerais avoir des informations sur les accessoires ou passer une commande."
     );
-    window.open(`https://wa.me/212600000000?text=${text}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=212676809781&text=${text}`, '_blank');
   };
 
   return (

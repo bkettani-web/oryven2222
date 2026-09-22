@@ -377,7 +377,7 @@ export const SitemapPage: React.FC<SitemapPageProps> = ({
                 Notre équipe marocaine est joignable directement par WhatsApp pour toute question de taille, coloris ou suivi d’envoi.
               </p>
               <a
-                href="https://wa.me/212600000000"
+                href="https://api.whatsapp.com/send?phone=212676809781"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:underline pt-1"

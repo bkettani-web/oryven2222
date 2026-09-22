@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
 
               <a
-                href="https://wa.me/212600000000"
+                href="https://api.whatsapp.com/send?phone=212676809781"
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-neutral-800 hover:bg-[#25D366] flex items-center justify-center text-white transition-colors"
@@ -169,7 +169,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <a
-                  href="https://wa.me/212600000000"
+                  href="https://api.whatsapp.com/send?phone=212676809781"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-white transition-colors"

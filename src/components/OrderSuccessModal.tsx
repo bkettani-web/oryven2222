@@ -24,7 +24,7 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({ order, onC
         `🏠 Adresse : ${order.address}\n\n` +
         `Merci de m'informer dès l'expédition de mon colis !`
     );
-    window.open(`https://wa.me/212600000000?text=${text}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=212676809781&text=${text}`, '_blank');
   };
 
   return (

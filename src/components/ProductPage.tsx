@@ -583,7 +583,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         `🏠 Adresse : ${address || 'À préciser'}`
     );
 
-    window.open(`https://wa.me/212600000000?text=${message}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=212676809781&text=${message}`, '_blank');
   };
 
   return (

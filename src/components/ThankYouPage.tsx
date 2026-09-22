@@ -128,7 +128,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({
   const handleWhatsAppConfirm = () => {
     const rawMessage = generateWhatsAppMessage();
     const encoded = encodeURIComponent(rawMessage);
-    window.open(`https://api.whatsapp.com/send?phone=212600000000&text=${encoded}`, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=212676809781&text=${encoded}`, '_blank');
   };
 
   const handleCopyOrderId = () => {
