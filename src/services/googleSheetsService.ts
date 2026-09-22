@@ -123,8 +123,12 @@ export interface GoogleSheetOrderPayload {
   phone: string;
   city: string;
   address: string;
-  productDetails: string;
+  productName: string;
+  offerTitle: string;
+  quantity: number;
+  variants: string;
   totalAmount: number;
+  productDetails: string;
   whatsappMessage: string;
   whatsappUrl: string;
   whatsappFormula: string;
@@ -139,6 +143,18 @@ export function buildGoogleSheetPayload(order: CustomerOrder, isTest = false): G
   const firstItem = order.items?.[0];
   const prodIdentifier = firstItem?.product?.id || firstItem?.product?.slug || firstItem?.product?.name || '';
   const sheetName = getProductSheetName(prodIdentifier);
+
+  const productName = firstItem?.product?.name || 'Produit Oryven';
+  const offerTitle = firstItem?.offer?.title || (firstItem?.quantity && firstItem.quantity > 1 ? `Quantité : ${firstItem.quantity}` : 'Solo');
+  const quantity = firstItem?.offer?.quantity || firstItem?.quantity || 1;
+
+  let variants = '-';
+  if (firstItem?.customColors && firstItem.customColors.length > 0) {
+    variants = firstItem.customColors.join(', ');
+  } else if (firstItem?.selectedColor?.name) {
+    variants = firstItem.selectedColor.name;
+  }
+
   const productDetails = formatOrderProductDetails(order);
 
   // Date locale formatée JJ/MM/AAAA HH:mm
@@ -172,8 +188,12 @@ export function buildGoogleSheetPayload(order: CustomerOrder, isTest = false): G
     phone: order.phone,
     city: order.city,
     address: order.address,
-    productDetails,
+    productName,
+    offerTitle,
+    quantity,
+    variants,
     totalAmount: order.totalAmount,
+    productDetails,
     whatsappMessage: waMsg,
     whatsappUrl: waUrl,
     whatsappFormula: waFormula,
@@ -258,35 +278,40 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       sheetName: 'Bandeau',
       productName: 'Oryven Yoga Headband',
       offerTitle: 'Duo Collection (2 Bandeaux)',
-      colors: '1x Lavande Glacée, 1x Bleu Ciel',
+      quantity: 2,
+      variants: '1x Lavande Glacée, 1x Bleu Ciel',
       total: 289,
     },
     {
       sheetName: 'Visière',
       productName: 'Oryven Visor UPF 50+',
       offerTitle: 'Solo (1 Visière)',
-      colors: '1x Bleu Glacier',
+      quantity: 1,
+      variants: '1x Bleu Glacier',
       total: 199,
     },
     {
       sheetName: 'Tote Bag',
       productName: 'Oryven Tote Bag 28L',
       offerTitle: 'Pack Solo (1 Sac)',
-      colors: '1x Toile Écru Naturelle',
+      quantity: 1,
+      variants: '1x Toile Écru Naturelle',
       total: 349,
     },
     {
       sheetName: 'Chaussettes',
       productName: 'Oryven Non-Slip Grip Socks',
       offerTitle: 'Duo (2 Paires)',
-      colors: '1x Blanc Studio, 1x Noir Onyx',
+      quantity: 2,
+      variants: '1x Blanc Studio, 1x Noir Onyx',
       total: 179,
     },
     {
       sheetName: 'Pack 4 Produits',
       productName: 'Pack Complet Oryven (4 Produits)',
       offerTitle: 'Pack Solo Essentiels',
-      colors: 'Visière: Noir Intense, Sac: Écru, 1er Bandeau: Bleu Ciel, 2ème Bandeau: Lavande Glacée',
+      quantity: 4,
+      variants: 'Visière: Noir Intense, Sac: Écru, 1er Bandeau: Bleu Ciel, 2ème Bandeau: Lavande Glacée',
       total: 590,
     },
   ];
@@ -298,7 +323,7 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
     const city = 'Casablanca';
     const address = '12 Boulevard d’Anfa, Étage 3, Gauthier';
     const cleanPhone = '212661234567';
-    const productDetails = `${item.productName} [${item.offerTitle}] - Variantes : ${item.colors}`;
+    const productDetails = `${item.productName} [${item.offerTitle}] - Variantes : ${item.variants}`;
 
     const waMsg = generateWhatsAppConfirmationMessage({
       fullName,
@@ -320,8 +345,12 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       phone,
       city,
       address,
-      productDetails,
+      productName: item.productName,
+      offerTitle: item.offerTitle,
+      quantity: item.quantity,
+      variants: item.variants,
       totalAmount: item.total,
+      productDetails,
       whatsappMessage: waMsg,
       whatsappUrl: waUrl,
       whatsappFormula: waFormula,
@@ -362,7 +391,7 @@ export async function sendTestOrdersForAllProducts(
     return {
       success: true,
       count: testOrders.length,
-      message: '5 commandes de test envoyées avec succès ! Les 5 feuilles vont être créées.',
+      message: '5 commandes de test envoyées avec succès ! Les 5 feuilles vont être créées avec les colonnes détaillées.',
     };
   } catch (error) {
     return {
@@ -379,7 +408,7 @@ export async function sendTestOrdersForAllProducts(
  */
 export const APPS_SCRIPT_CODE_TEMPLATE = `/**
  * ==============================================================================
- * 🌸 ORYVEN MAROC - GOOGLE APPS SCRIPT WEBHOOK AUTOMATIQUE
+ * 🌸 ORYVEN MAROC - GOOGLE APPS SCRIPT WEBHOOK AUTOMATIQUE (VERSION DÉTAILLÉE)
  * ==============================================================================
  * Ce script reçoit les commandes en temps réel depuis le site Oryven et les classe
  * automatiquement dans la feuille dédiée au produit commandé :
@@ -391,17 +420,21 @@ export const APPS_SCRIPT_CODE_TEMPLATE = `/**
  *
  * ✨ CRÉATION AUTOMATIQUE :
  * Si la feuille du produit n'existe pas encore dans votre classeur Google Sheet,
- * elle est créée automatiquement avec ses colonnes formatées et stylées aux couleurs Oryven !
+ * elle est créée automatiquement avec ses 12 colonnes distinctes et son design bordeaux Oryven !
  *
- * 📋 COLONNES CRÉÉES DANS CHAQUE FEUILLE :
+ * 📋 LES 12 COLONNES CRÉÉES DANS CHAQUE FEUILLE :
  *   1. Date
  *   2. N° commande
  *   3. Nom complet
  *   4. Téléphone
  *   5. Ville
  *   6. Adresse
- *   7. détails du produit commandé
- *   8. Confirmation WhatsApp (Lien cliquable avec message pré-rempli)
+ *   7. Produit
+ *   8. Formule / Offre
+ *   9. Quantité
+ *   10. Variantes / Couleurs
+ *   11. Prix Total (DH)
+ *   12. Confirmation WhatsApp (Lien cliquable avec message pré-rempli)
  * ==============================================================================
  */
 
@@ -436,8 +469,12 @@ function doPost(e) {
         sheet = ss.insertSheet(sheetName);
         setupSheetHeaders(sheet);
       } else {
-        // Si la feuille est totalement vide, ajouter les en-têtes
+        // Si la feuille est totalement vide ou n'a que l'ancien en-tête à 8 colonnes
         if (sheet.getLastRow() === 0) {
+          setupSheetHeaders(sheet);
+        } else if (sheet.getLastRow() === 1 && sheet.getLastColumn() <= 8) {
+          // Mise à niveau automatique des en-têtes si la feuille n'a qu'une seule ligne
+          sheet.clear();
           setupSheetHeaders(sheet);
         }
       }
@@ -450,11 +487,16 @@ function doPost(e) {
       var waUrl = "https://wa.me/" + cleanPhone + "?text=" + encodeURIComponent(waMsg);
 
       // Formule Google Sheets HYPERLINK pour clic direct
-      // Utilisation du point-virgule et virgule compatibles
       var waFormula = '=HYPERLINK("' + waUrl + '"; "📱 Confirmer sur WhatsApp")';
 
-      // 4. Construction de la ligne selon l'ordre exact demandé :
-      // [Date, N° commande, Nom complet, Téléphone, Ville, Adresse, détails du produit commandé, Confirmation WhatsApp]
+      // 4. Extraction détaillée des colonnes produits
+      var prodName = order.productName || extractProductName(order);
+      var offer = order.offerTitle || extractOfferTitle(order);
+      var qty = order.quantity || extractQuantity(order);
+      var variants = order.variants || extractVariants(order);
+      var priceFormatted = (order.totalAmount != null ? order.totalAmount + " DH" : "");
+
+      // 5. Construction de la ligne avec les 12 colonnes détaillées :
       var rowData = [
         order.date || Utilities.formatDate(new Date(), "GMT+1", "dd/MM/yyyy HH:mm"),
         order.orderId || "",
@@ -462,7 +504,11 @@ function doPost(e) {
         order.phone ? "'" + order.phone : "",
         order.city || "",
         order.address || "",
-        order.productDetails || "",
+        prodName,
+        offer,
+        qty,
+        variants,
+        priceFormatted,
         waFormula
       ];
 
@@ -470,14 +516,19 @@ function doPost(e) {
       var lastRow = sheet.getLastRow();
 
       // Styliser la ligne insérée
-      var dataRange = sheet.getRange(lastRow, 1, 1, 8);
+      var dataRange = sheet.getRange(lastRow, 1, 1, 12);
       dataRange.setVerticalAlignment("middle");
       dataRange.setFontFamily("Arial");
       dataRange.setFontSize(10);
       dataRange.setWrap(true);
 
+      // Alignements spécifiques pour une lecture fluide
+      sheet.getRange(lastRow, 9).setHorizontalAlignment("center"); // Quantité
+      sheet.getRange(lastRow, 11).setHorizontalAlignment("center"); // Prix
+      sheet.getRange(lastRow, 11).setFontWeight("bold");
+
       // Mettre en évidence la cellule WhatsApp en vert doux
-      var waCell = sheet.getRange(lastRow, 8);
+      var waCell = sheet.getRange(lastRow, 12);
       waCell.setBackground("#E8F5E9");
       waCell.setFontColor("#1B5E20");
       waCell.setFontWeight("bold");
@@ -507,7 +558,7 @@ function doPost(e) {
 }
 
 /**
- * Configure la ligne d'en-tête avec un style élégant et fixe les largeurs
+ * Configure la ligne d'en-tête avec les 12 colonnes distinctes et fixe les largeurs
  */
 function setupSheetHeaders(sheet) {
   var headers = [
@@ -517,7 +568,11 @@ function setupSheetHeaders(sheet) {
     "Téléphone",
     "Ville",
     "Adresse",
-    "détails du produit commandé",
+    "Produit",
+    "Formule / Offre",
+    "Quantité",
+    "Variantes / Couleurs",
+    "Prix Total (DH)",
     "Confirmation WhatsApp"
   ];
 
@@ -530,20 +585,24 @@ function setupSheetHeaders(sheet) {
   headerRange.setFontSize(11);
   headerRange.setHorizontalAlignment("center");
   headerRange.setVerticalAlignment("middle");
-  sheet.setRowHeight(1, 38);
+  sheet.setRowHeight(1, 40);
 
   // Figer la 1ère ligne pour garder les titres visibles lors du défilement
   sheet.setFrozenRows(1);
 
-  // Largeurs optimisées des colonnes
+  // Largeurs optimisées des 12 colonnes
   sheet.setColumnWidth(1, 140); // Date
-  sheet.setColumnWidth(2, 160); // N° commande
+  sheet.setColumnWidth(2, 150); // N° commande
   sheet.setColumnWidth(3, 170); // Nom complet
   sheet.setColumnWidth(4, 130); // Téléphone
   sheet.setColumnWidth(5, 120); // Ville
   sheet.setColumnWidth(6, 220); // Adresse
-  sheet.setColumnWidth(7, 340); // Détails du produit
-  sheet.setColumnWidth(8, 220); // Confirmation WhatsApp
+  sheet.setColumnWidth(7, 180); // Produit
+  sheet.setColumnWidth(8, 170); // Formule / Offre
+  sheet.setColumnWidth(9, 90);  // Quantité
+  sheet.setColumnWidth(10, 240); // Variantes / Couleurs
+  sheet.setColumnWidth(11, 120); // Prix Total (DH)
+  sheet.setColumnWidth(12, 220); // Confirmation WhatsApp
 }
 
 /**
@@ -560,6 +619,58 @@ function determineSheetName(order) {
   if (str.indexOf("tote") !== -1 || str.indexOf("sac") !== -1) return "Tote Bag";
   if (str.indexOf("sock") !== -1 || str.indexOf("chaussette") !== -1) return "Chaussettes";
   return "Pack 4 Produits";
+}
+
+/**
+ * Fonctions d'extraction pour compatibilité ascendante si données composites
+ */
+function extractProductName(order) {
+  if (order.productName) return order.productName;
+  if (!order.productDetails) return "Produit Oryven";
+  var bracketIdx = order.productDetails.indexOf("[");
+  if (bracketIdx !== -1) {
+    return order.productDetails.substring(0, bracketIdx).trim();
+  }
+  var dashIdx = order.productDetails.indexOf("-");
+  if (dashIdx !== -1) {
+    return order.productDetails.substring(0, dashIdx).trim();
+  }
+  return order.productDetails;
+}
+
+function extractOfferTitle(order) {
+  if (order.offerTitle) return order.offerTitle;
+  if (!order.productDetails) return "Solo";
+  var m = order.productDetails.match(/\\[(.*?)\\]/);
+  if (m && m[1]) {
+    return m[1].replace(/Offre:\\s*/i, "").trim();
+  }
+  return "Solo";
+}
+
+function extractQuantity(order) {
+  if (order.quantity) return order.quantity;
+  if (!order.productDetails) return 1;
+  var m = order.productDetails.match(/\\(Qté:\\s*(\\d+)\\)/i);
+  if (m && m[1]) return parseInt(m[1], 10);
+  if (order.productDetails.toLowerCase().indexOf("duo") !== -1) return 2;
+  if (order.productDetails.toLowerCase().indexOf("trio") !== -1) return 3;
+  if (order.productDetails.toLowerCase().indexOf("4 produits") !== -1 || order.productDetails.toLowerCase().indexOf("pack complet") !== -1) return 4;
+  return 1;
+}
+
+function extractVariants(order) {
+  if (order.variants) return order.variants;
+  if (!order.productDetails) return "-";
+  var varIdx = order.productDetails.indexOf("Variantes :");
+  if (varIdx !== -1) {
+    return order.productDetails.substring(varIdx + 11).trim();
+  }
+  var colIdx = order.productDetails.indexOf("Couleur :");
+  if (colIdx !== -1) {
+    return order.productDetails.substring(colIdx + 9).trim();
+  }
+  return "-";
 }
 
 /**
@@ -580,9 +691,16 @@ function formatMoroccanPhone(phone) {
  * Génère le message WhatsApp pré-rempli
  */
 function generateWhatsAppMsg(order) {
+  var details = order.productDetails;
+  if (!details) {
+    var p = order.productName || "Produit Oryven";
+    var o = order.offerTitle ? " [" + order.offerTitle + "]" : "";
+    var v = order.variants ? " - " + order.variants : "";
+    details = p + o + v;
+  }
   return "Bonjour " + (order.fullName || "cher(e) client(e)") + " ! 🌿\\n\\n" +
     "C'est l'équipe Oryven Maroc concernant votre commande #" + (order.orderId || "") + ".\\n\\n" +
-    "📦 Commande : " + (order.productDetails || "") + "\\n" +
+    "📦 Commande : " + details + "\\n" +
     "💰 Montant total : " + (order.totalAmount ? order.totalAmount + " MAD" : "Paiement à la livraison") + "\\n" +
     "📍 Adresse de livraison : " + (order.address || "") + ", " + (order.city || "") + "\\n\\n" +
     "Pouvez-vous s'il vous plaît nous confirmer cette commande afin de programmer l'expédition dès aujourd'hui ?\\n" +
@@ -603,8 +721,11 @@ function testerCreationFeuilles() {
           phone: "0661112233",
           city: "Casablanca",
           address: "Gauthier",
-          productDetails: "Oryven Yoga Headband - Couleur: Lavande Glacée",
-          totalAmount: 179
+          productName: "Oryven Yoga Headband",
+          offerTitle: "Duo Collection (2 Bandeaux)",
+          quantity: 2,
+          variants: "1x Lavande Glacée, 1x Bleu Ciel",
+          totalAmount: 289
         },
         {
           sheetName: "Visière",
@@ -613,7 +734,10 @@ function testerCreationFeuilles() {
           phone: "0662223344",
           city: "Rabat",
           address: "Agdal",
-          productDetails: "Oryven Visor UPF 50+ - Couleur: Bleu Glacier",
+          productName: "Oryven Visor UPF 50+",
+          offerTitle: "Solo (1 Visière)",
+          quantity: 1,
+          variants: "Bleu Glacier",
           totalAmount: 199
         },
         {
@@ -623,7 +747,10 @@ function testerCreationFeuilles() {
           phone: "0663334455",
           city: "Marrakech",
           address: "Guéliz",
-          productDetails: "Oryven Tote Bag 28L",
+          productName: "Oryven Tote Bag 28L",
+          offerTitle: "Pack Solo (1 Sac)",
+          quantity: 1,
+          variants: "Toile Écru Naturelle",
           totalAmount: 349
         },
         {
@@ -633,7 +760,10 @@ function testerCreationFeuilles() {
           phone: "0664445566",
           city: "Tanger",
           address: "Malabata",
-          productDetails: "Oryven Non-Slip Grip Socks - Duo",
+          productName: "Oryven Non-Slip Grip Socks",
+          offerTitle: "Duo (2 Paires)",
+          quantity: 2,
+          variants: "1x Blanc Studio, 1x Noir Onyx",
           totalAmount: 179
         },
         {
@@ -643,7 +773,10 @@ function testerCreationFeuilles() {
           phone: "0665556677",
           city: "Casablanca",
           address: "Anfa",
-          productDetails: "Pack Complet Oryven (Sac + Visière + 2 Bandeaux)",
+          productName: "Pack Complet Oryven (4 Produits)",
+          offerTitle: "Pack Solo Essentiels",
+          quantity: 4,
+          variants: "Visière: Noir Intense, Sac: Écru, 1er Bandeau: Bleu Ciel, 2ème Bandeau: Lavande Glacée",
           totalAmount: 590
         }
       ])

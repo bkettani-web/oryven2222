@@ -388,21 +388,26 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
 
               {/* Column details table */}
               <div className="border border-neutral-200 rounded-xl overflow-hidden">
-                <div className="bg-[#7A283B] text-white px-3 py-2 text-xs font-bold uppercase tracking-wider">
-                  Les 8 Colonnes de chaque feuille :
+                <div className="bg-[#7A283B] text-white px-3 py-2 text-xs font-bold uppercase tracking-wider flex items-center justify-between">
+                  <span>Les 12 Colonnes détaillées de chaque feuille :</span>
+                  <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded-full font-normal">Colonnes séparées</span>
                 </div>
                 <div className="divide-y divide-neutral-100 text-xs">
                   {[
-                    { col: 'A', name: 'Date', example: '20/09/2026 15:30' },
+                    { col: 'A', name: 'Date', example: '22/09/2026 15:30' },
                     { col: 'B', name: 'N° commande', example: 'ORYVEN-MA-482910' },
                     { col: 'C', name: 'Nom complet', example: 'Kawtar Benjelloun' },
                     { col: 'D', name: 'Téléphone', example: '0661234567' },
                     { col: 'E', name: 'Ville', example: 'Casablanca' },
                     { col: 'F', name: 'Adresse', example: '12 Boulevard d’Anfa, Gauthier' },
-                    { col: 'G', name: 'détails du produit commandé', example: 'Oryven Yoga Headband [Duo Collection] - Couleurs : Lavande Glacée, Bleu Ciel - 289 MAD' },
-                    { col: 'H', name: 'Confirmation WhatsApp', example: '=HYPERLINK("https://wa.me/212661234567?text=Bonjour...", "📱 Confirmer sur WhatsApp")' },
+                    { col: 'G', name: 'Produit', example: 'Oryven Yoga Headband' },
+                    { col: 'H', name: 'Formule / Offre', example: 'Duo Collection (2 Bandeaux)' },
+                    { col: 'I', name: 'Quantité', example: '2' },
+                    { col: 'J', name: 'Variantes / Couleurs', example: '1x Lavande Glacée, 1x Bleu Ciel' },
+                    { col: 'K', name: 'Prix Total (DH)', example: '289 DH' },
+                    { col: 'L', name: 'Confirmation WhatsApp', example: '=HYPERLINK("https://wa.me/212661234567?text=Bonjour...", "📱 Confirmer sur WhatsApp")' },
                   ].map((c) => (
-                    <div key={c.col} className="px-3.5 py-2 flex items-center justify-between gap-2 hover:bg-neutral-50">
+                    <div key={c.col} className="px-3.5 py-1.5 flex items-center justify-between gap-2 hover:bg-neutral-50">
                       <div className="flex items-center space-x-2">
                         <span className="w-5 h-5 rounded-full bg-neutral-200 font-bold text-[10px] flex items-center justify-center text-neutral-700">
                           {c.col}
@@ -415,6 +420,17 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Reset Advice Box */}
+              <div className="p-3.5 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 space-y-1.5">
+                <div className="font-bold flex items-center gap-1.5 text-amber-950">
+                  <AlertCircle size={15} className="text-amber-700 shrink-0" />
+                  <span>Dois-je supprimer les feuilles existantes dans Google Sheets ?</span>
+                </div>
+                <p className="text-[11px] text-amber-900 leading-relaxed">
+                  <strong>Oui, c'est vivement conseillé !</strong> Supprimez simplement vos feuilles actuelles (comme <em>Bandeau</em>, <em>Visière</em>, etc.) dans votre classeur Google Sheets. Dès que vous collez le nouveau script et recevez une commande ou lancez le test, les feuilles sont <strong>recréées automatiquement à neuf avec ces 12 colonnes propres</strong>.
+                </p>
               </div>
 
               {/* WhatsApp explanation */}
