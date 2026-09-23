@@ -32,9 +32,9 @@ export const IMAGES = {
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789808701/ChatGPT_Image_19_sept._2026_10_04_35_br7ig8.webp',
   tote: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911773/ChatGPT_Image_20_sept._2026_14_42_24_mlkskn.webp',
   headband:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
   visor:
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
   socks:
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789912252/ChatGPT_Image_20_sept._2026_14_50_13_wzbqb0.webp',
   lifestyle: lifestyleImg,
@@ -124,20 +124,51 @@ export const PRODUCTS: Product[] = [
     reviewCount: 96,
     badge: 'Bestseller',
     image:
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
     gallery: [
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665000/vdbabkhg4bzbdpa5rtu8_rjhwtk.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/sj6jdiegzs2k4tuum8ar_rzi7yi.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789665002/djtckeltvqfk2wjohbpg_jadrig.webp',
     ],
     colors: [
-      { name: 'Lavande Glacée', code: '#C8C2E6' },
-      { name: 'Bleu Ciel', code: '#97C4E8' },
-      { name: 'Noir Intense', code: '#171717' },
-      { name: 'Corail Énergie', code: '#F26D5B' },
-      { name: 'Vert Forêt', code: '#2E543D' },
-      { name: 'Beige Sable', code: '#DACFB9' },
+      {
+        name: 'Noir Intense',
+        code: '#171717',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
+      },
+      {
+        name: 'Lavande Glacée',
+        code: '#C8C2E6',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
+      },
+      {
+        name: 'Bleu Ciel',
+        code: '#97C4E8',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
+      },
+      {
+        name: 'Corail Énergie',
+        code: '#F26D5B',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
+      },
+      {
+        name: 'Vert Forêt',
+        code: '#2E543D',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
+      },
+      {
+        name: 'Beige Sable',
+        code: '#DACFB9',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
+      },
     ],
     description:
       'Le bandeau Oryven Yoga Headband maintient parfaitement vos cheveux et absorbe l’humidité pendant les séances de yoga vinyasa, pilates, course ou pour vos journées actives. Sa maille côtelée ultra-douce s’adapte à toutes les morphologies de tête sans jamais serrer.',
@@ -202,19 +233,45 @@ export const PRODUCTS: Product[] = [
     reviewCount: 112,
     badge: 'Coup de Cœur',
     image:
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
     gallery: [
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657377/d1y5f1m6fmkr7n0vpequ_hrboez.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657376/rctgcnwr21zh1glry8ql_zghrzb.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657375/up2ffm3dwarna3yejibg_wpugyi.webp',
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789657378/j8fjvhrm390ajxr44cvn_h1md8u.webp',
     ],
     colors: [
-      { name: 'Bleu Glacier', code: '#8FA9BA' },
-      { name: 'Rose Framboise', code: '#B8395B' },
-      { name: 'Mauve Nude', code: '#A88B96' },
-      { name: 'Noir Intense', code: '#171717' },
-      { name: 'Blanc Perle', code: '#F5F3ED' },
+      {
+        name: 'Noir Intense',
+        code: '#171717',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
+      },
+      {
+        name: 'Bleu Glacier',
+        code: '#8FA9BA',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
+      },
+      {
+        name: 'Rose Framboise',
+        code: '#B8395B',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_2_s702mz.webp',
+      },
+      {
+        name: 'Mauve Nude',
+        code: '#A88B96',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911354/ChatGPT_Image_20_sept._2026_14_32_19_3_afxtpd.webp',
+      },
+      {
+        name: 'Blanc Perle',
+        code: '#F5F3ED',
+        image:
+          'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_4_qh8xk2.webp',
+      },
     ],
     description:
       'Alliez protection solaire anti-UV et style architectural affûté avec la visière Oryven Visor. Dotée d’un bandeau intérieur absorbant éponge et d’une lanière ajustable velcro douce, elle accompagne vos séances de padel, running, tennis ou vos promenades ensoleillées.',

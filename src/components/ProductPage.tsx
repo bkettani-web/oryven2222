@@ -273,8 +273,13 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
   {
     id: 'headband1',
     name: '1er Bandeau Yoga Headband',
-    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
+    defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
     variants: [
+      {
+        name: 'Noir Intense',
+        code: '#171717',
+        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
+      },
       {
         name: 'Lavande Glacée',
         code: '#C8C2E6',
@@ -284,11 +289,6 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
         name: 'Bleu Ciel',
         code: '#97C4E8',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
-      },
-      {
-        name: 'Noir Intense',
-        code: '#171717',
-        image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
       },
       {
         name: 'Corail Énergie',
@@ -306,7 +306,7 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
       },
     ],
-    defaultVariant: 'Lavande Glacée',
+    defaultVariant: 'Noir Intense',
   },
   {
     id: 'headband2',

@@ -15,9 +15,9 @@ const PADEL_COURT_THUMBNAILS: Record<string, string> = {
   'oryven-tote-bag':
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911773/ChatGPT_Image_20_sept._2026_14_42_24_mlkskn.webp',
   'oryven-yoga-headband':
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
   'oryven-visor':
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
   'oryven-non-slip-grip-socks':
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789912252/ChatGPT_Image_20_sept._2026_14_50_13_wzbqb0.webp',
 };
