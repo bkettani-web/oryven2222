@@ -188,7 +188,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     placeholder="https://script.google.com/macros/s/.../exec"
-                    className="flex-1 px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl text-xs font-mono text-neutral-800 focus:outline-none focus:ring-2 focus:ring-[#7A283B] focus:border-transparent"
+                    className="flex-1 px-3.5 py-2.5 bg-neutral-50 border border-neutral-300 rounded-xl text-[16px] sm:text-xs font-mono text-neutral-800 focus:outline-none focus:ring-2 focus:ring-[#7A283B] focus:border-transparent"
                   />
                   <button
                     type="submit"

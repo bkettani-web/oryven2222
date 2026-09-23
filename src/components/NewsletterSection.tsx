@@ -93,7 +93,7 @@ export const NewsletterSection: React.FC = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Votre adresse e-mail"
                       required
-                      className="w-full h-11 sm:h-15 pl-10 sm:pl-13 pr-4 bg-white text-neutral-900 placeholder-neutral-500 text-xs sm:text-base font-medium rounded-xl sm:rounded-2xl border-0 shadow-inner focus:outline-none focus:ring-2 focus:ring-sky-300"
+                      className="w-full h-11 sm:h-15 pl-10 sm:pl-13 pr-4 bg-white text-neutral-900 placeholder-neutral-500 text-[16px] sm:text-base font-medium rounded-xl sm:rounded-2xl border-0 shadow-inner focus:outline-none focus:ring-2 focus:ring-sky-300"
                     />
                   </div>
 

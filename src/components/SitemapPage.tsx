@@ -117,7 +117,7 @@ export const SitemapPage: React.FC<SitemapPageProps> = ({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Filtrer les produits ou pages (ex: Tote Bag, Visor, Headband, Socks)..."
-            className="w-full pl-11 pr-4 py-3 bg-white border border-neutral-200 rounded-2xl text-xs sm:text-sm text-neutral-800 focus:outline-none focus:ring-2 focus:ring-[#7A283B] focus:border-transparent shadow-xs"
+            className="w-full pl-11 pr-4 py-3 bg-white border border-neutral-200 rounded-2xl text-[16px] sm:text-sm text-neutral-800 focus:outline-none focus:ring-2 focus:ring-[#7A283B] focus:border-transparent shadow-xs"
           />
         </div>
 

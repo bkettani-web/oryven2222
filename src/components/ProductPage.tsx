@@ -1047,7 +1047,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                         if (formErrors.fullName) setFormErrors((p) => ({ ...p, fullName: '' }));
                       }}
                       placeholder="Nom complet *"
-                      className={`w-full px-3 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                      className={`w-full px-3 py-2.5 text-[16px] sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                         formErrors.fullName ? 'border-red-400 bg-red-50/20' : 'border-neutral-300'
                       }`}
                     />
@@ -1059,7 +1059,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                   {/* Phone */}
                   <div>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-neutral-500 text-xs font-bold">
+                      <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-neutral-500 text-sm font-bold">
                         🇲🇦
                       </div>
                       <input
@@ -1070,7 +1070,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                           if (formErrors.phone) setFormErrors((p) => ({ ...p, phone: '' }));
                         }}
                         placeholder="Téléphone (ex: 06 XX XX XX XX) *"
-                        className={`w-full pl-8 pr-3 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                        className={`w-full pl-8 pr-3 py-2.5 text-[16px] sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                           formErrors.phone ? 'border-red-400 bg-red-50/20' : 'border-neutral-300'
                         }`}
                       />
@@ -1093,7 +1093,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                         if (formErrors.city) setFormErrors((p) => ({ ...p, city: '' }));
                       }}
                       placeholder="Ville de livraison (ex: Casablanca, Tanger...) *"
-                      className={`w-full px-3 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                      className={`w-full px-3 py-2.5 text-[16px] sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                         formErrors.city ? 'border-red-400 bg-red-50/20' : 'border-neutral-300'
                       }`}
                     />
@@ -1117,7 +1117,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                         if (formErrors.address) setFormErrors((p) => ({ ...p, address: '' }));
                       }}
                       placeholder="Adresse de livraison *"
-                      className={`w-full px-3 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                      className={`w-full px-3 py-2.5 text-[16px] sm:text-sm bg-[#FAF8F5] border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
                         formErrors.address ? 'border-red-400 bg-red-50/20' : 'border-neutral-300'
                       }`}
                     />

@@ -38,7 +38,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher un accessoire (ex: Tote Bag, Visor, Headband, Socks)..."
-            className="flex-1 text-sm sm:text-base text-neutral-800 placeholder-neutral-400 focus:outline-none"
+            className="flex-1 text-[16px] sm:text-base text-neutral-800 placeholder-neutral-400 focus:outline-none"
           />
           {query && (
             <button onClick={() => setQuery('')} className="p-1 text-neutral-400 hover:text-black">
