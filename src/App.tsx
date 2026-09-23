@@ -526,6 +526,7 @@ export default function App() {
         onNavigateSection={handleNavigateSection}
         onNavigateSitemap={handleOpenSitemap}
         onNavigateProducts={handleOpenProductsPage}
+        onSelectProduct={handleSelectProduct}
         onOpenGoogleSheets={() => setIsGoogleSheetsOpen(true)}
       />
 
