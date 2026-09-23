@@ -225,7 +225,7 @@ export const Footer: React.FC<FooterProps> = ({
 
         {/* Bottom Legal bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-neutral-500 gap-4">
-          <p>© 2024 Oryven Maroc. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} Oryven Maroc (oryven.ma). Tous droits réservés.</p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="hover:text-neutral-400 transition-colors cursor-pointer">
               Conditions générales

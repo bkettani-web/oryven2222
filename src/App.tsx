@@ -239,20 +239,52 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Dynamic SEO, title and Schema.org metadata
+  // Dynamic SEO, title, canonical and Schema.org metadata for oryven.ma
   useEffect(() => {
     const existingScript = document.getElementById('oryven-schema-ld') || document.getElementById('alo-schema-ld');
     if (existingScript) existingScript.remove();
 
-    if (currentView === 'product' && selectedProduct) {
-      document.title = `${selectedProduct.name} | Oryven Maroc - Paiement à la Livraison`;
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute(
-          'content',
-          `${selectedProduct.name} : ${selectedProduct.subtitle} Commandez avec livraison gratuite au Maroc et paiement à la livraison.`
-        );
+    const siteBase = 'https://oryven.ma';
+
+    const setMeta = (name: string, content: string, isProperty = false) => {
+      const selector = isProperty ? `meta[property="${name}"]` : `meta[name="${name}"]`;
+      let el = document.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        if (isProperty) el.setAttribute('property', name);
+        else el.setAttribute('name', name);
+        document.head.appendChild(el);
       }
+      el.setAttribute('content', content);
+    };
+
+    const setCanonical = (url: string) => {
+      let link = document.querySelector('link[rel="canonical"]');
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'canonical');
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', url);
+    };
+
+    if (currentView === 'product' && selectedProduct) {
+      const pageTitle = `${selectedProduct.name} Maroc | Oryven - Paiement à la Livraison`;
+      const pageDesc = `${selectedProduct.name} Oryven : ${selectedProduct.subtitle}. Commandez en ligne avec livraison partout au Maroc et paiement à la livraison (Cash on Delivery).`;
+      const pageUrl = `${siteBase}/produits/${selectedProduct.slug}`;
+
+      document.title = pageTitle;
+      setMeta('description', pageDesc);
+      setCanonical(pageUrl);
+
+      // Open Graph & Twitter
+      setMeta('og:title', pageTitle, true);
+      setMeta('og:description', pageDesc, true);
+      setMeta('og:url', pageUrl, true);
+      setMeta('og:image', selectedProduct.image, true);
+      setMeta('twitter:title', pageTitle);
+      setMeta('twitter:description', pageDesc);
+      setMeta('twitter:image', selectedProduct.image);
 
       // Add Schema.org JSON-LD
       const schemaScript = document.createElement('script');
@@ -262,38 +294,81 @@ export default function App() {
         '@context': 'https://schema.org/',
         '@type': 'Product',
         name: selectedProduct.name,
-        image: selectedProduct.image,
+        image: [selectedProduct.image, ...(selectedProduct.gallery || [])],
         description: selectedProduct.description,
+        sku: selectedProduct.id,
         brand: {
           '@type': 'Brand',
           name: 'Oryven',
         },
         offers: {
           '@type': 'Offer',
-          url: `${window.location.origin}/produits/${selectedProduct.slug}`,
+          url: pageUrl,
           priceCurrency: 'MAD',
           price: selectedProduct.price,
           availability: selectedProduct.inStock
             ? 'https://schema.org/InStock'
             : 'https://schema.org/OutOfStock',
           itemCondition: 'https://schema.org/NewCondition',
+          seller: {
+            '@type': 'Organization',
+            name: 'Oryven Maroc',
+            url: siteBase,
+          },
+          shippingDetails: {
+            '@type': 'OfferShippingDetails',
+            shippingRate: {
+              '@type': 'MonetaryAmount',
+              value: '0',
+              currency: 'MAD',
+            },
+            shippingDestination: {
+              '@type': 'DefinedRegion',
+              addressCountry: 'MA',
+            },
+            deliveryTime: {
+              '@type': 'ShippingDeliveryTime',
+              transitTime: {
+                '@type': 'QuantitativeValue',
+                minValue: 1,
+                maxValue: 3,
+                unitCode: 'DAY',
+              },
+            },
+          },
+          hasMerchantReturnPolicy: {
+            '@type': 'MerchantReturnPolicy',
+            applicableCountry: 'MA',
+            returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+            merchantReturnDays: 14,
+            returnMethod: 'https://schema.org/ReturnByMail',
+          },
         },
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: selectedProduct.rating,
           reviewCount: selectedProduct.reviewCount,
+          bestRating: '5',
+          worstRating: '1',
         },
       });
       document.head.appendChild(schemaScript);
     } else if (currentView === 'products') {
-      document.title = 'Tous les Produits (Les 4 Essentiels) | Oryven Maroc';
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute(
-          'content',
-          'Explorez les 4 Essentiels Oryven au Maroc : Tote Bag, Signature Yoga Headband, Sun & Court Visor et Chaussettes Pilates antidérapantes. Livraison gratuite au Maroc et paiement à la livraison.'
-        );
-      }
+      const pageTitle = 'Tous les Produits (Les 4 Essentiels) | Oryven Maroc (oryven.ma)';
+      const pageDesc = 'Explorez les 4 Essentiels Oryven au Maroc : Tote Bag 28L, Signature Yoga Headband, Sun & Court Visor et Chaussettes Pilates antidérapantes. Livraison rapide et paiement à la livraison.';
+      const pageUrl = `${siteBase}/produits`;
+
+      document.title = pageTitle;
+      setMeta('description', pageDesc);
+      setCanonical(pageUrl);
+
+      setMeta('og:title', pageTitle, true);
+      setMeta('og:description', pageDesc, true);
+      setMeta('og:url', pageUrl, true);
+      setMeta('og:image', 'https://res.cloudinary.com/diptsoc4h/image/upload/v1790114072/ChatGPT_Image_22_sept._2026_22_54_08_yafylq.webp', true);
+      setMeta('twitter:title', pageTitle);
+      setMeta('twitter:description', pageDesc);
+      setMeta('twitter:image', 'https://res.cloudinary.com/diptsoc4h/image/upload/v1790114072/ChatGPT_Image_22_sept._2026_22_54_08_yafylq.webp');
 
       // Add ItemList Schema.org JSON-LD
       const schemaScript = document.createElement('script');
@@ -302,43 +377,47 @@ export default function App() {
       schemaScript.textContent = JSON.stringify({
         '@context': 'https://schema.org/',
         '@type': 'ItemList',
-        name: 'Les 4 Essentiels Oryven',
+        name: 'Les 4 Essentiels Oryven Maroc',
+        url: pageUrl,
         itemListElement: PRODUCTS.map((prod, index) => ({
           '@type': 'ListItem',
           position: index + 1,
           name: prod.name,
-          url: `${window.location.origin}/produits/${prod.slug}`,
+          url: `${siteBase}/produits/${prod.slug}`,
           image: prod.image,
         })),
       });
       document.head.appendChild(schemaScript);
     } else if (currentView === 'sitemap') {
-      document.title = 'Plan du site (Sitemap E-commerce) | Oryven Maroc';
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute(
-          'content',
-          'Plan du site officiel Oryven Maroc : explorez l’ensemble de nos fiches produits dédiées, collections yoga & pilates, informations de livraison et service client.'
-        );
-      }
+      const pageTitle = 'Plan du site (Sitemap E-commerce) | Oryven Maroc';
+      const pageDesc = 'Plan du site officiel Oryven Maroc (oryven.ma) : explorez l’ensemble de nos fiches produits dédiées, collections yoga & pilates, informations de livraison et service client.';
+      const pageUrl = `${siteBase}/plan-du-site`;
+
+      document.title = pageTitle;
+      setMeta('description', pageDesc);
+      setCanonical(pageUrl);
+      setMeta('og:title', pageTitle, true);
+      setMeta('og:description', pageDesc, true);
+      setMeta('og:url', pageUrl, true);
     } else if (currentView === 'thankyou') {
-      document.title = 'Merci pour votre commande | Oryven Maroc';
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute(
-          'content',
-          'Confirmation de votre commande Oryven Maroc avec récapitulatif des articles, adresse de livraison et bouton de confirmation direct WhatsApp.'
-        );
-      }
+      const pageTitle = 'Merci pour votre commande | Oryven Maroc';
+      const pageDesc = 'Confirmation de votre commande Oryven Maroc avec récapitulatif des articles, adresse de livraison et bouton de confirmation direct WhatsApp.';
+      document.title = pageTitle;
+      setMeta('description', pageDesc);
+      setCanonical(`${siteBase}/merci`);
     } else {
-      document.title = 'Oryven Maroc | Boutique Officielle - Les 4 Essentiels';
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute(
-          'content',
-          'Boutique en ligne officielle Oryven au Maroc - Les 4 Essentiels : Tote Bag, Yoga Headband, Visor et Non-Slip Grip Socks avec paiement à la livraison et offres multi-quantités.'
-        );
-      }
+      const pageTitle = 'Oryven Maroc | Boutique Officielle oryven.ma - Les 4 Essentiels';
+      const pageDesc = 'Boutique en ligne officielle Oryven au Maroc (oryven.ma) - Les 4 Essentiels : Tote Bag, Yoga Headband, Visor et Non-Slip Grip Socks avec paiement à la livraison et offres multi-quantités.';
+      document.title = pageTitle;
+      setMeta('description', pageDesc);
+      setCanonical(siteBase + '/');
+      setMeta('og:title', pageTitle, true);
+      setMeta('og:description', pageDesc, true);
+      setMeta('og:url', siteBase + '/', true);
+      setMeta('og:image', 'https://res.cloudinary.com/diptsoc4h/image/upload/v1790114072/ChatGPT_Image_22_sept._2026_22_54_08_yafylq.webp', true);
+      setMeta('twitter:title', pageTitle);
+      setMeta('twitter:description', pageDesc);
+      setMeta('twitter:image', 'https://res.cloudinary.com/diptsoc4h/image/upload/v1790114072/ChatGPT_Image_22_sept._2026_22_54_08_yafylq.webp');
     }
   }, [currentView, selectedProduct]);
 

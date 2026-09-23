@@ -1,4 +1,7 @@
+# robots.txt for https://oryven.ma
 User-agent: *
 Allow: /
 
-Sitemap: https://oryven-maroc.com/sitemap.xml
+# Directives pour moteurs de recherche
+Host: https://oryven.ma
+Sitemap: https://oryven.ma/sitemap.xml

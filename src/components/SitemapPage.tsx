@@ -42,7 +42,7 @@ export const SitemapPage: React.FC<SitemapPageProps> = ({
   );
 
   const handleCopyLink = (slug: string) => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://oryven-maroc.com';
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://oryven.ma';
     const fullUrl = `${origin}/produits/${slug}`;
     if (navigator?.clipboard?.writeText) {
       navigator.clipboard.writeText(fullUrl);
