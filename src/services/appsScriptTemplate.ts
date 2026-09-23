@@ -537,12 +537,13 @@ function buildDashboardSheet(sheet) {
     { label: "J - 6", offset: 6 }
   ];
 
+  var tz = sheet.getParent().getSpreadsheetTimeZone() || "GMT+1";
   for (var d = 0; d < daysBack.length; d++) {
     var dayRow = qHeadRow + 1 + d;
     var dayItem = daysBack[d];
     var targetDate = new Date();
     targetDate.setDate(targetDate.getDate() - dayItem.offset);
-    var dateLabelStr = Utilities.formatDate(targetDate, "GMT+1", "dd/MM/yyyy");
+    var dateLabelStr = Utilities.formatDate(targetDate, tz, "dd/MM/yyyy");
 
     sheet.getRange("A" + dayRow).setValue(dayItem.label + " (" + dateLabelStr + ")").setFontWeight(dayItem.offset === 0 ? "bold" : "normal");
     sheet.getRange("B" + dayRow).setValue(0).setHorizontalAlignment("center").setFontWeight("bold");
@@ -591,6 +592,7 @@ function updateDashboardLive(ss) {
   var dash = ss.getSheetByName("Tableau de bord");
   if (!dash) return;
 
+  var tz = ss.getSpreadsheetTimeZone() || "GMT+1";
   var totalOrders = 0;
   var orderStatusCounts = { "Nouveau": 0, "Confirmé": 0, "Injoignable": 0, "Annulé": 0 };
   var deliveryStatusCounts = { "En attente": 0, "En préparation": 0, "Expédié": 0, "Livré": 0, "Retour": 0 };
@@ -601,16 +603,27 @@ function updateDashboardLive(ss) {
   var totalConfirmedRevenue = 0;   // CA Confirmé total
   var weeklyDeliveredRevenue = 0;  // CA Livré des 7 derniers jours
 
-  // 7 derniers jours au format JJ/MM/AAAA
+  // 7 derniers jours glissants au format JJ/MM/AAAA
+  var daysBack = [
+    { label: "Aujourd'hui", offset: 0 },
+    { label: "Hier", offset: 1 },
+    { label: "J - 2", offset: 2 },
+    { label: "J - 3", offset: 3 },
+    { label: "J - 4", offset: 4 },
+    { label: "J - 5", offset: 5 },
+    { label: "J - 6", offset: 6 }
+  ];
+
   var dailyCounts = [0, 0, 0, 0, 0, 0, 0];
   var dailyConfirmed = [0, 0, 0, 0, 0, 0, 0];
   var dailyDelivered = [0, 0, 0, 0, 0, 0, 0];
   var dailyRevenue = [0, 0, 0, 0, 0, 0, 0];
   var dailyDates = [];
   var now = new Date();
+
   for (var d = 0; d < 7; d++) {
     var dt = new Date(now.getTime() - d * 24 * 60 * 60 * 1000);
-    dailyDates.push(Utilities.formatDate(dt, "GMT+1", "dd/MM/yyyy"));
+    dailyDates.push(Utilities.formatDate(dt, tz, "dd/MM/yyyy"));
   }
 
   for (var p = 0; p < PRODUCT_SHEETS.length; p++) {
@@ -634,12 +647,14 @@ function updateDashboardLive(ss) {
 
     for (var r = 0; r < data.length; r++) {
       var row = data[r];
-      var dateVal = "" + (row[0] || "");
       var orderId = "" + (row[1] || "");
       if (!orderId) continue;
 
       totalOrders++;
       productStats[shName].total++;
+
+      // Normalisation de la date de commande (compatible Date natif Sheets & texte)
+      var orderDateKey = formatDateAsDayKey(row[0], tz);
 
       // Prix en DH (Colonne K, index 10)
       var priceVal = row[10];
@@ -674,17 +689,19 @@ function updateDashboardLive(ss) {
         productStats[shName].waiting++;
       }
 
-      // Suivi quotidien par date
-      for (var dayIdx = 0; dayIdx < 7; dayIdx++) {
-        if (dateVal.indexOf(dailyDates[dayIdx]) !== -1) {
-          dailyCounts[dayIdx]++;
-          if (ordSt === "Confirmé") dailyConfirmed[dayIdx]++;
-          if (delSt === "Livré") {
-            dailyDelivered[dayIdx]++;
-            dailyRevenue[dayIdx] += amount;
-            weeklyDeliveredRevenue += amount;
+      // Suivi quotidien par date (comparaison exacte JJ/MM/AAAA)
+      if (orderDateKey) {
+        for (var dayIdx = 0; dayIdx < 7; dayIdx++) {
+          if (orderDateKey === dailyDates[dayIdx]) {
+            dailyCounts[dayIdx]++;
+            if (ordSt === "Confirmé") dailyConfirmed[dayIdx]++;
+            if (delSt === "Livré") {
+              dailyDelivered[dayIdx]++;
+              dailyRevenue[dayIdx] += amount;
+              weeklyDeliveredRevenue += amount;
+            }
+            break;
           }
-          break;
         }
       }
     }
@@ -786,23 +803,94 @@ function updateDashboardLive(ss) {
 
   for (var dIdx = 0; dIdx < 7; dIdx++) {
     var dRow = qHeadRow + 1 + dIdx;
+    var dayItem = daysBack[dIdx];
+    var dateLabel = dailyDates[dIdx];
+
     sumWeekCreated += dailyCounts[dIdx];
     sumWeekConf += dailyConfirmed[dIdx];
     sumWeekLiv += dailyDelivered[dIdx];
     sumWeekRev += dailyRevenue[dIdx];
 
+    // Mise à jour automatique de la date dans la colonne A (pour refléter toujours le jour actuel)
+    dash.getRange("A" + dRow).setValue(dayItem.label + " (" + dateLabel + ")")
+      .setFontWeight(dIdx === 0 ? "bold" : "normal");
     dash.getRange("B" + dRow).setValue(dailyCounts[dIdx]);
     dash.getRange("C" + dRow).setValue(dailyConfirmed[dIdx]);
     dash.getRange("D" + dRow).setValue(dailyDelivered[dIdx]);
     dash.getRange("E" + dRow).setValue(formatMAD(dailyRevenue[dIdx]));
+    dash.getRange("G" + dRow).setValue(dIdx === 0 ? "⚡ Commandes reçues ce jour" : "-");
   }
 
-  // Ligne Total Semaine (Ligne 40)
+  // Ligne Total Semaine (Ligne 38)
   var weekRow = qHeadRow + 1 + 7;
+  dash.getRange("A" + weekRow).setValue("TOTAL SEMAINE (7 JOURS)");
   dash.getRange("B" + weekRow).setValue(sumWeekCreated);
   dash.getRange("C" + weekRow).setValue(sumWeekConf);
   dash.getRange("D" + weekRow).setValue(sumWeekLiv);
   dash.getRange("E" + weekRow).setValue(formatMAD(sumWeekRev));
+}
+
+/**
+ * Normalise n'importe quelle valeur de cellule Date en chaîne "JJ/MM/AAAA".
+ * Gère nativement :
+ *   - Les objets Date JavaScript renvoyés par getValues()
+ *   - Les chaînes de caractères formatées ("23/09/2026 10:18", "23/09/2026", "2026-09-23")
+ *   - Les numéros de série de date Google Sheets
+ */
+function formatDateAsDayKey(rawVal, tz) {
+  if (!rawVal) return "";
+  if (!tz) tz = "GMT+1";
+
+  // 1. Objet Date JavaScript natif (renvoyé par sheet.getValues() pour toute cellule Date)
+  if (rawVal instanceof Date || Object.prototype.toString.call(rawVal) === "[object Date]") {
+    try {
+      return Utilities.formatDate(rawVal, tz, "dd/MM/yyyy");
+    } catch (e) {
+      var d = rawVal.getDate();
+      var m = rawVal.getMonth() + 1;
+      var y = rawVal.getFullYear();
+      return (d < 10 ? "0" + d : "" + d) + "/" + (m < 10 ? "0" + m : "" + m) + "/" + y;
+    }
+  }
+
+  // 2. Numéro de série de date Excel/Sheets
+  if (typeof rawVal === "number" && rawVal > 30000 && rawVal < 60000) {
+    try {
+      var dObj = new Date(Math.round((rawVal - 25569) * 86400 * 1000));
+      return Utilities.formatDate(dObj, tz, "dd/MM/yyyy");
+    } catch (e) {}
+  }
+
+  var str = ("" + rawVal).trim();
+  if (!str) return "";
+
+  // 3. Format JJ/MM/AAAA ou JJ-MM-AAAA (ex: "23/09/2026 10:18" ou "23/09/2026")
+  var dmy = str.match(/(\\d{1,2})[\\/\\.-](\\d{1,2})[\\/\\.-](\\d{4})/);
+  if (dmy) {
+    var day = parseInt(dmy[1], 10);
+    var month = parseInt(dmy[2], 10);
+    var year = dmy[3];
+    return (day < 10 ? "0" + day : "" + day) + "/" + (month < 10 ? "0" + month : "" + month) + "/" + year;
+  }
+
+  // 4. Format ISO AAAA-MM-JJ (ex: "2026-09-23")
+  var ymd = str.match(/(\\d{4})[\\/\\.-](\\d{1,2})[\\/\\.-](\\d{1,2})/);
+  if (ymd) {
+    var y = ymd[1];
+    var m2 = parseInt(ymd[2], 10);
+    var d2 = parseInt(ymd[3], 10);
+    return (d2 < 10 ? "0" + d2 : "" + d2) + "/" + (m2 < 10 ? "0" + m2 : "" + m2) + "/" + y;
+  }
+
+  // 5. Tenter un parsing Date si c'est une chaîne arbitraire
+  var parsed = new Date(str);
+  if (!isNaN(parsed.getTime())) {
+    try {
+      return Utilities.formatDate(parsed, tz, "dd/MM/yyyy");
+    } catch (e) {}
+  }
+
+  return "";
 }
 
 function parseAmount(val) {
@@ -827,8 +915,8 @@ function onEdit(e) {
     var sheetName = sheet.getName();
     if (PRODUCT_SHEETS.indexOf(sheetName) !== -1) {
       var col = e.range.getColumn();
-      // Si la colonne 12 (Statut commande) ou 13 (Statut livraison) est modifiée
-      if (col === 12 || col === 13) {
+      // Si la colonne 1 (Date), 11 (Prix), 12 (Statut commande) ou 13 (Statut livraison) est modifiée
+      if (col === 1 || col === 11 || col === 12 || col === 13) {
         var row = e.range.getRow();
         if (row >= 2) {
           var val = ("" + e.range.getValue()).trim();
@@ -969,10 +1057,20 @@ function formatMoroccanPhone(phone) {
  * Fonction de test manuelle exécutable directement depuis l'éditeur Apps Script
  */
 function testerCreationFeuilles() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var tz = ss ? ss.getSpreadsheetTimeZone() : "GMT+1";
+  var now = new Date();
+  var todayStr = Utilities.formatDate(now, tz, "dd/MM/yyyy HH:mm");
+  var yesterdayDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  var yesterdayStr = Utilities.formatDate(yesterdayDate, tz, "dd/MM/yyyy HH:mm");
+  var j2Date = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+  var j2Str = Utilities.formatDate(j2Date, tz, "dd/MM/yyyy HH:mm");
+
   var e = {
     postData: {
       contents: JSON.stringify([
         {
+          date: todayStr,
           sheetName: "Bandeau",
           orderId: "TEST-001",
           fullName: "Sara Alami (Test)",
@@ -988,6 +1086,7 @@ function testerCreationFeuilles() {
           deliveryStatus: "Livré"
         },
         {
+          date: todayStr,
           sheetName: "Visière",
           orderId: "TEST-002",
           fullName: "Lina Berrada (Test)",
@@ -1003,6 +1102,7 @@ function testerCreationFeuilles() {
           deliveryStatus: "En préparation"
         },
         {
+          date: todayStr,
           sheetName: "Tote Bag",
           orderId: "TEST-003",
           fullName: "Ghita Bennani (Test)",
@@ -1018,6 +1118,7 @@ function testerCreationFeuilles() {
           deliveryStatus: "Expédié"
         },
         {
+          date: yesterdayStr,
           sheetName: "Chaussettes",
           orderId: "TEST-004",
           fullName: "Yasmine Tazi (Test)",
@@ -1033,6 +1134,7 @@ function testerCreationFeuilles() {
           deliveryStatus: "Livré"
         },
         {
+          date: j2Str,
           sheetName: "Pack 4 Produits",
           orderId: "TEST-005",
           fullName: "Kawtar Fassi (Test)",
