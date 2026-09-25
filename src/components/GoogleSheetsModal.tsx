@@ -451,7 +451,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     { col: 'G', name: 'Produit', example: 'Oryven Yoga Headband' },
                     { col: 'H', name: 'Formule / Offre', example: 'Duo Collection (2 Bandeaux)' },
                     { col: 'I', name: 'Quantité', example: '2' },
-                    { col: 'J', name: 'Variantes / Couleurs', example: '1x Lavande Glacée, 1x Bleu Ciel' },
+                    { col: 'J', name: 'Variantes / Couleurs', example: '1x Lavande, 1x Bleu' },
                     { col: 'K', name: 'Prix Total (DH)', example: '289 DH' },
                     { col: 'L', name: 'Statut commande', example: 'Nouveau (Menu déroulant)' },
                     { col: 'M', name: 'Statut livraison', example: 'En attente (Menu déroulant)' },

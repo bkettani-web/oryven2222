@@ -49,7 +49,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({
           image:
             'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
           gallery: [],
-          colors: [{ name: 'Lavande Glacée', code: '#B4A7D6' }],
+          colors: [{ name: 'Lavande', code: '#B4A7D6' }],
           description: '',
           features: [],
           materials: '',
@@ -75,7 +75,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({
           totalPrice: 289,
           shipping: 'Gratuite',
         },
-        customColors: ['Lavande Glacée', 'Bleu Ciel'],
+        customColors: ['Lavande', 'Bleu'],
         quantity: 2,
       },
     ],

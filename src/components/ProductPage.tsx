@@ -243,37 +243,37 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
     variants: [
       {
-        name: 'Noir Intense',
+        name: 'Noir',
         code: '#171717',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
       },
       {
-        name: 'Bleu Glacier',
+        name: 'Bleu',
         code: '#8FA9BA',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
       },
       {
-        name: 'Rose Framboise',
+        name: 'Rose',
         code: '#B8395B',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_2_s702mz.webp',
       },
       {
-        name: 'Mauve Nude',
+        name: 'Mauve',
         code: '#A88B96',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911354/ChatGPT_Image_20_sept._2026_14_32_19_3_afxtpd.webp',
       },
       {
-        name: 'Blanc Perle',
+        name: 'Blanc',
         code: '#F5F3ED',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_4_qh8xk2.webp',
       },
     ],
-    defaultVariant: 'Noir Intense',
+    defaultVariant: 'Noir',
   },
   {
     id: 'headband1',
@@ -281,37 +281,37 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
     defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
     variants: [
       {
-        name: 'Noir Intense',
+        name: 'Noir',
         code: '#171717',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
       },
       {
-        name: 'Lavande Glacée',
+        name: 'Lavande',
         code: '#C8C2E6',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
       },
       {
-        name: 'Bleu Ciel',
+        name: 'Bleu',
         code: '#97C4E8',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
       },
       {
-        name: 'Corail Énergie',
+        name: 'Corail',
         code: '#F26D5B',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
       },
       {
-        name: 'Vert Forêt',
+        name: 'Vert',
         code: '#2E543D',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
       },
       {
-        name: 'Beige Sable',
+        name: 'Beige',
         code: '#DACFB9',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
       },
     ],
-    defaultVariant: 'Noir Intense',
+    defaultVariant: 'Noir',
   },
   {
     id: 'headband2',
@@ -319,37 +319,37 @@ const PACK_COMPLET_ITEMS: PackItemVariantConfig[] = [
     defaultImage: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
     variants: [
       {
-        name: 'Bleu Ciel',
+        name: 'Bleu',
         code: '#97C4E8',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
       },
       {
-        name: 'Lavande Glacée',
+        name: 'Lavande',
         code: '#C8C2E6',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
       },
       {
-        name: 'Noir Intense',
+        name: 'Noir',
         code: '#171717',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
       },
       {
-        name: 'Corail Énergie',
+        name: 'Corail',
         code: '#F26D5B',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
       },
       {
-        name: 'Vert Forêt',
+        name: 'Vert',
         code: '#2E543D',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
       },
       {
-        name: 'Beige Sable',
+        name: 'Beige',
         code: '#DACFB9',
         image: 'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
       },
     ],
-    defaultVariant: 'Bleu Ciel',
+    defaultVariant: 'Bleu',
   },
 ];
 
@@ -388,15 +388,15 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   }>({
     0: {
       tote: 'Toile Écru Naturelle',
-      visor: 'Noir Intense',
-      headband1: 'Lavande Glacée',
-      headband2: 'Bleu Ciel',
+      visor: 'Noir',
+      headband1: 'Lavande',
+      headband2: 'Bleu',
     },
     1: {
       tote: 'Toile Écru Naturelle',
-      visor: 'Rose Framboise',
-      headband1: 'Noir Intense',
-      headband2: 'Corail Énergie',
+      visor: 'Rose',
+      headband1: 'Noir',
+      headband2: 'Corail',
     },
   });
   const [activePackIndex, setActivePackIndex] = useState(0);
@@ -426,9 +426,9 @@ export const ProductPage: React.FC<ProductPageProps> = ({
       const prefix = qty > 1 ? `[Coffret ${i + 1}] ` : '';
       list.push(
         `${prefix}Sac : Toile Écru Naturelle`,
-        `${prefix}Visière : ${p?.visor || 'Noir Intense'}`,
-        `${prefix}1er Bandeau : ${p?.headband1 || 'Lavande Glacée'}`,
-        `${prefix}2ème Bandeau : ${p?.headband2 || 'Bleu Ciel'}`
+        `${prefix}Visière : ${p?.visor || 'Noir'}`,
+        `${prefix}1er Bandeau : ${p?.headband1 || 'Lavande'}`,
+        `${prefix}2ème Bandeau : ${p?.headband2 || 'Bleu'}`
       );
     }
     return list;
@@ -484,8 +484,24 @@ export const ProductPage: React.FC<ProductPageProps> = ({
     setSelectedOfferId(offerId);
   };
 
+  const handleSingleColorSelect = (colorName: string) => {
+    setSelectedColor(colorName);
+    setPackColors((prev) => ({ ...prev, 0: colorName }));
+    const matched = product.colors?.find((c) => c.name === colorName);
+    if (matched?.image) {
+      setActiveImage(matched.image);
+    }
+  };
+
   const handlePackColorChange = (index: number, colorName: string) => {
     setPackColors((prev) => ({ ...prev, [index]: colorName }));
+    if (index === 0) {
+      setSelectedColor(colorName);
+    }
+    const matched = product.colors?.find((c) => c.name === colorName);
+    if (matched?.image) {
+      setActiveImage(matched.image);
+    }
   };
 
   // Form Validation & Submit
@@ -751,6 +767,47 @@ export const ProductPage: React.FC<ProductPageProps> = ({
               <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
                 {product.subtitle}
               </p>
+
+              {/* Side-by-side variant selection directly under header for products with multiple colors */}
+              {!isPackComplet && hasVariants && product.colors && product.colors.length > 1 && (
+                <div className="pt-2 pb-0.5 space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-neutral-800 flex items-center gap-1.5">
+                      <span>Couleur :</span>
+                      <span className="text-orange-600 font-extrabold">{selectedColor}</span>
+                    </span>
+                    <span className="text-[11px] text-neutral-400 font-medium">
+                      {product.colors.length} coloris disponibles
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {product.colors.map((c) => {
+                      const isColorActive = selectedColor === c.name;
+                      return (
+                        <button
+                          key={c.name}
+                          type="button"
+                          onClick={() => handleSingleColorSelect(c.name)}
+                          className={`group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition-all cursor-pointer select-none ${
+                            isColorActive
+                              ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
+                              : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-medium shadow-2xs'
+                          }`}
+                          title={`Couleur : ${c.name}`}
+                        >
+                          <span
+                            className={`w-4 h-4 rounded-full border shadow-2xs shrink-0 transition-transform ${
+                              isColorActive ? 'ring-2 ring-orange-500/50 scale-110 border-white' : 'border-neutral-300 group-hover:scale-105'
+                            }`}
+                            style={{ backgroundColor: c.code }}
+                          />
+                          <span className="text-xs">{c.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* ================= UNIFIED SIMPLIFIED BLOCK: OFFERS + FORM ================= */}
@@ -854,55 +911,130 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                           </div>
                         </div>
 
-                        {/* Integrated Variant Choice when selected (only if single product has multiple color variants) */}
+                        {/* Integrated Variant Choice when selected (side-by-side color swatches & names) */}
                         {isSelected && !isPackComplet && hasVariants && product.colors && product.colors.length > 1 && (
                           <div
                             className="mt-3 pt-2.5 border-t border-orange-200/60 space-y-2 animate-fadeIn"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <div className="space-y-1.5">
-                              <div className="flex items-center justify-between">
-                                <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wide">
-                                  {offer.quantity === 1
-                                    ? 'Couleur au choix :'
-                                    : `Couleurs (${offer.quantity} pièces) :`}
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                                {Array.from({ length: offer.quantity }).map((_, idx) => (
-                                  <div
-                                    key={idx}
-                                    className="flex items-center justify-between p-1.5 sm:p-2 bg-white rounded-lg border border-neutral-200 text-xs shadow-xs"
-                                  >
-                                    <span className="text-neutral-500 font-medium text-[11px] pl-1">
-                                      {offer.quantity === 1 ? 'Couleur :' : `Pièce ${idx + 1} :`}
+                            {offer.quantity === 1 ? (
+                              <div className="space-y-1.5">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[11px] font-bold text-neutral-700 uppercase tracking-wide flex items-center gap-1.5">
+                                    <span>Couleur au choix :</span>
+                                    <span className="text-orange-600 font-extrabold normal-case text-xs">
+                                      {selectedColor || product.colors[0]?.name}
                                     </span>
-                                    <select
-                                      value={
-                                        (offer.quantity === 1 ? selectedColor : packColors[idx]) ||
-                                        product.colors?.[0]?.name ||
-                                        ''
-                                      }
-                                      onChange={(e) => {
-                                        const val = e.target.value;
-                                        if (offer.quantity === 1) {
-                                          setSelectedColor(val);
-                                        }
-                                        handlePackColorChange(idx, val);
-                                      }}
-                                      className="bg-neutral-50 border border-neutral-200 text-neutral-800 text-[11px] rounded px-2 py-1 font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 cursor-pointer"
-                                    >
-                                      {product.colors.map((c) => (
-                                        <option key={c.name} value={c.name}>
-                                          {c.name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  </div>
-                                ))}
+                                  </span>
+                                  <span className="text-[10px] text-neutral-400 font-medium">
+                                    {product.colors.length} coloris disponibles
+                                  </span>
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                                  {product.colors.map((c) => {
+                                    const isColorActive = (selectedColor || product.colors[0]?.name) === c.name;
+                                    return (
+                                      <button
+                                        key={c.name}
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleSingleColorSelect(c.name);
+                                        }}
+                                        className={`group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition-all cursor-pointer select-none ${
+                                          isColorActive
+                                            ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
+                                            : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-medium shadow-2xs'
+                                        }`}
+                                        title={`Couleur : ${c.name}`}
+                                      >
+                                        <span
+                                          className={`w-4 h-4 rounded-full border shadow-2xs shrink-0 transition-transform ${
+                                            isColorActive
+                                              ? 'ring-2 ring-orange-500/50 scale-110 border-white'
+                                              : 'border-neutral-300 group-hover:scale-105'
+                                          }`}
+                                          style={{ backgroundColor: c.code }}
+                                        />
+                                        <span className="text-xs">{c.name}</span>
+                                        {isColorActive && (
+                                          <span className="w-1.5 h-1.5 rounded-full bg-orange-600 shrink-0" />
+                                        )}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
                               </div>
-                            </div>
+                            ) : (
+                              <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[11px] font-bold text-neutral-700 uppercase tracking-wide">
+                                    Couleurs ({offer.quantity} pièces au choix) :
+                                  </span>
+                                  <span className="text-[10px] text-orange-700 font-semibold bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
+                                    Mix de couleurs libre
+                                  </span>
+                                </div>
+
+                                <div className="space-y-2.5">
+                                  {Array.from({ length: offer.quantity }).map((_, idx) => {
+                                    const currentPieceColor =
+                                      packColors[idx] ||
+                                      product.colors?.[idx % product.colors.length]?.name ||
+                                      product.colors?.[0]?.name ||
+                                      '';
+                                    return (
+                                      <div
+                                        key={idx}
+                                        className="p-2.5 bg-white rounded-xl border border-neutral-200 shadow-2xs space-y-1.5"
+                                      >
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wide">
+                                            Pièce {idx + 1} :{' '}
+                                            <span className="text-orange-600 font-extrabold normal-case text-xs">
+                                              {currentPieceColor}
+                                            </span>
+                                          </span>
+                                        </div>
+
+                                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                          {product.colors.map((c) => {
+                                            const isColorActive = currentPieceColor === c.name;
+                                            return (
+                                              <button
+                                                key={c.name}
+                                                type="button"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  handlePackColorChange(idx, c.name);
+                                                }}
+                                                className={`group inline-flex items-center gap-1.5 px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl border text-xs transition-all cursor-pointer select-none ${
+                                                  isColorActive
+                                                    ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
+                                                    : 'border-neutral-200 bg-neutral-50/60 hover:border-neutral-300 hover:bg-white text-neutral-700 font-medium'
+                                                }`}
+                                                title={`Pièce ${idx + 1} en ${c.name}`}
+                                              >
+                                                <span
+                                                  className={`w-3.5 h-3.5 rounded-full border shadow-2xs shrink-0 transition-transform ${
+                                                    isColorActive
+                                                      ? 'ring-1.5 ring-orange-500 scale-105 border-white'
+                                                      : 'border-neutral-300 group-hover:scale-105'
+                                                  }`}
+                                                  style={{ backgroundColor: c.code }}
+                                                />
+                                                <span className="text-[11px] sm:text-xs">{c.name}</span>
+                                              </button>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -985,7 +1117,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                               </span>
                             </div>
 
-                            {/* Product Info & Dropdown Menu */}
+                            {/* Product Info & Side-by-Side Variant Selection */}
                             <div className="flex-1 min-w-0 space-y-1.5 sm:space-y-2">
                               <div className="flex items-center justify-between gap-1.5">
                                 <span className="text-xs sm:text-sm font-bold text-neutral-900 leading-snug">
@@ -997,37 +1129,40 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                               </div>
 
                               {!isFixed ? (
-                                <div className="space-y-1 pt-0.5">
-                                  <label
-                                    htmlFor={`pack-select-${item.id}`}
-                                    className="text-[11px] font-semibold text-neutral-500 flex items-center justify-between"
-                                  >
+                                <div className="space-y-1.5 pt-0.5">
+                                  <div className="text-[11px] font-semibold text-neutral-500 flex items-center justify-between">
                                     <span>Choisir la couleur :</span>
-                                    <span className="text-[10px] text-orange-600 font-medium hidden sm:inline">
+                                    <span className="text-[10px] text-orange-600 font-medium">
                                       {item.variants.length} coloris disponibles
                                     </span>
-                                  </label>
-                                  <div className="relative flex items-center">
-                                    <span
-                                      className="absolute left-3 w-3.5 h-3.5 rounded-full border border-neutral-300 shadow-2xs pointer-events-none z-10 shrink-0"
-                                      style={{ backgroundColor: selectedVariantObj?.code || '#171717' }}
-                                    />
-                                    <select
-                                      id={`pack-select-${item.id}`}
-                                      value={selectedVariant}
-                                      onChange={(e) => handlePackItemSelect(activePackIndex, item.id, e.target.value)}
-                                      className="w-full bg-[#FAF7F2]/90 hover:bg-white text-neutral-900 text-xs sm:text-sm font-bold rounded-lg sm:rounded-xl border border-neutral-300 pl-8.5 pr-8 py-2 sm:py-2.5 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all cursor-pointer shadow-2xs"
-                                    >
-                                      {item.variants.map((v) => (
-                                        <option key={v.name} value={v.name}>
-                                          {v.name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                    <ChevronDown
-                                      size={16}
-                                      className="absolute right-3 text-neutral-400 pointer-events-none"
-                                    />
+                                  </div>
+
+                                  {/* Side-by-side variant buttons */}
+                                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                    {item.variants.map((v) => {
+                                      const isVariantActive = selectedVariant === v.name;
+                                      return (
+                                        <button
+                                          key={v.name}
+                                          type="button"
+                                          onClick={() => handlePackItemSelect(activePackIndex, item.id, v.name)}
+                                          className={`group inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg sm:rounded-xl border text-xs transition-all cursor-pointer select-none ${
+                                            isVariantActive
+                                              ? 'border-orange-500 bg-orange-50 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
+                                              : 'border-neutral-200 bg-[#FAF7F2]/80 hover:border-neutral-300 hover:bg-white text-neutral-700 font-medium shadow-2xs'
+                                          }`}
+                                          title={`Sélectionner la couleur ${v.name}`}
+                                        >
+                                          <span
+                                            className={`w-3.5 h-3.5 rounded-full border shadow-2xs shrink-0 transition-transform ${
+                                              isVariantActive ? 'ring-1.5 ring-orange-500 scale-105 border-white' : 'border-neutral-300 group-hover:scale-105'
+                                            }`}
+                                            style={{ backgroundColor: v.code }}
+                                          />
+                                          <span className="text-[11px] sm:text-xs">{v.name}</span>
+                                        </button>
+                                      );
+                                    })}
                                   </div>
                                 </div>
                               ) : (

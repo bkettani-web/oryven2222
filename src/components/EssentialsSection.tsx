@@ -25,29 +25,29 @@ const PADEL_COURT_THUMBNAILS: Record<string, string> = {
 // Variantes couleur prises sur le sol de padel
 const PADEL_VARIANT_IMAGES: Record<string, Record<string, string>> = {
   'oryven-yoga-headband': {
-    'Lavande Glacée':
+    'Lavande':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
-    'Bleu Ciel':
+    'Bleu':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
-    'Noir Intense':
+    'Noir':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
-    'Corail Énergie':
+    'Corail':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
-    'Vert Forêt':
+    'Vert':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
-    'Beige Sable':
+    'Beige':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
   },
   'oryven-visor': {
-    'Bleu Glacier':
+    'Bleu':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
-    'Rose Framboise':
+    'Rose':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_2_s702mz.webp',
-    'Mauve Nude':
+    'Mauve':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911354/ChatGPT_Image_20_sept._2026_14_32_19_3_afxtpd.webp',
-    'Noir Intense':
+    'Noir':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
-    'Blanc Perle':
+    'Blanc':
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_4_qh8xk2.webp',
   },
 };

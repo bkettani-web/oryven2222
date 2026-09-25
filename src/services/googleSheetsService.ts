@@ -302,7 +302,7 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       productName: 'Oryven Yoga Headband',
       offerTitle: 'Duo Collection (2 Bandeaux)',
       quantity: 2,
-      variants: '1x Lavande Glacée, 1x Bleu Ciel',
+      variants: '1x Lavande, 1x Bleu',
       total: 289,
     },
     {
@@ -310,7 +310,7 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       productName: 'Oryven Visor UPF 50+',
       offerTitle: 'Solo (1 Visière)',
       quantity: 1,
-      variants: '1x Bleu Glacier',
+      variants: '1x Bleu',
       total: 199,
     },
     {
@@ -326,7 +326,7 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       productName: 'Oryven Non-Slip Grip Socks',
       offerTitle: 'Duo (2 Paires)',
       quantity: 2,
-      variants: '1x Blanc Studio, 1x Noir Onyx',
+      variants: '1x Blanc, 1x Noir',
       total: 179,
     },
     {
@@ -334,7 +334,7 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       productName: 'Pack Complet Oryven (4 Produits)',
       offerTitle: 'Pack Solo Essentiels',
       quantity: 4,
-      variants: 'Visière: Noir Intense, Sac: Écru, 1er Bandeau: Bleu Ciel, 2ème Bandeau: Lavande Glacée',
+      variants: 'Visière: Noir, Sac: Écru, 1er Bandeau: Bleu, 2ème Bandeau: Lavande',
       total: 590,
     },
   ];

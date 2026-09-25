@@ -133,37 +133,37 @@ export const PRODUCTS: Product[] = [
     ],
     colors: [
       {
-        name: 'Noir Intense',
+        name: 'Noir',
         code: '#171717',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
       },
       {
-        name: 'Lavande Glacée',
+        name: 'Lavande',
         code: '#C8C2E6',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
       },
       {
-        name: 'Bleu Ciel',
+        name: 'Bleu',
         code: '#97C4E8',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
       },
       {
-        name: 'Corail Énergie',
+        name: 'Corail',
         code: '#F26D5B',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
       },
       {
-        name: 'Vert Forêt',
+        name: 'Vert',
         code: '#2E543D',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
       },
       {
-        name: 'Beige Sable',
+        name: 'Beige',
         code: '#DACFB9',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
@@ -241,31 +241,31 @@ export const PRODUCTS: Product[] = [
     ],
     colors: [
       {
-        name: 'Noir Intense',
+        name: 'Noir',
         code: '#171717',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
       },
       {
-        name: 'Bleu Glacier',
+        name: 'Bleu',
         code: '#8FA9BA',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_18_1_zttxjl.webp',
       },
       {
-        name: 'Rose Framboise',
+        name: 'Rose',
         code: '#B8395B',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_2_s702mz.webp',
       },
       {
-        name: 'Mauve Nude',
+        name: 'Mauve',
         code: '#A88B96',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911354/ChatGPT_Image_20_sept._2026_14_32_19_3_afxtpd.webp',
       },
       {
-        name: 'Blanc Perle',
+        name: 'Blanc',
         code: '#F5F3ED',
         image:
           'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_19_4_qh8xk2.webp',
@@ -343,9 +343,9 @@ export const PRODUCTS: Product[] = [
       'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660965/rf71sk34tncgg4tafymw_z7uhs5.webp',
     ],
     colors: [
-      { name: 'Orange Sunset', code: '#E25F2E' },
-      { name: 'Noir Intense', code: '#171717' },
-      { name: 'Blanc Studio', code: '#F8F6F0' },
+      { name: 'Orange', code: '#E25F2E' },
+      { name: 'Noir', code: '#171717' },
+      { name: 'Blanc', code: '#F8F6F0' },
     ],
     description:
       'Développées pour le Pilates Reformer, le Barre et le Yoga, les chaussettes Oryven Grip Socks garantissent une stabilité absolue au sol et sur machine. La semelle intègre des centaines de picots en silicone haute adhérence disposés stratégiquement sous la voûte plantaire.',
