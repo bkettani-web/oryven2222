@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { MessageCircle, X } from 'lucide-react';
+import { trackContact } from '../services/pixelService';
 
 export const WhatsAppButton: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(true);
 
   const handleClick = () => {
+    trackContact('whatsapp');
     const text = encodeURIComponent(
       "Bonjour Oryven Maroc ! J'aimerais avoir des informations sur les accessoires ou passer une commande."
     );

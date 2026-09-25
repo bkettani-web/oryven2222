@@ -4,7 +4,6 @@ import {
   Truck,
   RotateCcw,
   CheckCircle,
-  Check,
   MessageCircle,
   ChevronDown,
   Sparkles,
@@ -19,6 +18,11 @@ import {
   sendOrderToGoogleSheets,
   getAppsScriptUrl,
 } from '../services/googleSheetsService';
+import {
+  trackViewContent,
+  trackInitiateCheckout,
+  trackContact,
+} from '../services/pixelService';
 
 interface ProductVisualHighlight {
   image: string;
@@ -442,6 +446,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
       2: product.colors?.[2]?.name || defaultColorName,
     });
     setActivePackIndex(0);
+    trackViewContent(product);
   }, [product.id, product.image]);
 
   // Active color for x1
@@ -517,6 +522,19 @@ export const ProductPage: React.FC<ProductPageProps> = ({
             )
         : [];
 
+    // Trigger Meta Pixel InitiateCheckout event
+    trackInitiateCheckout(
+      [
+        {
+          product,
+          offer: currentOffer,
+          quantity: 1,
+          customColors: chosenColors,
+        },
+      ],
+      currentOffer.totalPrice
+    );
+
     const newOrder: CustomerOrder = {
       orderId: `ORYVEN-MA-${Math.floor(100000 + Math.random() * 900000)}`,
       createdAt: new Date().toISOString(),
@@ -584,6 +602,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
         `🏠 Adresse : ${address || 'À préciser'}`
     );
 
+    trackContact('whatsapp');
     window.open(`https://api.whatsapp.com/send?phone=212676809781&text=${message}`, '_blank');
   };
 
@@ -841,124 +860,48 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                             className="mt-3 pt-2.5 border-t border-orange-200/60 space-y-2 animate-fadeIn"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <div className="space-y-2">
-                              {offer.quantity === 1 ? (
-                                <div className="bg-white/85 rounded-xl p-2.5 sm:p-3 border border-orange-200/70 shadow-2xs">
-                                  <div className="flex items-center justify-between gap-2 mb-2">
-                                    <span className="text-[11px] font-bold text-neutral-700 uppercase tracking-wide">
-                                      Couleur au choix :
-                                    </span>
-                                    <span className="text-xs font-bold text-neutral-900 bg-orange-50 border border-orange-200/80 px-2 py-0.5 rounded-full">
-                                      {selectedColor || product.colors[0]?.name}
-                                    </span>
-                                  </div>
+                            <div className="space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wide">
+                                  {offer.quantity === 1
+                                    ? 'Couleur au choix :'
+                                    : `Couleurs (${offer.quantity} pièces) :`}
+                                </span>
+                              </div>
 
-                                  <div className="flex items-center flex-wrap gap-2.5">
-                                    {product.colors.map((c) => {
-                                      const isColorSelected = (selectedColor || product.colors?.[0]?.name) === c.name;
-                                      const isLight = c.code === '#F5F3ED' || c.code === '#FAFAF8' || c.code === '#FFFFFF';
-                                      return (
-                                        <button
-                                          key={c.name}
-                                          type="button"
-                                          title={c.name}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setSelectedColor(c.name);
-                                            handlePackColorChange(0, c.name);
-                                            if (c.image) {
-                                              setActiveImage(c.image);
-                                            }
-                                          }}
-                                          className={`group relative w-8 h-8 rounded-full transition-all duration-150 flex items-center justify-center cursor-pointer shadow-xs border ${
-                                            isColorSelected
-                                              ? 'ring-2 ring-orange-500 ring-offset-2 scale-110 border-white'
-                                              : 'border-black/15 hover:scale-105 hover:border-neutral-400'
-                                          }`}
-                                          style={{ backgroundColor: c.code }}
-                                          aria-label={c.name}
-                                        >
-                                          {isColorSelected && (
-                                            <Check
-                                              size={14}
-                                              className={isLight ? 'text-neutral-800' : 'text-white'}
-                                              strokeWidth={3}
-                                            />
-                                          )}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="space-y-2">
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-[11px] font-bold text-neutral-700 uppercase tracking-wide">
-                                      Choisissez vos {offer.quantity} couleurs :
+                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                                {Array.from({ length: offer.quantity }).map((_, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between p-1.5 sm:p-2 bg-white rounded-lg border border-neutral-200 text-xs shadow-xs"
+                                  >
+                                    <span className="text-neutral-500 font-medium text-[11px] pl-1">
+                                      {offer.quantity === 1 ? 'Couleur :' : `Pièce ${idx + 1} :`}
                                     </span>
+                                    <select
+                                      value={
+                                        (offer.quantity === 1 ? selectedColor : packColors[idx]) ||
+                                        product.colors?.[0]?.name ||
+                                        ''
+                                      }
+                                      onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (offer.quantity === 1) {
+                                          setSelectedColor(val);
+                                        }
+                                        handlePackColorChange(idx, val);
+                                      }}
+                                      className="bg-neutral-50 border border-neutral-200 text-neutral-800 text-[11px] rounded px-2 py-1 font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 cursor-pointer"
+                                    >
+                                      {product.colors.map((c) => (
+                                        <option key={c.name} value={c.name}>
+                                          {c.name}
+                                        </option>
+                                      ))}
+                                    </select>
                                   </div>
-
-                                  <div className="space-y-2">
-                                    {Array.from({ length: offer.quantity }).map((_, idx) => {
-                                      const currentColor = packColors[idx] || product.colors?.[0]?.name || '';
-                                      return (
-                                        <div
-                                          key={idx}
-                                          className="p-2 sm:p-2.5 bg-white/85 rounded-xl border border-neutral-200/80 shadow-2xs space-y-1.5"
-                                        >
-                                          <div className="flex items-center justify-between gap-2">
-                                            <span className="text-neutral-700 font-bold text-xs">
-                                              Pièce {idx + 1} :
-                                            </span>
-                                            <span className="text-[11px] font-bold text-neutral-900 bg-neutral-100 border border-neutral-200 px-2 py-0.5 rounded-full">
-                                              {currentColor}
-                                            </span>
-                                          </div>
-
-                                          <div className="flex items-center flex-wrap gap-2">
-                                            {product.colors.map((c) => {
-                                              const isColorSelected = currentColor === c.name;
-                                              const isLight = c.code === '#F5F3ED' || c.code === '#FAFAF8' || c.code === '#FFFFFF';
-                                              return (
-                                                <button
-                                                  key={c.name}
-                                                  type="button"
-                                                  title={`Pièce ${idx + 1} : ${c.name}`}
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handlePackColorChange(idx, c.name);
-                                                    if (idx === 0) {
-                                                      setSelectedColor(c.name);
-                                                    }
-                                                    if (c.image) {
-                                                      setActiveImage(c.image);
-                                                    }
-                                                  }}
-                                                  className={`group relative w-7.5 h-7.5 rounded-full transition-all duration-150 flex items-center justify-center cursor-pointer shadow-2xs border ${
-                                                    isColorSelected
-                                                      ? 'ring-2 ring-orange-500 ring-offset-2 scale-110 border-white'
-                                                      : 'border-black/15 hover:scale-105 hover:border-neutral-400'
-                                                  }`}
-                                                  style={{ backgroundColor: c.code }}
-                                                  aria-label={`Pièce ${idx + 1} - ${c.name}`}
-                                                >
-                                                  {isColorSelected && (
-                                                    <Check
-                                                      size={13}
-                                                      className={isLight ? 'text-neutral-800' : 'text-white'}
-                                                      strokeWidth={3}
-                                                    />
-                                                  )}
-                                                </button>
-                                              );
-                                            })}
-                                          </div>
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              )}
+                                ))}
+                              </div>
                             </div>
                           </div>
                         )}
@@ -1054,47 +997,37 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                               </div>
 
                               {!isFixed ? (
-                                <div className="space-y-1.5 pt-0.5">
-                                  <div className="flex items-center justify-between text-[11px] font-semibold text-neutral-600">
-                                    <span>
-                                      Couleur :{' '}
-                                      <span className="text-neutral-900 font-bold">{selectedVariant}</span>
-                                    </span>
+                                <div className="space-y-1 pt-0.5">
+                                  <label
+                                    htmlFor={`pack-select-${item.id}`}
+                                    className="text-[11px] font-semibold text-neutral-500 flex items-center justify-between"
+                                  >
+                                    <span>Choisir la couleur :</span>
                                     <span className="text-[10px] text-orange-600 font-medium hidden sm:inline">
-                                      {item.variants.length} coloris
+                                      {item.variants.length} coloris disponibles
                                     </span>
-                                  </div>
-                                  <div className="flex items-center flex-wrap gap-2 pt-0.5">
-                                    {item.variants.map((v) => {
-                                      const isVarSelected = v.name === selectedVariant;
-                                      const isLight = v.code === '#F5F3ED' || v.code === '#FAFAF8' || v.code === '#FFFFFF';
-                                      return (
-                                        <button
-                                          key={v.name}
-                                          type="button"
-                                          title={v.name}
-                                          onClick={() => {
-                                            handlePackItemSelect(activePackIndex, item.id, v.name);
-                                            if (v.image) setActiveImage(v.image);
-                                          }}
-                                          className={`group relative w-7.5 h-7.5 sm:w-8 sm:h-8 rounded-full transition-all duration-150 flex items-center justify-center cursor-pointer shadow-2xs border ${
-                                            isVarSelected
-                                              ? 'ring-2 ring-orange-500 ring-offset-2 scale-110 border-white'
-                                              : 'border-black/15 hover:scale-105 hover:border-neutral-400'
-                                          }`}
-                                          style={{ backgroundColor: v.code }}
-                                          aria-label={`${item.name} - ${v.name}`}
-                                        >
-                                          {isVarSelected && (
-                                            <Check
-                                              size={13}
-                                              className={isLight ? 'text-neutral-800' : 'text-white'}
-                                              strokeWidth={3}
-                                            />
-                                          )}
-                                        </button>
-                                      );
-                                    })}
+                                  </label>
+                                  <div className="relative flex items-center">
+                                    <span
+                                      className="absolute left-3 w-3.5 h-3.5 rounded-full border border-neutral-300 shadow-2xs pointer-events-none z-10 shrink-0"
+                                      style={{ backgroundColor: selectedVariantObj?.code || '#171717' }}
+                                    />
+                                    <select
+                                      id={`pack-select-${item.id}`}
+                                      value={selectedVariant}
+                                      onChange={(e) => handlePackItemSelect(activePackIndex, item.id, e.target.value)}
+                                      className="w-full bg-[#FAF7F2]/90 hover:bg-white text-neutral-900 text-xs sm:text-sm font-bold rounded-lg sm:rounded-xl border border-neutral-300 pl-8.5 pr-8 py-2 sm:py-2.5 appearance-none focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all cursor-pointer shadow-2xs"
+                                    >
+                                      {item.variants.map((v) => (
+                                        <option key={v.name} value={v.name}>
+                                          {v.name}
+                                        </option>
+                                      ))}
+                                    </select>
+                                    <ChevronDown
+                                      size={16}
+                                      className="absolute right-3 text-neutral-400 pointer-events-none"
+                                    />
                                   </div>
                                 </div>
                               ) : (

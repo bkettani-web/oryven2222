@@ -24,3 +24,10 @@ declare module '*.webp' {
   const src: string;
   export default src;
 }
+
+declare global {
+  interface Window {
+    fbq?: (...args: any[]) => void;
+    _fbq?: any;
+  }
+}

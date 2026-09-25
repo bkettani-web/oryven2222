@@ -26,6 +26,13 @@ import { WhatsAppButton } from './components/WhatsAppButton';
 import { PRODUCTS } from './data/products';
 import { Product, CartItem, ProductOffer, CustomerOrder } from './types';
 import { Check } from 'lucide-react';
+import {
+  trackPageView,
+  trackViewContent,
+  trackAddToCart as sendPixelAddToCart,
+  trackPurchase,
+  trackAddToWishlist,
+} from './services/pixelService';
 
 const normalizeSlug = (raw: string): string => {
   const clean = raw.toLowerCase().trim();
@@ -185,6 +192,7 @@ export default function App() {
   const handleSelectProduct = (product: Product, pushHistory = true) => {
     setSelectedProduct(product);
     setCurrentView('product');
+    trackViewContent(product);
     if (pushHistory && typeof window !== 'undefined') {
       const targetPath = `/produits/${product.slug}`;
       if (window.location.pathname !== targetPath) {
@@ -419,6 +427,9 @@ export default function App() {
       setMeta('twitter:description', pageDesc);
       setMeta('twitter:image', 'https://res.cloudinary.com/diptsoc4h/image/upload/v1790114072/ChatGPT_Image_22_sept._2026_22_54_08_yafylq.webp');
     }
+
+    // Trigger Meta Pixel PageView event with dynamic page context
+    trackPageView(document.title);
   }, [currentView, selectedProduct]);
 
   const handleNavigateSection = (sectionId: string) => {
@@ -453,6 +464,7 @@ export default function App() {
 
     setCartItems((prev) => [...prev, newItem]);
     setIsCartOpen(true);
+    sendPixelAddToCart(product, offerToUse, 1, customColors);
     showToast(`✓ ${product.name} ajouté à votre panier`);
   };
 
@@ -467,6 +479,7 @@ export default function App() {
         showToast(`Retiré des favoris : ${product.name}`);
         return prev.filter((id) => id !== product.id);
       } else {
+        trackAddToWishlist(product);
         showToast(`❤️ Ajouté aux favoris : ${product.name}`);
         return [...prev, product.id];
       }
@@ -475,6 +488,7 @@ export default function App() {
 
   const handleOrderSuccess = (order: CustomerOrder) => {
     setConfirmedOrder(order);
+    trackPurchase(order);
     try {
       localStorage.setItem('oryven_latest_order', JSON.stringify(order));
     } catch {

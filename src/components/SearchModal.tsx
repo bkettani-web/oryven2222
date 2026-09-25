@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { Product } from '../types';
+import { trackSearch } from '../services/pixelService';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -63,6 +64,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             <div
               key={product.id}
               onClick={() => {
+                if (query.trim()) {
+                  trackSearch(query);
+                }
                 onSelectProduct(product);
                 onClose();
               }}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Trash2, ShoppingBag, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 import { CartItem } from '../types';
+import { trackInitiateCheckout } from '../services/pixelService';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -144,7 +145,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               <button
                 id="cart-checkout-btn"
-                onClick={onCheckout}
+                onClick={() => {
+                  trackInitiateCheckout(items, total);
+                  onCheckout();
+                }}
                 className="w-full py-3.5 px-4 bg-[#7A283B] hover:bg-[#681F30] text-white text-xs font-black uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center space-x-2"
               >
                 <span>Finaliser la commande ({total} MAD)</span>
