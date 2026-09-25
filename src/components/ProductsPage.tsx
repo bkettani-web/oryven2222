@@ -162,11 +162,15 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                 {/* Product Image Box */}
                 <div className="relative aspect-square bg-[#FAF6F1] p-3 sm:p-5 flex items-center justify-center overflow-hidden">
                   {/* Badge */}
-                  {product.badge && (
+                  {!product.inStock ? (
+                    <span className="absolute top-2.5 left-2.5 z-10 bg-neutral-900/90 text-white backdrop-blur-xs text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-xs border border-neutral-700">
+                      Rupture de stock
+                    </span>
+                  ) : product.badge ? (
                     <span className="absolute top-2.5 left-2.5 z-10 bg-white/95 backdrop-blur-xs text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-xs text-neutral-800 border border-neutral-200">
                       {product.badge}
                     </span>
-                  )}
+                  ) : null}
 
                   {/* Discount Tag */}
                   {discountPct && (
@@ -276,32 +280,45 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
 
                   {/* Actions: View Details / Quick Add */}
                   <div className="pt-2 flex flex-col sm:flex-row gap-2">
-                    <button
-                      type="button"
-                      onClick={() => onSelectProduct(product)}
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#7A283B] hover:bg-[#681F30] text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-xs"
-                    >
-                      <span>Commander</span>
-                      <ArrowRight size={12} />
-                    </button>
+                    {product.inStock ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => onSelectProduct(product)}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-[#7A283B] hover:bg-[#681F30] text-white text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-xs"
+                        >
+                          <span>Commander</span>
+                          <ArrowRight size={12} />
+                        </button>
 
-                    <button
-                      type="button"
-                      onClick={(e) => handleQuickAdd(product, e)}
-                      className={`inline-flex items-center justify-center p-2.5 rounded-lg border transition-all cursor-pointer shrink-0 ${
-                        isJustAdded
-                          ? 'bg-emerald-600 text-white border-emerald-600'
-                          : 'bg-white hover:bg-neutral-100 text-neutral-800 border-[#EDE5DB]'
-                      }`}
-                      title="Ajouter au panier"
-                      aria-label="Ajouter au panier"
-                    >
-                      {isJustAdded ? (
-                        <Check size={14} className="text-white" />
-                      ) : (
-                        <ShoppingBag size={14} />
-                      )}
-                    </button>
+                        <button
+                          type="button"
+                          onClick={(e) => handleQuickAdd(product, e)}
+                          className={`inline-flex items-center justify-center p-2.5 rounded-lg border transition-all cursor-pointer shrink-0 ${
+                            isJustAdded
+                              ? 'bg-emerald-600 text-white border-emerald-600'
+                              : 'bg-white hover:bg-neutral-100 text-neutral-800 border-[#EDE5DB]'
+                          }`}
+                          title="Ajouter au panier"
+                          aria-label="Ajouter au panier"
+                        >
+                          {isJustAdded ? (
+                            <Check size={14} className="text-white" />
+                          ) : (
+                            <ShoppingBag size={14} />
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => onSelectProduct(product)}
+                        className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 px-3 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 border border-neutral-300 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors cursor-pointer shadow-2xs"
+                      >
+                        <span>Rupture de stock</span>
+                        <ArrowRight size={12} />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

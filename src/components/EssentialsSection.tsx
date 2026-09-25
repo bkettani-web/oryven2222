@@ -19,7 +19,7 @@ const PADEL_COURT_THUMBNAILS: Record<string, string> = {
   'oryven-visor':
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
   'oryven-non-slip-grip-socks':
-    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789912252/ChatGPT_Image_20_sept._2026_14_50_13_wzbqb0.webp',
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660961/j0dq1fvx1ejox3rdnqcc_zhfvmq.webp',
 };
 
 // Variantes couleur prises sur le sol de padel
@@ -113,11 +113,15 @@ export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
                 {/* Product Image Stage */}
                 <div className="relative aspect-square bg-[#FBF7F2] p-2 sm:p-4 flex items-center justify-center overflow-hidden">
                   {/* Badge */}
-                  {product.badge && (
+                  {!product.inStock ? (
+                    <span className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-neutral-900/90 text-white backdrop-blur-xs text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-xs border border-neutral-700">
+                      Rupture de stock
+                    </span>
+                  ) : product.badge ? (
                     <span className="absolute top-2 left-2 sm:top-3 sm:left-3 z-10 bg-white/95 backdrop-blur-xs text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded shadow-xs text-neutral-800">
                       {product.badge}
                     </span>
-                  )}
+                  ) : null}
 
                   {/* Wishlist Button */}
                   <button
@@ -226,20 +230,34 @@ export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
                     )}
                   </div>
 
-                  {/* Add to Cart Button */}
+                  {/* Add to Cart or Out of Stock Button */}
                   <div className="pt-1.5 sm:pt-2">
-                    <button
-                      id={`add-to-cart-btn-${product.id}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onAddToCart(product);
-                      }}
-                      className="w-full py-2 sm:py-3 px-2 sm:px-4 bg-[#7A283B] hover:bg-[#681F30] text-white text-[11px] sm:text-xs font-bold tracking-wider uppercase rounded-md shadow-xs transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 group/btn cursor-pointer"
-                    >
-                      <ShoppingBag size={13} className="group-hover/btn:scale-110 transition-transform" />
-                      <span className="hidden sm:inline">Ajouter au panier</span>
-                      <span className="sm:hidden">Ajouter</span>
-                    </button>
+                    {product.inStock ? (
+                      <button
+                        id={`add-to-cart-btn-${product.id}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onAddToCart(product);
+                        }}
+                        className="w-full py-2 sm:py-3 px-2 sm:px-4 bg-[#7A283B] hover:bg-[#681F30] text-white text-[11px] sm:text-xs font-bold tracking-wider uppercase rounded-md shadow-xs transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 group/btn cursor-pointer"
+                      >
+                        <ShoppingBag size={13} className="group-hover/btn:scale-110 transition-transform" />
+                        <span className="hidden sm:inline">Ajouter au panier</span>
+                        <span className="sm:hidden">Ajouter</span>
+                      </button>
+                    ) : (
+                      <button
+                        id={`out-of-stock-btn-${product.id}`}
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectProduct(product);
+                        }}
+                        className="w-full py-2 sm:py-3 px-2 sm:px-4 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 border border-neutral-300 text-[11px] sm:text-xs font-bold tracking-wider uppercase rounded-md shadow-2xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span>Rupture de stock</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

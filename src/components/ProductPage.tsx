@@ -11,6 +11,8 @@ import {
   Star,
   ShoppingBag,
   ArrowRight,
+  AlertCircle,
+  Clock,
 } from 'lucide-react';
 import { Product, ProductOffer, CustomerOrder } from '../types';
 import { MOROCCAN_CITIES, IMAGES, PRODUCTS } from '../data/products';
@@ -631,11 +633,18 @@ export const ProductPage: React.FC<ProductPageProps> = ({
           <div className="lg:col-span-6 space-y-6">
             {/* Main Image Display */}
             <div className="relative aspect-square bg-white rounded-2xl overflow-hidden border border-neutral-200/90 shadow-md flex items-center justify-center p-3">
+              {/* Out of Stock Overlay Badge */}
+              {!product.inStock && (
+                <span className="absolute top-4 left-4 z-10 bg-neutral-900/90 backdrop-blur-xs text-white text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-md border border-neutral-700">
+                  Rupture de stock
+                </span>
+              )}
+
               {/* Main Photo */}
               <img
                 src={activeImage}
                 alt={product.name}
-                className="w-full h-full object-cover rounded-xl transition-all duration-300"
+                className={`w-full h-full object-cover rounded-xl transition-all duration-300 ${!product.inStock ? 'opacity-90' : ''}`}
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -750,10 +759,17 @@ export const ProductPage: React.FC<ProductPageProps> = ({
             {/* Product Title, Subtitle & Stock */}
             <div className="space-y-1.5 pb-1">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  En stock ({product.stockCount} disponibles)
-                </span>
+                {product.inStock ? (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    En stock ({product.stockCount} disponibles)
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                    Rupture de stock
+                  </span>
+                )}
                 <button
                   onClick={onBack}
                   className="text-xs text-neutral-500 hover:text-[#7A283B] transition-colors cursor-pointer"
@@ -767,47 +783,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
               <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed">
                 {product.subtitle}
               </p>
-
-              {/* Side-by-side variant selection directly under header for products with multiple colors */}
-              {!isPackComplet && hasVariants && product.colors && product.colors.length > 1 && (
-                <div className="pt-2 pb-0.5 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-neutral-800 flex items-center gap-1.5">
-                      <span>Couleur :</span>
-                      <span className="text-orange-600 font-extrabold">{selectedColor}</span>
-                    </span>
-                    <span className="text-[11px] text-neutral-400 font-medium">
-                      {product.colors.length} coloris disponibles
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    {product.colors.map((c) => {
-                      const isColorActive = selectedColor === c.name;
-                      return (
-                        <button
-                          key={c.name}
-                          type="button"
-                          onClick={() => handleSingleColorSelect(c.name)}
-                          className={`group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition-all cursor-pointer select-none ${
-                            isColorActive
-                              ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
-                              : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-medium shadow-2xs'
-                          }`}
-                          title={`Couleur : ${c.name}`}
-                        >
-                          <span
-                            className={`w-4 h-4 rounded-full border shadow-2xs shrink-0 transition-transform ${
-                              isColorActive ? 'ring-2 ring-orange-500/50 scale-110 border-white' : 'border-neutral-300 group-hover:scale-105'
-                            }`}
-                            style={{ backgroundColor: c.code }}
-                          />
-                          <span className="text-xs">{c.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* ================= UNIFIED SIMPLIFIED BLOCK: OFFERS + FORM ================= */}
@@ -818,18 +793,76 @@ export const ProductPage: React.FC<ProductPageProps> = ({
               {/* Block Header */}
               <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
                 <div className="flex items-center space-x-2">
-                  <div className="p-1.5 rounded-lg bg-orange-500/10 text-orange-600">
+                  <div className={`p-1.5 rounded-lg ${product.inStock ? 'bg-orange-500/10 text-orange-600' : 'bg-rose-500/10 text-rose-600'}`}>
                     <Truck size={16} />
                   </div>
                   <h3 className="text-xs sm:text-sm font-black font-heading uppercase text-neutral-900 tracking-wide">
-                    Offres & Commande Express
+                    {product.inStock ? 'Offres & Commande Express' : 'Disponibilité & Réassort'}
                   </h3>
                 </div>
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-orange-800 bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
-                  Livraison Gratuite
-                </span>
+                {product.inStock ? (
+                  <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-orange-800 bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
+                    Livraison Gratuite
+                  </span>
+                ) : (
+                  <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-rose-800 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                    Épuisé temporairement
+                  </span>
+                )}
               </div>
 
+              {!product.inStock ? (
+                <div className="py-6 px-3 text-center space-y-4">
+                  <div className="inline-flex p-3 rounded-full bg-rose-100 text-rose-700">
+                    <AlertCircle size={28} />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-base sm:text-lg font-black font-heading uppercase text-neutral-900">
+                      Rupture de stock
+                    </h4>
+                    <p className="text-xs sm:text-sm text-neutral-600 max-w-md mx-auto leading-relaxed">
+                      Ce produit ({product.name}) est actuellement victime de son succès et en rupture temporaire de stock.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-[#FAF7F2] rounded-xl border border-neutral-200 text-left space-y-2 max-w-md mx-auto">
+                    <div className="flex items-center gap-2 text-xs font-bold text-neutral-800">
+                      <Clock size={15} className="text-orange-600" />
+                      <span>Prochain réassort en préparation</span>
+                    </div>
+                    <p className="text-xs text-neutral-600 leading-relaxed">
+                      Notre atelier prépare un nouvel arrivage. Cliquez sur le bouton ci-dessous pour nous envoyer un message et être alerté(e) en priorité dès la remise en stock.
+                    </p>
+                  </div>
+
+                  <div className="pt-2 max-w-md mx-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const msg = encodeURIComponent(
+                          `Bonjour Oryven Maroc ! Je souhaite être prévenu(e) en priorité dès que le produit "${product.name}" sera à nouveau disponible en stock.`
+                        );
+                        window.open(`https://api.whatsapp.com/send?phone=212676809781&text=${msg}`, '_blank');
+                      }}
+                      className="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+                    >
+                      <MessageCircle size={18} />
+                      <span>Être informé(e) du prochain réassort sur WhatsApp</span>
+                    </button>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={onBack}
+                      className="text-xs text-neutral-500 hover:text-[#7A283B] font-semibold underline cursor-pointer"
+                    >
+                      ← Voir les autres articles de la collection
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
               {/* 1. QUANTITY OFFERS STACKED ONE BELOW THE OTHER WITH INTEGRATED VARIANTS */}
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
@@ -1320,6 +1353,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                   <span>Échange 14 jours</span>
                 </div>
               </form>
+                </>
+              )}
             </div>
 
             {/* ================= 4 IMAGES & DESCRIPTIONS SECTION (UNDER ORDER FORM) ================= */}
