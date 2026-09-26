@@ -1608,29 +1608,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                 );
               })}
           </div>
-
-          {/* Reassurance strip */}
-          <div className="mt-10 p-4 sm:p-5 rounded-2xl bg-white border border-neutral-200/90 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left shadow-xs">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-orange-50 text-orange-600 shrink-0">
-                <Truck size={20} />
-              </div>
-              <div>
-                <p className="text-xs sm:text-sm font-bold text-neutral-900">
-                  Livraison Express Gratuite au Maroc
-                </p>
-                <p className="text-[11px] text-neutral-500">
-                  Combinez plusieurs accessoires pour bénéficier d'un colis unique prioritaire et du paiement à la livraison.
-                </p>
-              </div>
-            </div>
-            <div className="shrink-0">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
-                <CheckCircle size={14} />
-                Paiement en espèces à la livraison
-              </span>
-            </div>
-          </div>
         </div>
       </section>
     </div>
