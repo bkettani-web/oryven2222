@@ -870,9 +870,13 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black mr-1.5 shadow-xs">
                       1
                     </span>
-                    {isPackComplet ? 'Choisissez votre offre :' : (hasVariants ? 'Choisissez votre offre & couleurs :' : 'Choisissez votre offre :')}
+                    {product.offers.length > 1
+                      ? (isPackComplet ? 'Choisissez votre offre :' : (hasVariants ? 'Choisissez votre offre & couleurs :' : 'Choisissez votre offre :'))
+                      : 'Offre sélectionnée :'}
                   </span>
-                  <span className="text-[10px] text-neutral-400 font-medium">Cliquez pour sélectionner</span>
+                  {product.offers.length > 1 && (
+                    <span className="text-[10px] text-neutral-400 font-medium">Cliquez pour sélectionner</span>
+                  )}
                 </div>
 
                 <div className="space-y-2.5">
