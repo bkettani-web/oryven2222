@@ -438,9 +438,10 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
   // Sync state when product changes
   useEffect(() => {
-    setActiveImage(product.gallery[0] || product.image);
-    setSelectedOfferId('x1');
     const defaultColorName = product.colors?.[0]?.name || '';
+    const defaultColorImage = product.colors?.[0]?.image;
+    setActiveImage(defaultColorImage || product.gallery[0] || product.image);
+    setSelectedOfferId('x1');
     setSelectedColor(defaultColorName);
     setPackColors({
       0: defaultColorName,
@@ -955,7 +956,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                             onClick={(e) => e.stopPropagation()}
                           >
                             {offer.quantity === 1 ? (
-                              <div className="space-y-1.5">
+                              <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                   <span className="text-[11px] font-bold text-neutral-700 uppercase tracking-wide flex items-center gap-1.5">
                                     <span>Couleur au choix :</span>
@@ -964,44 +965,65 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                                     </span>
                                   </span>
                                   <span className="text-[10px] text-neutral-400 font-medium">
-                                    {product.colors.length} coloris disponibles
+                                    {product.colors.length} coloris
                                   </span>
                                 </div>
 
-                                <div className="flex flex-wrap items-center gap-2 pt-0.5">
-                                  {product.colors.map((c) => {
-                                    const isColorActive = (selectedColor || product.colors[0]?.name) === c.name;
-                                    return (
-                                      <button
-                                        key={c.name}
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleSingleColorSelect(c.name);
-                                        }}
-                                        className={`group inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition-all cursor-pointer select-none ${
-                                          isColorActive
-                                            ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
-                                            : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-medium shadow-2xs'
-                                        }`}
-                                        title={`Couleur : ${c.name}`}
-                                      >
-                                        <span
-                                          className={`w-4 h-4 rounded-full border shadow-2xs shrink-0 transition-transform ${
-                                            isColorActive
-                                              ? 'ring-2 ring-orange-500/50 scale-110 border-white'
-                                              : 'border-neutral-300 group-hover:scale-105'
-                                          }`}
-                                          style={{ backgroundColor: c.code }}
+                                {(() => {
+                                  const activeColorObj =
+                                    product.colors.find(
+                                      (c) => c.name === (selectedColor || product.colors?.[0]?.name)
+                                    ) || product.colors[0];
+
+                                  return (
+                                    <div className="flex items-center gap-3 pt-1">
+                                      {/* Image à gauche qui change en fonction de la couleur choisie, sans texte */}
+                                      {activeColorObj?.image && (
+                                        <img
+                                          src={activeColorObj.image}
+                                          alt={activeColorObj.name}
+                                          className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-neutral-200 shadow-xs shrink-0 bg-white"
                                         />
-                                        <span className="text-xs">{c.name}</span>
-                                        {isColorActive && (
-                                          <span className="w-1.5 h-1.5 rounded-full bg-orange-600 shrink-0" />
-                                        )}
-                                      </button>
-                                    );
-                                  })}
-                                </div>
+                                      )}
+
+                                      {/* Choix des couleurs à droite */}
+                                      <div className="flex-1 flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                        {product.colors.map((c) => {
+                                          const isColorActive = (selectedColor || product.colors[0]?.name) === c.name;
+                                          return (
+                                            <button
+                                              key={c.name}
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleSingleColorSelect(c.name);
+                                              }}
+                                              className={`group inline-flex items-center gap-2 px-2.5 py-1.5 rounded-xl border text-xs transition-all cursor-pointer select-none ${
+                                                isColorActive
+                                                  ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
+                                                  : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50 text-neutral-700 font-medium shadow-2xs'
+                                              }`}
+                                              title={`Couleur : ${c.name}`}
+                                            >
+                                              <span
+                                                className={`w-3.5 h-3.5 rounded-full border shadow-2xs shrink-0 transition-transform ${
+                                                  isColorActive
+                                                    ? 'ring-2 ring-orange-500/50 scale-110 border-white'
+                                                    : 'border-neutral-300 group-hover:scale-105'
+                                                }`}
+                                                style={{ backgroundColor: c.code }}
+                                              />
+                                              <span className="text-xs">{c.name}</span>
+                                              {isColorActive && (
+                                                <span className="w-1.5 h-1.5 rounded-full bg-orange-600 shrink-0" />
+                                              )}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             ) : (
                               <div className="space-y-3">
@@ -1014,57 +1036,70 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                                   </span>
                                 </div>
 
-                                <div className="space-y-2.5">
+                                <div className="space-y-2">
                                   {Array.from({ length: offer.quantity }).map((_, idx) => {
                                     const currentPieceColor =
                                       packColors[idx] ||
                                       product.colors?.[idx % product.colors.length]?.name ||
                                       product.colors?.[0]?.name ||
                                       '';
+                                    const currentPieceObj = product.colors?.find(
+                                      (c) => c.name === currentPieceColor
+                                    );
+
                                     return (
                                       <div
                                         key={idx}
                                         className="p-2.5 bg-white rounded-xl border border-neutral-200 shadow-2xs space-y-1.5"
                                       >
-                                        <div className="flex items-center justify-between">
-                                          <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wide">
-                                            Pièce {idx + 1} :{' '}
-                                            <span className="text-orange-600 font-extrabold normal-case text-xs">
-                                              {currentPieceColor}
-                                            </span>
+                                        <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wide block">
+                                          Pièce {idx + 1} :{' '}
+                                          <span className="text-orange-600 font-extrabold normal-case text-xs">
+                                            {currentPieceColor}
                                           </span>
-                                        </div>
+                                        </span>
 
-                                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                                          {product.colors.map((c) => {
-                                            const isColorActive = currentPieceColor === c.name;
-                                            return (
-                                              <button
-                                                key={c.name}
-                                                type="button"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  handlePackColorChange(idx, c.name);
-                                                }}
-                                                className={`group inline-flex items-center gap-1.5 px-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl border text-xs transition-all cursor-pointer select-none ${
-                                                  isColorActive
-                                                    ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
-                                                    : 'border-neutral-200 bg-neutral-50/60 hover:border-neutral-300 hover:bg-white text-neutral-700 font-medium'
-                                                }`}
-                                                title={`Pièce ${idx + 1} en ${c.name}`}
-                                              >
-                                                <span
-                                                  className={`w-3.5 h-3.5 rounded-full border shadow-2xs shrink-0 transition-transform ${
+                                        <div className="flex items-center gap-2.5 pt-0.5">
+                                          {/* Image à gauche sans texte qui change en fonction de la couleur choisie */}
+                                          {currentPieceObj?.image && (
+                                            <img
+                                              src={currentPieceObj.image}
+                                              alt={currentPieceColor}
+                                              className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover border border-neutral-200 shadow-2xs shrink-0 bg-white"
+                                            />
+                                          )}
+
+                                          <div className="flex-1 flex flex-wrap items-center gap-1.5">
+                                            {product.colors.map((c) => {
+                                              const isColorActive = currentPieceColor === c.name;
+                                              return (
+                                                <button
+                                                  key={c.name}
+                                                  type="button"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handlePackColorChange(idx, c.name);
+                                                  }}
+                                                  className={`group inline-flex items-center gap-1.5 px-2 py-1 rounded-lg border text-xs transition-all cursor-pointer select-none ${
                                                     isColorActive
-                                                      ? 'ring-1.5 ring-orange-500 scale-105 border-white'
-                                                      : 'border-neutral-300 group-hover:scale-105'
+                                                      ? 'border-orange-500 bg-orange-50/90 text-orange-950 font-bold ring-2 ring-orange-500/25 shadow-xs'
+                                                      : 'border-neutral-200 bg-neutral-50/60 hover:border-neutral-300 hover:bg-white text-neutral-700 font-medium'
                                                   }`}
-                                                  style={{ backgroundColor: c.code }}
-                                                />
-                                                <span className="text-[11px] sm:text-xs">{c.name}</span>
-                                              </button>
-                                            );
-                                          })}
+                                                  title={`Pièce ${idx + 1} en ${c.name}`}
+                                                >
+                                                  <span
+                                                    className={`w-3 h-3 rounded-full border shadow-2xs shrink-0 transition-transform ${
+                                                      isColorActive
+                                                        ? 'ring-1.5 ring-orange-500 scale-105 border-white'
+                                                        : 'border-neutral-300 group-hover:scale-105'
+                                                    }`}
+                                                    style={{ backgroundColor: c.code }}
+                                                  />
+                                                  <span className="text-[11px] sm:text-xs">{c.name}</span>
+                                                </button>
+                                              );
+                                            })}
+                                          </div>
                                         </div>
                                       </div>
                                     );
