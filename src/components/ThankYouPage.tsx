@@ -47,7 +47,7 @@ export const ThankYouPage: React.FC<ThankYouPageProps> = ({
           rating: 4.9,
           reviewCount: 342,
           image:
-            'https://res.cloudinary.com/diptsoc4h/image/upload/v1789664999/ozfmjvjz1zysmzpojycj_c2iyta.webp',
+            'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
           gallery: [],
           colors: [{ name: 'Lavande', code: '#B4A7D6' }],
           description: '',

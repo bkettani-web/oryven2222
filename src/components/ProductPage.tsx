@@ -652,25 +652,46 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
             {/* Thumbnail Navigation */}
             {product.gallery.length > 1 && (
-              <div className="grid grid-cols-4 gap-2 sm:gap-3 w-full">
-                {product.gallery.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImage(img)}
-                    className={`relative aspect-square w-full rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
-                      activeImage === img
-                        ? 'border-[#7A283B] ring-2 ring-[#7A283B]/20 scale-102 shadow-xs'
-                        : 'border-neutral-200 hover:border-neutral-300 opacity-75 hover:opacity-100'
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`${product.name} vue ${idx + 1}`}
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  </button>
-                ))}
+              <div
+                className={`grid ${
+                  product.gallery.length > 4 ? 'grid-cols-6' : 'grid-cols-4'
+                } gap-2 sm:gap-2.5 w-full`}
+              >
+                {product.gallery.map((img, idx) => {
+                  const matchedColor = product.colors?.find((c) => c.image === img);
+                  const isSelected = activeImage === img;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setActiveImage(img);
+                        if (matchedColor) {
+                          handleSingleColorSelect(matchedColor.name);
+                        }
+                      }}
+                      className={`relative aspect-square w-full rounded-xl overflow-hidden border-2 transition-all cursor-pointer group ${
+                        isSelected
+                          ? 'border-[#7A283B] ring-2 ring-[#7A283B]/25 scale-102 shadow-xs'
+                          : 'border-neutral-200 hover:border-neutral-300 opacity-80 hover:opacity-100 hover:scale-[1.02]'
+                      }`}
+                      title={matchedColor ? `Coloris ${matchedColor.name}` : `${product.name} vue ${idx + 1}`}
+                    >
+                      <img
+                        src={img}
+                        alt={matchedColor ? `${product.name} - ${matchedColor.name}` : `${product.name} vue ${idx + 1}`}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      {matchedColor && (
+                        <span
+                          className="absolute bottom-1 right-1 w-2.5 h-2.5 rounded-full border border-white shadow-xs"
+                          style={{ backgroundColor: matchedColor.code }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
 
