@@ -1113,7 +1113,7 @@ function testerCreationFeuilles() {
           offerTitle: "Pack Solo (1 Sac)",
           quantity: 1,
           variants: "Toile Écru Naturelle",
-          totalAmount: 349,
+          totalAmount: 369,
           orderStatus: "Confirmé",
           deliveryStatus: "Expédié"
         },

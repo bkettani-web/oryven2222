@@ -319,7 +319,7 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       offerTitle: 'Pack Solo (1 Sac)',
       quantity: 1,
       variants: '1x Toile Écru Naturelle',
-      total: 349,
+      total: 369,
     },
     {
       sheetName: 'Chaussettes',
