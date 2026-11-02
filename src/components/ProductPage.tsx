@@ -1375,8 +1375,8 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                   </div>
                 </div>
 
-                {/* Submit & Secondary Actions */}
-                <div className="pt-2 space-y-2">
+                {/* Submit Action */}
+                <div className="pt-2">
                   <button
                     id="confirm-order-submit-btn"
                     type="submit"
@@ -1391,15 +1391,6 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                         <span>Commander • {currentOffer.totalPrice} MAD (Paiement à la livraison)</span>
                       </>
                     )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleWhatsAppOrder}
-                    className="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <MessageCircle size={15} />
-                    <span>Commander rapidement par WhatsApp 💬</span>
                   </button>
                 </div>
 
