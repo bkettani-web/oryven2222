@@ -1381,7 +1381,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                     id="confirm-order-submit-btn"
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 px-4 bg-gradient-to-r from-[#FF6B00] via-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:via-[#C2410C] hover:to-[#9A3412] text-white text-xs sm:text-sm md:text-base font-black uppercase tracking-wider rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/45 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer ring-2 ring-orange-400/30"
+                    className="w-full py-4 px-4 bg-gradient-to-r from-[#FF6B00] via-[#F97316] to-[#EA580C] hover:from-[#EA580C] hover:via-[#C2410C] hover:to-[#9A3412] text-white text-xs sm:text-sm md:text-base font-black uppercase tracking-wider rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/45 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer ring-2 ring-orange-400/30 animate-cta-shake"
                   >
                     {isSubmitting ? (
                       <span>Confirmation en cours...</span>

@@ -87,10 +87,10 @@ export const PRODUCTS: Product[] = [
       },
       {
         id: 'x2',
-        title: 'Pack Duo (2 Sacs)',
+        title: 'Pack Famille (2 Sacs)',
         quantity: 2,
         popular: true,
-        badge: 'LE PLUS DEMANDÉ',
+        badge: 'PACK FAMILLE',
         unitPrice: 349.5,
         totalPrice: 699,
         originalPrice: 738,
