@@ -26,6 +26,11 @@ export const APPS_SCRIPT_CODE_TEMPLATE = `/**
  *   - Compatible smartphones (iPhone iOS & Android) et ordinateurs
  *   - Pas de code %20 ni %0A : texte propre avec sauts de ligne et émojis
  *
+ * 📧 NOUVEAU - NOTIFICATIONS EMAIL AUTOMATIQUES :
+ *   - Envoi immédiat d'un e-mail à Berradamohamed10@gmail.com à chaque commande reçue
+ *   - Contient l'ensemble des coordonnées : Client, Téléphone, Ville, Adresse, Produit, Variantes, Montant MAD
+ *   - Liens d'action rapide : WhatsApp direct, Appel téléphonique et accès au Google Sheet
+ *
  * 📑 FEUILLES GÉRÉES AUTOMATIQUEMENT :
  *   📊 Tableau de bord (Onglet principal avec KPIs financiers & volume en direct)
  *   1. Bandeau
@@ -35,6 +40,9 @@ export const APPS_SCRIPT_CODE_TEMPLATE = `/**
  *   5. Pack 4 Produits
  * ==============================================================================
  */
+
+// Adresse email recevant les alertes instantanées de nouvelles commandes
+var NOTIFICATION_EMAIL = "Berradamohamed10@gmail.com";
 
 var PRODUCT_SHEETS = ["Bandeau", "Visière", "Tote Bag", "Chaussettes", "Pack 4 Produits"];
 
@@ -151,6 +159,15 @@ function doPost(e) {
         sheet: sheetName,
         success: true
       });
+
+      // Envoi automatique de la notification par email à Berradamohamed10@gmail.com
+      try {
+        if (NOTIFICATION_EMAIL) {
+          sendOrderEmailNotification(order, NOTIFICATION_EMAIL);
+        }
+      } catch (mailErr) {
+        Logger.log("Erreur lors de l'envoi de l'email de notification: " + mailErr.toString());
+      }
     }
 
     // Actualiser le Tableau de bord avec les données en direct et le CA en MAD
@@ -1051,6 +1068,141 @@ function formatMoroccanPhone(phone) {
   if (clean.indexOf("0") === 0) clean = "212" + clean.substring(1);
   else if (clean.indexOf("212") !== 0) clean = "212" + clean;
   return clean;
+}
+
+/**
+ * Envoie une notification automatique par e-mail à l'administrateur
+ * avec tous les détails de la commande reçue
+ */
+function sendOrderEmailNotification(order, recipientEmail) {
+  if (!recipientEmail) return;
+
+  var orderId = order.orderId || ("ORY-" + Math.floor(Math.random() * 90000 + 10000));
+  var dateStr = order.date || Utilities.formatDate(new Date(), "GMT+1", "dd/MM/yyyy HH:mm");
+  var clientName = order.fullName || "Client";
+  var rawPhone = order.phone || "";
+  var cleanPhone = formatMoroccanPhone(rawPhone);
+  var city = order.city || "Non spécifiée";
+  var address = order.address || "Non spécifiée";
+  var prodName = order.productName || extractProductName(order);
+  var offer = order.offerTitle || extractOfferTitle(order);
+  var qty = order.quantity || extractQuantity(order);
+  var variants = order.variants || extractVariants(order);
+  var amount = order.totalAmount != null ? order.totalAmount + " MAD" : "Paiement à la livraison";
+
+  var waMessage = "Bonjour " + clientName + ", nous avons bien reçu votre commande Oryven #" + orderId + " : " + prodName + " (" + offer + ") pour un montant de " + amount + ". Merci de nous confirmer votre disponibilité de livraison à " + city + " svp.";
+  var waLink = "https://api.whatsapp.com/send?phone=" + cleanPhone + "&text=" + encodeURIComponent(waMessage);
+
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetUrl = ss ? ss.getUrl() : "";
+
+  var subject = "🌸 Nouvelle Commande Oryven #" + orderId + " - " + clientName + " (" + amount + ")";
+
+  var htmlBody = "" +
+    "<!DOCTYPE html>" +
+    "<html>" +
+    "<head><meta charset='utf-8'></head>" +
+    "<body style='margin:0;padding:0;background-color:#f4f5f7;font-family:Arial,Helvetica,sans-serif;color:#333333;line-height:1.5;'>" +
+    "  <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color:#f4f5f7;padding:25px 10px;'>" +
+    "    <tr>" +
+    "      <td align='center'>" +
+    "        <table role='presentation' width='100%' style='max-width:600px;background-color:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.08);border:1px solid #e5e7eb;'>" +
+    "          <!-- HEADER -->" +
+    "          <tr>" +
+    "            <td style='background:linear-gradient(135deg, #7A283B 0%, #521623 100%);padding:28px 24px;text-align:center;color:#ffffff;'>" +
+    "              <div style='font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#F9CBD3;margin-bottom:6px;'>Oryven Maroc — Notification Directe</div>" +
+    "              <h1 style='margin:0;font-size:22px;font-weight:800;letter-spacing:0.5px;'>🎉 NOUVELLE COMMANDE REÇUE !</h1>" +
+    "              <div style='display:inline-block;margin-top:12px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);padding:6px 16px;border-radius:20px;font-size:13px;font-weight:700;'>" +
+    "                N° " + orderId + " • " + amount + "" +
+    "              </div>" +
+    "            </td>" +
+    "          </tr>" +
+    "          <!-- BODY -->" +
+    "          <tr>" +
+    "            <td style='padding:24px;'>" +
+    "              <!-- INFO BANNER -->" +
+    "              <table width='100%' cellpadding='0' cellspacing='0' style='background:#fdf6f7;border-left:4px solid #7A283B;border-radius:6px;padding:12px 14px;margin-bottom:20px;'>" +
+    "                <tr>" +
+    "                  <td>" +
+    "                    <div style='font-size:12px;color:#7A283B;font-weight:700;'>Date de réception :</div>" +
+    "                    <div style='font-size:14px;color:#1f2937;font-weight:600;'>" + dateStr + "</div>" +
+    "                  </td>" +
+    "                  <td align='right'>" +
+    "                    <span style='background:#e0f2fe;color:#0369a1;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;'>Paiement à la livraison</span>" +
+    "                  </td>" +
+    "                </tr>" +
+    "              </table>" +
+    "              <!-- CLIENT DETAILS -->" +
+    "              <h3 style='margin:0 0 10px 0;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#7A283B;border-bottom:2px solid #f3e8ea;padding-bottom:6px;'>👤 Coordonnées du Client</h3>" +
+    "              <table width='100%' cellpadding='6' cellspacing='0' style='font-size:13px;margin-bottom:20px;'>" +
+    "                <tr><td width='32%' style='color:#6b7280;font-weight:600;'>Nom complet :</td><td style='color:#111827;font-weight:700;'>" + clientName + "</td></tr>" +
+    "                <tr><td style='color:#6b7280;font-weight:600;'>Téléphone :</td><td><a href='tel:" + rawPhone + "' style='color:#7A283B;font-weight:700;text-decoration:none;'>" + rawPhone + "</a></td></tr>" +
+    "                <tr><td style='color:#6b7280;font-weight:600;'>Ville :</td><td style='color:#111827;font-weight:700;'>" + city + "</td></tr>" +
+    "                <tr><td style='color:#6b7280;font-weight:600;'>Adresse complète :</td><td style='color:#111827;font-weight:600;'>" + address + "</td></tr>" +
+    "              </table>" +
+    "              <!-- PRODUCT DETAILS -->" +
+    "              <h3 style='margin:0 0 10px 0;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#7A283B;border-bottom:2px solid #f3e8ea;padding-bottom:6px;'>🛍️ Détails de la Commande</h3>" +
+    "              <table width='100%' cellpadding='6' cellspacing='0' style='font-size:13px;margin-bottom:22px;background:#fafafa;border:1px solid #f0f0f0;border-radius:8px;'>" +
+    "                <tr><td width='32%' style='color:#6b7280;font-weight:600;'>Produit :</td><td style='color:#111827;font-weight:700;'>" + prodName + "</td></tr>" +
+    "                <tr><td style='color:#6b7280;font-weight:600;'>Formule / Offre :</td><td style='color:#111827;font-weight:600;'>" + offer + "</td></tr>" +
+    "                <tr><td style='color:#6b7280;font-weight:600;'>Quantité :</td><td style='color:#111827;font-weight:700;'>" + qty + "</td></tr>" +
+    (variants ? "<tr><td style='color:#6b7280;font-weight:600;'>Variante(s) :</td><td style='color:#7A283B;font-weight:700;'>" + variants + "</td></tr>" : "") +
+    "                <tr style='border-top:1px solid #e5e7eb;'><td style='color:#111827;font-weight:700;font-size:14px;padding-top:10px;'>Total à payer :</td><td style='color:#7A283B;font-weight:800;font-size:16px;padding-top:10px;'>" + amount + "</td></tr>" +
+    "              </table>" +
+    "              <!-- QUICK ACTIONS -->" +
+    "              <table width='100%' cellpadding='0' cellspacing='0' style='margin-bottom:15px;'>" +
+    "                <tr>" +
+    "                  <td align='center' style='padding-right:6px;'>" +
+    "                    <a href='" + waLink + "' target='_blank' style='display:block;background-color:#25D366;color:#ffffff;text-decoration:none;font-weight:700;font-size:13px;padding:12px 16px;border-radius:8px;text-align:center;'>💬 Confirmer sur WhatsApp</a>" +
+    "                  </td>" +
+    "                  <td align='center' style='padding-left:6px;'>" +
+    "                    <a href='tel:" + rawPhone + "' style='display:block;background-color:#7A283B;color:#ffffff;text-decoration:none;font-weight:700;font-size:13px;padding:12px 16px;border-radius:8px;text-align:center;'>📞 Appeler le Client</a>" +
+    "                  </td>" +
+    "                </tr>" +
+    "              </table>" +
+    (sheetUrl ? ("<div style='text-align:center;margin-top:12px;'><a href='" + sheetUrl + "' target='_blank' style='color:#4b5563;font-size:12px;text-decoration:underline;'>📊 Ouvrir le Google Sheet / Tableau de bord</a></div>") : "") +
+    "            </td>" +
+    "          </tr>" +
+    "          <!-- FOOTER -->" +
+    "          <tr>" +
+    "            <td style='background:#f9fafb;padding:16px;text-align:center;color:#9ca3af;font-size:11px;border-top:1px solid #f3f4f6;'>" +
+    "              Système de commande en ligne Oryven Maroc • www.oryven.ma<br/>" +
+    "              Email envoyé automatiquement à " + recipientEmail + "" +
+    "            </td>" +
+    "          </tr>" +
+    "        </table>" +
+    "      </td>" +
+    "    </tr>" +
+    "  </table>" +
+    "</body>" +
+    "</html>";
+
+  var plainBody = "🌸 NOUVELLE COMMANDE ORYVEN #" + orderId + "\n" +
+    "--------------------------------------------------\n" +
+    "Montant total : " + amount + " (Paiement à la livraison)\n" +
+    "Date : " + dateStr + "\n\n" +
+    "CLIENT :\n" +
+    "- Nom : " + clientName + "\n" +
+    "- Téléphone : " + rawPhone + "\n" +
+    "- Ville : " + city + "\n" +
+    "- Adresse : " + address + "\n\n" +
+    "COMMANDE :\n" +
+    "- Produit : " + prodName + "\n" +
+    "- Offre : " + offer + "\n" +
+    "- Quantité : " + qty + "\n" +
+    "- Variantes : " + variants + "\n\n" +
+    "ACTIONS RAPIDES :\n" +
+    "- WhatsApp : " + waLink + "\n" +
+    "- Appeler : tel:" + rawPhone + "\n\n" +
+    (sheetUrl ? ("- Google Sheet : " + sheetUrl + "\n\n") : "") +
+    "Notification automatique envoyée à " + recipientEmail;
+
+  MailApp.sendEmail({
+    to: recipientEmail,
+    subject: subject,
+    body: plainBody,
+    htmlBody: htmlBody
+  });
 }
 
 /**

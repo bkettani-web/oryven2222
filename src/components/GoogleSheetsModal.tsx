@@ -11,6 +11,7 @@ import {
   HelpCircle,
   ShieldCheck,
   RefreshCw,
+  Mail,
 } from 'lucide-react';
 import {
   getAppsScriptUrl,
@@ -177,6 +178,22 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                 </div>
               </div>
 
+              {/* Notification Email Box */}
+              <div className="p-3.5 bg-rose-50/70 border border-rose-200/80 rounded-xl flex items-start space-x-3 text-xs text-rose-950">
+                <div className="w-7 h-7 rounded-lg bg-[#7A283B] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                  <Mail size={15} />
+                </div>
+                <div className="space-y-1">
+                  <div className="font-bold flex items-center gap-2">
+                    <span>Notification email automatique à chaque commande</span>
+                    <span className="text-[10px] bg-rose-200/60 text-[#7A283B] px-2 py-0.5 rounded-full font-bold">Actif</span>
+                  </div>
+                  <p className="text-neutral-700 leading-relaxed">
+                    Un e-mail récapitulatif complet (Client, Téléphone, Adresse, Produit, Variantes, Montant MAD, boutons d’appel et WhatsApp en 1 clic) est envoyé automatiquement à <strong className="text-[#7A283B]">Berradamohamed10@gmail.com</strong> dès réception d'une commande dans le Google Sheet.
+                  </p>
+                </div>
+              </div>
+
               {/* URL Input Form */}
               <form onSubmit={handleSaveUrl} className="space-y-2">
                 <label className="block text-xs font-bold uppercase tracking-wider text-neutral-700">
@@ -339,19 +356,18 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
               </div>
 
               {/* Deployment hints */}
-              <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-200 text-xs space-y-2 text-neutral-700">
+              <div className="bg-neutral-50 p-4 rounded-xl border border-neutral-200 text-xs space-y-2.5 text-neutral-700">
                 <div className="font-bold text-neutral-900 flex items-center gap-1.5">
                   <ShieldCheck size={15} className="text-[#7A283B]" />
-                  <span>Important lors du déploiement :</span>
+                  <span>Comment mettre à jour le script dans votre Google Sheet :</span>
                 </div>
-                <p>
-                  Dans la boîte de déploiement Google Apps Script :
-                </p>
-                <ul className="list-disc pl-5 space-y-1 text-neutral-600">
-                  <li><strong>Type :</strong> Application Web (icône roue dentée ⚙️)</li>
-                  <li><strong>Exécuter en tant que :</strong> Moi (votre adresse Gmail / Workspace)</li>
-                  <li><strong>Qui a accès :</strong> <span className="font-bold text-neutral-900">Tout le monde</span> (obligatoire pour autoriser la boutique à poster les commandes sans login Google)</li>
-                </ul>
+                <ol className="list-decimal pl-5 space-y-1.5 text-neutral-600 leading-relaxed">
+                  <li>Dans votre Google Sheet (<em>Oryven Maroc - Commandes Clients</em>), ouvrez <strong>Extensions &gt; Apps Script</strong>.</li>
+                  <li>Sélectionnez tout le code existant dans <code className="bg-neutral-200 px-1.5 py-0.5 rounded text-[11px] font-mono">Code.gs</code> et remplacez-le par le code ci-dessus (cliquez sur le bouton <strong>« Copier le code »</strong> ci-dessus).</li>
+                  <li>Cliquez sur l'icône 💾 <strong>Enregistrer</strong> (Ctrl+S).</li>
+                  <li>Cliquez en haut à droite sur <strong>Déployer &gt; Gérer les déploiements</strong>, cliquez sur l'icône <strong>✏️ Modifier</strong> (crayon), choisissez <strong>« Nouvelle version »</strong>, puis validez avec <strong>Déployer</strong>.</li>
+                  <li>À la première exécution, Google peut afficher une autorisation standard (<em>Autoriser l'accès</em> pour autoriser l'envoi d'emails via votre compte). Validez-la : chaque commande reçue enverra alors automatiquement un email avec tous les détails à <strong className="text-neutral-900">Berradamohamed10@gmail.com</strong> !</li>
+                </ol>
               </div>
             </div>
           )}
