@@ -996,6 +996,7 @@ function onOpen() {
   var ui = SpreadsheetApp.getUi();
   ui.createMenu("🌸 Oryven")
     .addItem("📊 Actualiser le Tableau de bord & Revenus (MAD)", "menuRebuildDashboard")
+    .addItem("📧 Tester l'envoi d'email de notification", "testerEnvoiEmailNotification")
     .addItem("🧪 Envoyer les 5 commandes tests pour initialiser", "testerCreationFeuilles")
     .addToUi();
 }
@@ -1197,12 +1198,56 @@ function sendOrderEmailNotification(order, recipientEmail) {
     (sheetUrl ? ("- Google Sheet : " + sheetUrl + "\n\n") : "") +
     "Notification automatique envoyée à " + recipientEmail;
 
-  MailApp.sendEmail({
-    to: recipientEmail,
-    subject: subject,
-    body: plainBody,
-    htmlBody: htmlBody
-  });
+  try {
+    MailApp.sendEmail({
+      to: recipientEmail,
+      subject: subject,
+      body: plainBody,
+      htmlBody: htmlBody
+    });
+    Logger.log("Email envoyé avec succès via MailApp à " + recipientEmail);
+  } catch (errMailApp) {
+    Logger.log("MailApp a échoué (" + errMailApp.toString() + "). Tentative avec GmailApp...");
+    try {
+      GmailApp.sendEmail(recipientEmail, subject, plainBody, {
+        htmlBody: htmlBody
+      });
+      Logger.log("Email envoyé avec succès via GmailApp à " + recipientEmail);
+    } catch (errGmailApp) {
+      Logger.log("Échec GmailApp également: " + errGmailApp.toString());
+      throw errGmailApp;
+    }
+  }
+}
+
+/**
+ * ⚡ TESTEZ CETTE FONCTION EN UN CLIC POUR DÉBLOQUER LES AUTORISATIONS GOOGLE !
+ * Dans l'éditeur Apps Script :
+ * 1. Choisissez "testerEnvoiEmailNotification" dans la barre d'outils en haut.
+ * 2. Cliquez sur "▷ Exécuter".
+ * 3. Validez la fenêtre "Autorisation requise" (Accorder l'accès).
+ */
+function testerEnvoiEmailNotification() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var tz = ss ? ss.getSpreadsheetTimeZone() : "GMT+1";
+  var testOrder = {
+    orderId: "TEST-EMAIL-" + Math.floor(Math.random() * 9000 + 1000),
+    fullName: "Client Test Oryven",
+    phone: "0661234567",
+    city: "Casablanca",
+    address: "Boulevard d'Anfa",
+    productName: "Oryven Tote Bag 28L",
+    offerTitle: "Pack Solo (1 Sac)",
+    quantity: 1,
+    variants: "Toile Écru Naturelle",
+    totalAmount: 369,
+    date: Utilities.formatDate(new Date(), tz, "dd/MM/yyyy HH:mm")
+  };
+
+  Logger.log("=== TEST D'ENVOI D'EMAIL NOTIFICATION ===");
+  Logger.log("Destinataire configuré : " + NOTIFICATION_EMAIL);
+  sendOrderEmailNotification(testOrder, NOTIFICATION_EMAIL);
+  Logger.log("✅ Email envoyé avec succès ! Vérifiez votre boîte de réception ou vos spams.");
 }
 
 /**
