@@ -33,6 +33,7 @@ export const APPS_SCRIPT_CODE_TEMPLATE = `/**
  *
  * 📑 FEUILLES GÉRÉES AUTOMATIQUEMENT :
  *   📊 Tableau de bord (Onglet principal avec KPIs financiers & volume en direct)
+ *   🚚 Export Livraison (Format officiel pour import direct plateforme de livraison)
  *   1. Bandeau
  *   2. Visière
  *   3. Tote Bag
@@ -43,6 +44,9 @@ export const APPS_SCRIPT_CODE_TEMPLATE = `/**
 
 // Adresse email recevant les alertes instantanées de nouvelles commandes
 var NOTIFICATION_EMAIL = "Berradamohamed10@gmail.com";
+
+// Nom de la feuille d'export pour la plateforme de livraison
+var DELIVERY_EXPORT_SHEET = "Export Livraison";
 
 var PRODUCT_SHEETS = ["Bandeau", "Visière", "Tote Bag", "Chaussettes", "Pack 4 Produits"];
 
@@ -154,6 +158,13 @@ function doPost(e) {
       waCell.setFontWeight("bold");
       waCell.setHorizontalAlignment("center");
 
+      // 2. Préremplissage automatique dans la feuille "Export Livraison" pour la plateforme livreur
+      try {
+        appendOrderToDeliveryExport(ss, order);
+      } catch (delivErr) {
+        Logger.log("Erreur ajout Export Livraison: " + delivErr.toString());
+      }
+
       results.push({
         orderId: order.orderId,
         sheet: sheetName,
@@ -255,6 +266,189 @@ function setupSheetHeaders(sheet) {
 }
 
 /**
+ * Configure la feuille "Export Livraison" avec les 7 colonnes requises
+ * par la plateforme de la société de livraison :
+ * NUMERO DE COMMANDE | DESTINATAIRE | TELEPHONE | ADRESSE | PRIX | VILLE | COMMENTAIRE
+ */
+function setupDeliverySheetHeaders(sheet) {
+  var headers = [
+    "NUMERO DE COMMANDE",
+    "DESTINATAIRE",
+    "TELEPHONE",
+    "ADRESSE",
+    "PRIX",
+    "VILLE",
+    "COMMENTAIRE"
+  ];
+
+  sheet.appendRow(headers);
+  var headerRange = sheet.getRange(1, 1, 1, headers.length);
+  headerRange.setBackground("#1E3A8A"); // Bleu sobre logistique
+  headerRange.setFontColor("#FFFFFF");
+  headerRange.setFontWeight("bold");
+  headerRange.setFontFamily("Arial");
+  headerRange.setFontSize(10);
+  headerRange.setHorizontalAlignment("center");
+  headerRange.setVerticalAlignment("middle");
+  sheet.setRowHeight(1, 38);
+
+  // Figer la 1ère ligne
+  sheet.setFrozenRows(1);
+
+  // Largeurs optimisées pour export CSV/Excel
+  sheet.setColumnWidth(1, 180); // NUMERO DE COMMANDE
+  sheet.setColumnWidth(2, 190); // DESTINATAIRE
+  sheet.setColumnWidth(3, 140); // TELEPHONE
+  sheet.setColumnWidth(4, 280); // ADRESSE
+  sheet.setColumnWidth(5, 100); // PRIX
+  sheet.setColumnWidth(6, 140); // VILLE
+  sheet.setColumnWidth(7, 300); // COMMENTAIRE
+}
+
+/**
+ * Ajoute une commande dans la feuille Export Livraison
+ */
+function appendOrderToDeliveryExport(ss, order) {
+  var sheet = ss.getSheetByName(DELIVERY_EXPORT_SHEET);
+  if (!sheet) {
+    sheet = ss.insertSheet(DELIVERY_EXPORT_SHEET, 1);
+    setupDeliverySheetHeaders(sheet);
+  } else if (sheet.getLastRow() === 0) {
+    setupDeliverySheetHeaders(sheet);
+  }
+
+  var prodName = order.productName || extractProductName(order);
+  var offer = order.offerTitle || extractOfferTitle(order);
+  var qty = order.quantity || extractQuantity(order);
+  var variants = order.variants || extractVariants(order);
+  var cleanPhone = formatMoroccanPhoneLocal(order.phone);
+  var priceNum = parseAmount(order.totalAmount);
+
+  var commentParts = [];
+  if (prodName) commentParts.push(prodName);
+  if (offer) commentParts.push("[" + offer + "]");
+  if (qty && qty > 1) commentParts.push("Qté: " + qty);
+  if (variants && variants !== "-") commentParts.push("Var: " + variants);
+
+  var row = [
+    order.orderId || "",
+    order.fullName || "",
+    cleanPhone,
+    order.address || "",
+    priceNum,
+    order.city || "",
+    commentParts.join(" - ")
+  ];
+
+  sheet.appendRow(row);
+  var lastRow = sheet.getLastRow();
+
+  var range = sheet.getRange(lastRow, 1, 1, 7);
+  range.setVerticalAlignment("middle");
+  range.setFontFamily("Arial");
+  range.setFontSize(10);
+
+  // Formatage texte pour le téléphone afin de conserver le 0 initial
+  sheet.getRange(lastRow, 3).setNumberFormat("@");
+  sheet.getRange(lastRow, 3).setHorizontalAlignment("center");
+
+  // Formatage numérique du Prix pour calcul ou export direct plateforme
+  sheet.getRange(lastRow, 5).setNumberFormat("#,##0");
+  sheet.getRange(lastRow, 5).setFontWeight("bold");
+  sheet.getRange(lastRow, 5).setHorizontalAlignment("center");
+
+  sheet.getRange(lastRow, 6).setFontWeight("bold");
+}
+
+/**
+ * Formate le téléphone pour les fiches transporteurs marocaines (format 06... ou 07...)
+ */
+function formatMoroccanPhoneLocal(phone) {
+  if (!phone) return "";
+  var clean = ("" + phone).replace(/[^0-9]/g, "");
+  if (clean.indexOf("212") === 0) clean = "0" + clean.substring(3);
+  else if (clean.indexOf("0") !== 0) clean = "0" + clean;
+  return "'" + clean;
+}
+
+/**
+ * Synchronise et importe toutes les commandes existantes dans "Export Livraison"
+ */
+function syncAllOrdersToDeliveryExport() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var delivSheet = ss.getSheetByName(DELIVERY_EXPORT_SHEET);
+  if (!delivSheet) {
+    delivSheet = ss.insertSheet(DELIVERY_EXPORT_SHEET, 1);
+    setupDeliverySheetHeaders(delivSheet);
+  } else if (delivSheet.getLastRow() === 0) {
+    setupDeliverySheetHeaders(delivSheet);
+  }
+
+  var existingIds = {};
+  var lastRow = delivSheet.getLastRow();
+  if (lastRow > 1) {
+    var existingData = delivSheet.getRange(2, 1, lastRow - 1, 1).getValues();
+    for (var i = 0; i < existingData.length; i++) {
+      var id = ("" + existingData[i][0]).trim();
+      if (id) existingIds[id] = true;
+    }
+  }
+
+  var count = 0;
+  for (var p = 0; p < PRODUCT_SHEETS.length; p++) {
+    var pSheet = ss.getSheetByName(PRODUCT_SHEETS[p]);
+    if (!pSheet) continue;
+    var pLast = pSheet.getLastRow();
+    if (pLast <= 1) continue;
+
+    var rows = pSheet.getRange(2, 1, pLast - 1, 14).getValues();
+    for (var r = 0; r < rows.length; r++) {
+      var rowData = rows[r];
+      var orderId = ("" + (rowData[1] || "")).trim();
+      if (!orderId || existingIds[orderId]) continue;
+
+      var fullName = "" + (rowData[2] || "");
+      var rawPhone = "" + (rowData[3] || "");
+      var city = "" + (rowData[4] || "");
+      var address = "" + (rowData[5] || "");
+      var prod = "" + (rowData[6] || "");
+      var offer = "" + (rowData[7] || "");
+      var qty = rowData[8] || 1;
+      var variants = "" + (rowData[9] || "");
+      var priceNum = parseAmount(rowData[10]);
+
+      var commentParts = [];
+      if (prod) commentParts.push(prod);
+      if (offer) commentParts.push("[" + offer + "]");
+      if (qty && qty > 1) commentParts.push("Qté: " + qty);
+      if (variants && variants !== "-") commentParts.push("Var: " + variants);
+
+      var newRow = [
+        orderId,
+        fullName,
+        formatMoroccanPhoneLocal(rawPhone),
+        address,
+        priceNum,
+        city,
+        commentParts.join(" - ")
+      ];
+
+      delivSheet.appendRow(newRow);
+      var curRow = delivSheet.getLastRow();
+      delivSheet.getRange(curRow, 1, 1, 7).setVerticalAlignment("middle").setFontFamily("Arial").setFontSize(10);
+      delivSheet.getRange(curRow, 3).setNumberFormat("@").setHorizontalAlignment("center");
+      delivSheet.getRange(curRow, 5).setNumberFormat("#,##0").setFontWeight("bold").setHorizontalAlignment("center");
+      delivSheet.getRange(curRow, 6).setFontWeight("bold");
+
+      existingIds[orderId] = true;
+      count++;
+    }
+  }
+
+  return count;
+}
+
+/**
  * Construit la formule WhatsApp propre.
  * Utilise api.whatsapp.com/send qui est universellement reconnu par Android & iOS
  * pour ouvrir directement l'application WhatsApp sans passer par une page web intermédiaire.
@@ -305,6 +499,13 @@ function ensureAllSheetsAndDashboard(ss) {
       pSheet = ss.insertSheet(PRODUCT_SHEETS[i]);
       setupSheetHeaders(pSheet);
     }
+  }
+
+  // S'assurer que la feuille Export Livraison existe
+  var delivSheet = ss.getSheetByName(DELIVERY_EXPORT_SHEET);
+  if (!delivSheet) {
+    delivSheet = ss.insertSheet(DELIVERY_EXPORT_SHEET, 1);
+    setupDeliverySheetHeaders(delivSheet);
   }
 
   var dash = ss.getSheetByName("Tableau de bord");
@@ -996,6 +1197,7 @@ function onOpen() {
   var ui = SpreadsheetApp.getUi();
   ui.createMenu("🌸 Oryven")
     .addItem("📊 Actualiser le Tableau de bord & Revenus (MAD)", "menuRebuildDashboard")
+    .addItem("🚚 Synchroniser la feuille Export Livraison", "menuSyncDelivery")
     .addItem("📧 Tester l'envoi d'email de notification", "testerEnvoiEmailNotification")
     .addItem("🧪 Envoyer les 5 commandes tests pour initialiser", "testerCreationFeuilles")
     .addToUi();
@@ -1006,6 +1208,11 @@ function menuRebuildDashboard() {
   ensureAllSheetsAndDashboard(ss);
   updateDashboardLive(ss);
   SpreadsheetApp.getUi().alert("✅ Tableau de bord & Revenus actualisés avec succès !");
+}
+
+function menuSyncDelivery() {
+  var count = syncAllOrdersToDeliveryExport();
+  SpreadsheetApp.getUi().alert("✅ Synchronisation réussie : " + count + " commande(s) ajoutée(s) dans la feuille 'Export Livraison' !");
 }
 
 /**

@@ -241,6 +241,9 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   <span className="px-2.5 py-1 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-[11px] font-bold shadow-2xs">
                     📊 Tableau de bord (Dashboard)
                   </span>
+                  <span className="px-2.5 py-1 bg-blue-50 border border-blue-300 text-blue-900 rounded-lg text-[11px] font-bold shadow-2xs">
+                    🚚 Export Livraison (7 colonnes)
+                  </span>
                   {['Bandeau', 'Visière', 'Tote Bag', 'Chaussettes', 'Pack 4 Produits'].map((sheet) => (
                     <span
                       key={sheet}
