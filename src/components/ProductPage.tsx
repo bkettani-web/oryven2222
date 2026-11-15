@@ -69,27 +69,27 @@ const getProductHighlights = (product: Product): ProductVisualHighlight[] => {
       return [
         {
           image: product.gallery[0] || product.image,
-          title: 'Microfibre Oryven Soft Seconde Peau',
+          title: 'Microfibre Oryven Soft & Finition Broderie',
           description:
-            'Tricotage extensible ultra-doux au toucher qui épouse parfaitement le tour de tête sans aucune sensation de pression.',
+            'Gros plan sur une maille extensible ultra-douce au toucher qui épouse le tour de tête sans aucune sensation de pression ni trace sur le front.',
         },
         {
           image: product.gallery[1] || IMAGES.yogaMatDetail,
-          title: 'Maintien Anti-Glisse Actif',
+          title: 'Maintien Anti-Glisse en Salle de Sport',
           description:
-            'Micro-texture intérieure respirante maintenant les cheveux bien en place même lors des séances de yoga ou de fitness intenses.',
+            'Micro-texture intérieure respirante qui garde vos cheveux parfaitement en place pendant vos séances de pilates, yoga ou entraînement intense.',
         },
         {
           image: product.gallery[2] || IMAGES.heroScene,
-          title: 'Absorption & Séchage Instantané',
+          title: 'Confort Studio & Séchage Rapide QuickDry',
           description:
-            'Technologie QuickDry régulant l’humidité pour vous garder au sec et concentrée tout au long de votre séance.',
+            'Tissu technique absorbant qui régule immédiatement l’humidité tout en offrant une coupe élégante et minimaliste au studio.',
         },
         {
           image: product.gallery[3] || IMAGES.lifestyle,
-          title: 'Maille Côtelée & Finitions Douces',
+          title: 'Style Polyvalent en Extérieur & au Quotidien',
           description:
-            'Coutures plates thermo-soudées qui ne laissent aucune trace sur le front, avec logo signature discret et élégant.',
+            'Léger et respirant, il vous accompagne avec allure de vos entraînements en plein air à toutes vos sorties quotidiennes.',
         },
       ];
 
@@ -471,7 +471,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
     const defaultColorName = product.colors?.[0]?.name || '';
     const defaultColorImage = product.colors?.[0]?.image;
     const defaultSizeName = product.sizes?.[0] || '';
-    setActiveImage(defaultColorImage || product.gallery[0] || product.image);
+    setActiveImage(product.gallery[0] || defaultColorImage || product.image);
     setSelectedOfferId('x1');
     setSelectedColor(defaultColorName);
     setSelectedSize(defaultSizeName);

@@ -114,14 +114,12 @@ export const PRODUCTS: Product[] = [
     reviewCount: 96,
     badge: 'Bestseller',
     image:
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1794752408/bandeau-oryven-noir-gros-plan_ohg1kw.webp',
     gallery: [
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/bbyapbwquohxaokxpysv_jmqzsa.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/etndrdmao8yzwvzbwcch_dda6mr.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/jwmbcpxtiqanr9uiklxa_ssrh4p.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/cdbz8bgrcxdvje6kyeay_gyeifc.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/auitayygzmelcd9fdjbl_emckuz.webp',
-      'https://res.cloudinary.com/diptsoc4h/image/upload/v1789910363/lzwshgcbf1e7ntlzynue_ghlm7z.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1794752408/bandeau-oryven-noir-gros-plan_ohg1kw.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1794752408/bandeau-oryven-beige-salle-de-sport_okry1w.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1794752408/bandeau-oryven-noir-portrait-studio_nkgunk.webp',
+      'https://res.cloudinary.com/diptsoc4h/image/upload/v1794752408/bandeau-oryven-noir-porte-en-exterieur_lfrfwk.webp',
     ],
     colors: [
       {
