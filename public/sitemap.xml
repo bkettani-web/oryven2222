@@ -83,6 +83,18 @@
     </image:image>
   </url>
 
+  <url>
+    <loc>https://oryven.ma/produits/oryven-hoodie-oversize</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/diptsoc4h/image/upload/v1794741700/Hoodie_noir_oversize_Oryven_port%C3%A9_de_trois_quarts_awh134.webp</image:loc>
+      <image:title>Oryven Hoodie Oversize - Sweat à Capuche Oversize Premium Maroc</image:title>
+      <image:caption>Sweat à capuche oversize Oryven Maroc en molleton épais ultra-doux</image:caption>
+    </image:image>
+  </url>
+
   <!-- Plan du site e-commerce (HTML) -->
   <url>
     <loc>https://oryven.ma/plan-du-site</loc>

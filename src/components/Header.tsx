@@ -103,9 +103,15 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="brand-logo-btn"
               onClick={handleHomeClick}
-              className="text-2xl sm:text-3xl font-black tracking-tight text-neutral-900 font-heading lowercase cursor-pointer hover:opacity-85 transition-opacity"
+              aria-label="Oryven - Accueil"
+              className="flex items-center cursor-pointer hover:opacity-85 transition-opacity focus:outline-none"
             >
-              oryven
+              <img
+                src="https://res.cloudinary.com/diptsoc4h/image/upload/v1794742700/Logo_ORYVEN_horizontal_sur_fond_ivoire_r4idwm.webp"
+                alt="Oryven"
+                className="h-6 sm:h-8 w-auto object-contain rounded-md"
+                referrerPolicy="no-referrer"
+              />
             </button>
           </div>
 

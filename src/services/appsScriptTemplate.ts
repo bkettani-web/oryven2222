@@ -38,7 +38,8 @@ export const APPS_SCRIPT_CODE_TEMPLATE = `/**
  *   2. Visière
  *   3. Tote Bag
  *   4. Chaussettes
- *   5. Pack 4 Produits
+ *   5. Hoodie
+ *   6. Pack 4 Produits
  * ==============================================================================
  */
 
@@ -48,7 +49,7 @@ var NOTIFICATION_EMAIL = "Berradamohamed10@gmail.com";
 // Nom de la feuille d'export pour la plateforme de livraison
 var DELIVERY_EXPORT_SHEET = "Export Livraison";
 
-var PRODUCT_SHEETS = ["Bandeau", "Visière", "Tote Bag", "Chaussettes", "Pack 4 Produits"];
+var PRODUCT_SHEETS = ["Bandeau", "Visière", "Tote Bag", "Chaussettes", "Hoodie", "Pack 4 Produits"];
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
@@ -466,7 +467,7 @@ function buildWhatsAppFormula(cleanPhone, order) {
     '"Bonjour ' + escapeFormulaText(clientName) + ' ! 🌿"',
     'CHAR(10)',
     'CHAR(10)',
-    '"C\'est l\'équipe Oryven Maroc concernant votre commande N° ' + escapeFormulaText(orderNum) + '."',
+    '"C\\'est l\\'équipe Oryven Maroc concernant votre commande N° ' + escapeFormulaText(orderNum) + '."',
     'CHAR(10)',
     'CHAR(10)',
     '"📦 Commande : ' + escapeFormulaText(pName) + ' [' + escapeFormulaText(offer) + '] - Variantes : ' + escapeFormulaText(variants) + '"',
@@ -476,7 +477,7 @@ function buildWhatsAppFormula(cleanPhone, order) {
     '"📍 Adresse de livraison : ' + escapeFormulaText(addr) + '"',
     'CHAR(10)',
     'CHAR(10)',
-    '"Pouvez-vous s\'il vous plaît nous confirmer cette commande afin de programmer l\'expédition dès aujourd\'hui ?"',
+    '"Pouvez-vous s\\'il vous plaît nous confirmer cette commande afin de programmer l\\'expédition dès aujourd\\'hui ?"',
     'CHAR(10)',
     '"Merci pour votre confiance ! ✨"'
   ];
@@ -512,6 +513,13 @@ function ensureAllSheetsAndDashboard(ss) {
   if (!dash) {
     dash = ss.insertSheet("Tableau de bord", 0);
     buildDashboardSheet(dash);
+  } else {
+    // Reconstruire automatiquement le Tableau de bord si de nouveaux produits (ex: Hoodie) ont été ajoutés
+    var expectedLastProdRow = 22 + PRODUCT_SHEETS.length - 1;
+    var lastProdLabel = ("" + dash.getRange("A" + expectedLastProdRow).getValue()).trim();
+    if (lastProdLabel !== PRODUCT_SHEETS[PRODUCT_SHEETS.length - 1]) {
+      buildDashboardSheet(dash);
+    }
   }
 }
 
@@ -1199,15 +1207,19 @@ function onOpen() {
     .addItem("📊 Actualiser le Tableau de bord & Revenus (MAD)", "menuRebuildDashboard")
     .addItem("🚚 Synchroniser la feuille Export Livraison", "menuSyncDelivery")
     .addItem("📧 Tester l'envoi d'email de notification", "testerEnvoiEmailNotification")
-    .addItem("🧪 Envoyer les 5 commandes tests pour initialiser", "testerCreationFeuilles")
+    .addItem("🧪 Envoyer les 6 commandes tests pour initialiser", "testerCreationFeuilles")
     .addToUi();
 }
 
 function menuRebuildDashboard() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   ensureAllSheetsAndDashboard(ss);
+  var dash = ss.getSheetByName("Tableau de bord");
+  if (dash) {
+    buildDashboardSheet(dash);
+  }
   updateDashboardLive(ss);
-  SpreadsheetApp.getUi().alert("✅ Tableau de bord & Revenus actualisés avec succès !");
+  SpreadsheetApp.getUi().alert("✅ Feuille Hoodie, Tableau de bord & Revenus actualisés avec succès !");
 }
 
 function menuSyncDelivery() {
@@ -1228,6 +1240,7 @@ function determineSheetName(order) {
   if (str.indexOf("visor") !== -1 || str.indexOf("visiere") !== -1 || str.indexOf("visière") !== -1) return "Visière";
   if (str.indexOf("tote") !== -1 || str.indexOf("sac") !== -1) return "Tote Bag";
   if (str.indexOf("sock") !== -1 || str.indexOf("chaussette") !== -1) return "Chaussettes";
+  if (str.indexOf("hoodie") !== -1 || str.indexOf("sweat") !== -1 || str.indexOf("oversize") !== -1) return "Hoodie";
   return "Pack 4 Produits";
 }
 
@@ -1385,24 +1398,24 @@ function sendOrderEmailNotification(order, recipientEmail) {
     "</body>" +
     "</html>";
 
-  var plainBody = "🌸 NOUVELLE COMMANDE ORYVEN #" + orderId + "\n" +
-    "--------------------------------------------------\n" +
-    "Montant total : " + amount + " (Paiement à la livraison)\n" +
-    "Date : " + dateStr + "\n\n" +
-    "CLIENT :\n" +
-    "- Nom : " + clientName + "\n" +
-    "- Téléphone : " + rawPhone + "\n" +
-    "- Ville : " + city + "\n" +
-    "- Adresse : " + address + "\n\n" +
-    "COMMANDE :\n" +
-    "- Produit : " + prodName + "\n" +
-    "- Offre : " + offer + "\n" +
-    "- Quantité : " + qty + "\n" +
-    "- Variantes : " + variants + "\n\n" +
-    "ACTIONS RAPIDES :\n" +
-    "- WhatsApp : " + waLink + "\n" +
-    "- Appeler : tel:" + rawPhone + "\n\n" +
-    (sheetUrl ? ("- Google Sheet : " + sheetUrl + "\n\n") : "") +
+  var plainBody = "🌸 NOUVELLE COMMANDE ORYVEN #" + orderId + "\\n" +
+    "--------------------------------------------------\\n" +
+    "Montant total : " + amount + " (Paiement à la livraison)\\n" +
+    "Date : " + dateStr + "\\n\\n" +
+    "CLIENT :\\n" +
+    "- Nom : " + clientName + "\\n" +
+    "- Téléphone : " + rawPhone + "\\n" +
+    "- Ville : " + city + "\\n" +
+    "- Adresse : " + address + "\\n\\n" +
+    "COMMANDE :\\n" +
+    "- Produit : " + prodName + "\\n" +
+    "- Offre : " + offer + "\\n" +
+    "- Quantité : " + qty + "\\n" +
+    "- Variantes : " + variants + "\\n\\n" +
+    "ACTIONS RAPIDES :\\n" +
+    "- WhatsApp : " + waLink + "\\n" +
+    "- Appeler : tel:" + rawPhone + "\\n\\n" +
+    (sheetUrl ? ("- Google Sheet : " + sheetUrl + "\\n\\n") : "") +
     "Notification automatique envoyée à " + recipientEmail;
 
   try {
@@ -1538,9 +1551,25 @@ function testerCreationFeuilles() {
           deliveryStatus: "Livré"
         },
         {
+          date: todayStr,
+          sheetName: "Hoodie",
+          orderId: "TEST-005",
+          fullName: "Salma Berrada (Test)",
+          phone: "0666778899",
+          city: "Casablanca",
+          address: "Maarif",
+          productName: "Oryven Hoodie Oversize",
+          offerTitle: "Pack Solo (1 Hoodie)",
+          quantity: 1,
+          variants: "Taille M",
+          totalAmount: 299,
+          orderStatus: "Confirmé",
+          deliveryStatus: "En attente"
+        },
+        {
           date: j2Str,
           sheetName: "Pack 4 Produits",
-          orderId: "TEST-005",
+          orderId: "TEST-006",
           fullName: "Kawtar Fassi (Test)",
           phone: "0665556677",
           city: "Casablanca",

@@ -51,6 +51,7 @@ export function getProductSheetName(productIdOrName: string): string {
   if (norm.includes('visor') || norm.includes('visiere') || norm.includes('visière')) return 'Visière';
   if (norm.includes('tote') || norm.includes('sac')) return 'Tote Bag';
   if (norm.includes('sock') || norm.includes('chaussette')) return 'Chaussettes';
+  if (norm.includes('hoodie') || norm.includes('sweat') || norm.includes('oversize')) return 'Hoodie';
   return 'Pack 4 Produits';
 }
 
@@ -330,6 +331,14 @@ export function getTestOrdersForAllSheets(): GoogleSheetOrderPayload[] {
       total: 179,
     },
     {
+      sheetName: 'Hoodie',
+      productName: 'Oryven Hoodie Oversize',
+      offerTitle: 'Pack Solo (1 Hoodie)',
+      quantity: 1,
+      variants: 'Taille M',
+      total: 299,
+    },
+    {
       sheetName: 'Pack 4 Produits',
       productName: 'Pack Complet Oryven (4 Produits)',
       offerTitle: 'Pack Solo Essentiels',
@@ -417,7 +426,7 @@ export async function sendTestOrdersForAllProducts(
     return {
       success: true,
       count: testOrders.length,
-      message: '5 commandes de test envoyées avec succès ! Les feuilles produits et le Tableau de bord vont être créés.',
+      message: `${testOrders.length} commandes de test envoyées avec succès ! Les feuilles produits et le Tableau de bord vont être créés.`,
     };
   } catch (error) {
     return {

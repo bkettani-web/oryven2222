@@ -13,6 +13,7 @@ import {
   ArrowRight,
   AlertCircle,
   Clock,
+  Ruler,
 } from 'lucide-react';
 import { Product, ProductOffer, CustomerOrder } from '../types';
 import { MOROCCAN_CITIES, IMAGES, PRODUCTS } from '../data/products';
@@ -39,27 +40,27 @@ const getProductHighlights = (product: Product): ProductVisualHighlight[] => {
       return [
         {
           image: product.gallery[0] || product.image,
-          title: 'Toile Bio 480 g/m² Ultrarésistante',
+          title: 'Motif Camouflage Signature & Toile Bio 480 g/m²',
           description:
-            'Tissage dense en coton biologique déperlant, conçu pour résister aux frottements et protéger vos affaires en toutes circonstances.',
+            'Toile de coton biologique ultrarésistante et déperlante au motif camouflage raffiné, pensée pour accompagner avec style vos tenues du quotidien.',
         },
         {
           image: product.gallery[1] || IMAGES.toteDetail,
-          title: 'Finitions & Coutures Renforcées',
+          title: 'Port Épaule Ergonomique & Confortable',
           description:
-            'Double piquage des anses et rivets en métal brossé garantissant une robustesse à toute épreuve, même lourdement chargé.',
+            'Doubles anses renforcées et largeur étudiée pour un maintien naturel à l’épaule sans glisser, même lorsque le sac est bien rempli.',
         },
         {
           image: product.gallery[2] || IMAGES.heroScene,
-          title: 'Volume 28L & Rangement Dédié',
+          title: 'Volume 28L & Intérieur Structuré',
           description:
-            'Grand compartiment pour gourde, maintien élastique pour tapis de yoga et poche intérieure zippée pour vos clés et téléphone.',
+            'Grand espace doublé et imperméabilisé avec poche intérieure zippée et compartiment dédié pour organiser facilement ordinateur, gourde et essentiels.',
         },
         {
           image: product.gallery[3] || IMAGES.lifestyle,
-          title: 'Port Épaule Ergonomique',
+          title: 'Le Compagnon Idéal de Tous Vos Trajets',
           description:
-            'Anses larges et confortables étudiées pour un maintien naturel sans glisser, idéal pour le studio, le travail ou le week-end.',
+            'Fond structuré qui reste bien droit sans s’affaisser, idéal en voiture, au studio de sport, au bureau ou lors de vos escapades du week-end.',
         },
       ];
 
@@ -175,6 +176,34 @@ const getProductHighlights = (product: Product): ProductVisualHighlight[] => {
           title: '2x Bandeaux Yoga Headband au Choix',
           description:
             'Deux bandeaux élastiques au maintien seconde peau et séchage QuickDry aux coloris de votre choix.',
+        },
+      ];
+
+    case 'oryven-hoodie-oversize':
+      return [
+        {
+          image: product.gallery[0] || product.image,
+          title: 'Coupe Oversize Structurée & Tombé Parfait',
+          description:
+            'Une silhouette ample contemporaine avec emmanchures tombantes pour une liberté de mouvement totale et un style minimaliste sans effort.',
+        },
+        {
+          image: product.gallery[1] || product.image,
+          title: 'Capuche Doublée Sans Cordon & Dos Structuré',
+          description:
+            'Capuche généreuse à double épaisseur qui garde une belle tenue même abaissée, associée à une coupe droite fluide dans le dos.',
+        },
+        {
+          image: product.gallery[2] || IMAGES.heroScene,
+          title: 'Molleton Épais 420 g/m² & Poche Kangourou',
+          description:
+            'Coton biologique peigné haute densité au toucher ultra-doux, doté d’une poche kangourou frontale spacieuse et de bords-côtes robustes.',
+        },
+        {
+          image: product.gallery[3] || IMAGES.lifestyle,
+          title: 'Polyvalent : Du Studio à Vos Sorties',
+          description:
+            'La pièce idéale à superposer avant et après vos séances de sport ou au quotidien, facile à associer à vos tenues actives comme urbaines.',
         },
       ];
 
@@ -381,8 +410,9 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   // Gallery state
   const [activeImage, setActiveImage] = useState(product.gallery[0] || product.image);
 
-  // Check if product has multiple color variants
+  // Check if product has multiple color variants or size variants
   const hasVariants = Boolean(product.colors && product.colors.length > 1);
+  const hasSizes = Boolean(product.sizes && product.sizes.length > 0);
 
   // Pack item variant custom selections (for pack-complet-oryven: 1 sac, 1 visière, 2 bandeaux)
   const [packCustomSelections, setPackCustomSelections] = useState<{
@@ -440,13 +470,20 @@ export const ProductPage: React.FC<ProductPageProps> = ({
   useEffect(() => {
     const defaultColorName = product.colors?.[0]?.name || '';
     const defaultColorImage = product.colors?.[0]?.image;
+    const defaultSizeName = product.sizes?.[0] || '';
     setActiveImage(defaultColorImage || product.gallery[0] || product.image);
     setSelectedOfferId('x1');
     setSelectedColor(defaultColorName);
+    setSelectedSize(defaultSizeName);
     setPackColors({
       0: defaultColorName,
       1: product.colors?.[1]?.name || defaultColorName,
       2: product.colors?.[2]?.name || defaultColorName,
+    });
+    setPackSizes({
+      0: defaultSizeName,
+      1: product.sizes?.[1] || defaultSizeName,
+      2: product.sizes?.[2] || defaultSizeName,
     });
     setActivePackIndex(0);
     trackViewContent(product);
@@ -454,12 +491,21 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
   // Active color for x1
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]?.name || '');
+  // Active size for x1
+  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '');
 
   // Multi-pack color choices (for x2 and x3)
   const [packColors, setPackColors] = useState<{ [index: number]: string }>({
     0: product.colors?.[0]?.name || '',
     1: product.colors?.[1]?.name || product.colors?.[0]?.name || '',
     2: product.colors?.[2]?.name || product.colors?.[0]?.name || '',
+  });
+
+  // Multi-pack size choices (for x2 and x3)
+  const [packSizes, setPackSizes] = useState<{ [index: number]: string }>({
+    0: product.sizes?.[0] || '',
+    1: product.sizes?.[1] || product.sizes?.[0] || '',
+    2: product.sizes?.[2] || product.sizes?.[0] || '',
   });
 
   // Selected Offer: default to x1 as requested
@@ -531,15 +577,24 @@ export const ProductPage: React.FC<ProductPageProps> = ({
 
     setIsSubmitting(true);
 
-    const chosenColors = isPackComplet
+    const chosenVariants = isPackComplet
       ? getPackCompletColorsList()
       : hasVariants && product.colors && product.colors.length > 0
         ? currentOffer.quantity === 1
-          ? [selectedColor]
-          : Array.from({ length: currentOffer.quantity }).map(
-              (_, idx) => packColors[idx] || product.colors?.[0]?.name || ''
-            )
-        : [];
+          ? [hasSizes ? `${selectedColor} • Taille ${selectedSize}` : selectedColor]
+          : Array.from({ length: currentOffer.quantity }).map((_, idx) => {
+              const col = packColors[idx] || product.colors?.[0]?.name || '';
+              if (!hasSizes) return col;
+              const sz = packSizes[idx] || product.sizes?.[0] || '';
+              return `${col} (Taille ${sz})`;
+            })
+        : hasSizes && product.sizes && product.sizes.length > 0
+          ? currentOffer.quantity === 1
+            ? [`Taille ${selectedSize || product.sizes[0]}`]
+            : Array.from({ length: currentOffer.quantity }).map(
+                (_, idx) => `Pièce ${idx + 1} : Taille ${packSizes[idx] || product.sizes?.[0] || ''}`
+              )
+          : [];
 
     // Trigger Meta Pixel InitiateCheckout event
     trackInitiateCheckout(
@@ -548,7 +603,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
           product,
           offer: currentOffer,
           quantity: 1,
-          customColors: chosenColors,
+          customColors: chosenVariants,
         },
       ],
       currentOffer.totalPrice
@@ -570,7 +625,7 @@ export const ProductPage: React.FC<ProductPageProps> = ({
               ? product.colors.find((c) => c.name === selectedColor) || product.colors[0]
               : undefined,
           offer: currentOffer,
-          customColors: chosenColors.length > 0 ? chosenColors : undefined,
+          customColors: chosenVariants.length > 0 ? chosenVariants : undefined,
           quantity: 1,
         },
       ],
@@ -893,7 +948,13 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                       1
                     </span>
                     {product.offers.length > 1
-                      ? (isPackComplet ? 'Choisissez votre offre :' : (hasVariants ? 'Choisissez votre offre & couleurs :' : 'Choisissez votre offre :'))
+                      ? (isPackComplet
+                          ? 'Choisissez votre offre :'
+                          : hasVariants
+                            ? 'Choisissez votre offre & couleurs :'
+                            : hasSizes
+                              ? 'Choisissez votre offre & taille :'
+                              : 'Choisissez votre offre :')
                       : 'Offre sélectionnée :'}
                   </span>
                   {product.offers.length > 1 && (
@@ -1121,6 +1182,134 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                                               );
                                             })}
                                           </div>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Integrated Size Choice when selected (e.g. S / M / XL) */}
+                        {isSelected && !isPackComplet && hasSizes && product.sizes && product.sizes.length > 0 && (
+                          <div
+                            className="mt-3 pt-2.5 border-t border-orange-200/60 space-y-2.5 animate-fadeIn"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {offer.quantity === 1 ? (
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-[11px] font-bold text-neutral-700 uppercase tracking-wide flex items-center gap-1.5">
+                                    <span>Taille au choix :</span>
+                                    <span className="text-orange-600 font-extrabold text-xs">
+                                      {selectedSize || product.sizes[0]}
+                                    </span>
+                                  </span>
+                                  {product.sizeGuide && product.sizeGuide.length > 0 && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const el = document.getElementById('product-size-guide');
+                                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                      }}
+                                      className="inline-flex items-center gap-1 text-[10px] font-bold text-[#7A283B] hover:underline cursor-pointer"
+                                    >
+                                      <Ruler size={12} />
+                                      <span>Guide des tailles</span>
+                                    </button>
+                                  )}
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-2">
+                                  {product.sizes.map((sz) => {
+                                    const isSizeActive = (selectedSize || product.sizes?.[0]) === sz;
+                                    return (
+                                      <button
+                                        key={sz}
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedSize(sz);
+                                          setPackSizes((prev) => ({ ...prev, 0: sz }));
+                                        }}
+                                        className={`min-w-[3.2rem] px-3.5 py-2 rounded-xl border text-xs font-extrabold tracking-wide transition-all cursor-pointer select-none ${
+                                          isSizeActive
+                                            ? 'border-orange-500 bg-orange-500 text-white shadow-xs ring-2 ring-orange-500/25'
+                                            : 'border-neutral-200 bg-white hover:border-orange-300 hover:bg-orange-50/40 text-neutral-800 shadow-2xs'
+                                        }`}
+                                      >
+                                        {sz}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="space-y-2.5">
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-[11px] font-bold text-neutral-700 uppercase tracking-wide">
+                                    Tailles ({offer.quantity} pièces au choix) :
+                                  </span>
+                                  {product.sizeGuide && product.sizeGuide.length > 0 && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const el = document.getElementById('product-size-guide');
+                                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                      }}
+                                      className="inline-flex items-center gap-1 text-[10px] font-bold text-[#7A283B] hover:underline cursor-pointer"
+                                    >
+                                      <Ruler size={12} />
+                                      <span>Guide des tailles</span>
+                                    </button>
+                                  )}
+                                </div>
+
+                                <div className="space-y-2">
+                                  {Array.from({ length: offer.quantity }).map((_, idx) => {
+                                    const currentPieceSize =
+                                      packSizes[idx] ||
+                                      product.sizes?.[idx % product.sizes.length] ||
+                                      product.sizes?.[0] ||
+                                      '';
+                                    return (
+                                      <div
+                                        key={idx}
+                                        className="p-2.5 bg-white rounded-xl border border-neutral-200 shadow-2xs flex items-center justify-between gap-2 flex-wrap"
+                                      >
+                                        <span className="text-[11px] font-bold text-neutral-600 uppercase tracking-wide">
+                                          Pièce {idx + 1} :{' '}
+                                          <span className="text-orange-600 font-extrabold text-xs">
+                                            Taille {currentPieceSize}
+                                          </span>
+                                        </span>
+
+                                        <div className="flex items-center gap-1.5">
+                                          {product.sizes?.map((sz) => {
+                                            const isSizeActive = currentPieceSize === sz;
+                                            return (
+                                              <button
+                                                key={sz}
+                                                type="button"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  setPackSizes((prev) => ({ ...prev, [idx]: sz }));
+                                                  if (idx === 0) setSelectedSize(sz);
+                                                }}
+                                                className={`min-w-[2.5rem] px-2.5 py-1 rounded-lg border text-xs font-extrabold transition-all cursor-pointer select-none ${
+                                                  isSizeActive
+                                                    ? 'border-orange-500 bg-orange-500 text-white shadow-xs ring-2 ring-orange-500/20'
+                                                    : 'border-neutral-200 bg-neutral-50/70 hover:border-orange-300 hover:bg-white text-neutral-800'
+                                                }`}
+                                              >
+                                                {sz}
+                                              </button>
+                                            );
+                                          })}
                                         </div>
                                       </div>
                                     );
@@ -1407,6 +1596,63 @@ export const ProductPage: React.FC<ProductPageProps> = ({
                 </>
               )}
             </div>
+
+            {/* ================= TABLEAU GUIDE DES TAILLES (AU DESSOUS DU FORMULAIRE DE COMMANDE) ================= */}
+            {product.sizeGuide && product.sizeGuide.length > 0 && (
+              <section
+                id="product-size-guide"
+                aria-label="Guide des tailles"
+                className="bg-white rounded-2xl border border-neutral-200/90 shadow-xs p-4 sm:p-5 space-y-3"
+              >
+                <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-[#7A283B]/10 text-[#7A283B]">
+                      <Ruler size={16} />
+                    </div>
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-black font-heading uppercase text-neutral-900 tracking-wide">
+                        Guide des tailles (Coupe Oversize)
+                      </h3>
+                      <p className="text-[11px] text-neutral-500">
+                        Comparez les mesures pour choisir facilement votre taille
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200">
+                    Mesures en cm
+                  </span>
+                </div>
+
+                <div className="overflow-x-auto rounded-xl border border-neutral-200">
+                  <table className="w-full text-left border-collapse text-[11px] sm:text-xs">
+                    <thead>
+                      <tr className="bg-[#FAF8F5] text-neutral-800 border-b border-neutral-200">
+                        <th className="py-2.5 px-3 font-extrabold uppercase">Taille</th>
+                        <th className="py-2.5 px-3 font-bold">Poitrine</th>
+                        <th className="py-2.5 px-3 font-bold">Longueur</th>
+                        <th className="py-2.5 px-3 font-bold">Manche</th>
+                        <th className="py-2.5 px-3 font-bold">Gabarit conseillé</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {product.sizeGuide.map((row) => (
+                        <tr key={row.size} className="hover:bg-neutral-50/80 transition-colors">
+                          <td className="py-2.5 px-3 font-black text-[#7A283B]">{row.size}</td>
+                          <td className="py-2.5 px-3 text-neutral-700">{row.chest}</td>
+                          <td className="py-2.5 px-3 text-neutral-700">{row.length}</td>
+                          <td className="py-2.5 px-3 text-neutral-700">{row.sleeve}</td>
+                          <td className="py-2.5 px-3 text-neutral-700 font-medium">{row.fit}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <p className="text-[11px] text-neutral-600 bg-[#FAF8F5] px-3 py-2.5 rounded-xl border border-neutral-200/70 leading-relaxed">
+                  <strong className="text-neutral-800">Conseil coupe oversize :</strong> prenez votre taille habituelle pour conserver le tombé ample signature Oryven, ou une taille en dessous pour un porté plus ajusté.
+                </p>
+              </section>
+            )}
 
             {/* ================= 4 IMAGES & DESCRIPTIONS SECTION (UNDER ORDER FORM) ================= */}
             {!isPackComplet && (

@@ -73,6 +73,16 @@ const normalizeSlug = (raw: string): string => {
   ) {
     return 'oryven-non-slip-grip-socks';
   }
+  if (
+    clean === 'hoodie' ||
+    clean === 'hoodie-oversize' ||
+    clean === 'oryven-hoodie' ||
+    clean === 'oryven-hoodie-oversize' ||
+    clean === 'sweat' ||
+    clean === 'sweat-oversize'
+  ) {
+    return 'oryven-hoodie-oversize';
+  }
   return clean;
 };
 
@@ -448,6 +458,7 @@ export default function App() {
   const handleAddToCart = (product: Product, customOffer?: ProductOffer, customColors?: string[]) => {
     const offerToUse = customOffer || product.offers[0];
     const defaultColor = product.colors && product.colors.length > 0 ? product.colors[0] : undefined;
+    const defaultSize = product.sizes && product.sizes.length > 0 ? `Taille ${product.sizes[0]}` : undefined;
 
     const newItem: CartItem = {
       product,
@@ -458,6 +469,8 @@ export default function App() {
           ? customColors
           : defaultColor?.name
           ? [defaultColor.name]
+          : defaultSize
+          ? [defaultSize]
           : undefined,
       quantity: 1,
     };

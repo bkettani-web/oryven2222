@@ -19,6 +19,14 @@ export interface ProductOffer {
   bonus?: string;
 }
 
+export interface ProductSizeGuideRow {
+  size: string;
+  chest: string;
+  length: string;
+  sleeve: string;
+  fit: string;
+}
+
 export interface Product {
   id: string;
   slug: string;
@@ -32,6 +40,8 @@ export interface Product {
   image: string;
   gallery: string[];
   colors: ProductColor[];
+  sizes?: string[];
+  sizeGuide?: ProductSizeGuideRow[];
   description: string;
   features: string[];
   materials: string;

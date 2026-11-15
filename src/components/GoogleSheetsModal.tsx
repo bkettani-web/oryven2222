@@ -106,7 +106,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                 </span>
               </div>
               <p className="text-xs text-rose-100 mt-0.5">
-                Tableau de bord en direct + 5 feuilles produits avec statuts de commande et livraison
+                Tableau de bord en direct + 6 feuilles produits avec statuts de commande et livraison
               </p>
             </div>
           </div>
@@ -228,11 +228,11 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-neutral-900 flex items-center gap-1.5">
                       <Play size={14} className="text-[#7A283B]" />
-                      <span>Création automatique du Tableau de bord & des 5 feuilles</span>
+                      <span>Création automatique du Tableau de bord & des 6 feuilles</span>
                     </h4>
                     <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
                       En cliquant ci-dessous, le système envoie immédiatement une commande de test pour
-                      chacun des 5 produits. Le script va <strong>créer automatiquement la feuille "Tableau de bord" en tête</strong> ainsi que les 5 onglets produits avec leurs 14 colonnes (menus déroulants de statuts et boutons WhatsApp) !
+                      chacun des 6 produits. Le script va <strong>créer automatiquement la feuille "Tableau de bord" en tête</strong> ainsi que les 6 onglets produits avec leurs 14 colonnes (menus déroulants de statuts et boutons WhatsApp) !
                     </p>
                   </div>
                 </div>
@@ -244,7 +244,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                   <span className="px-2.5 py-1 bg-blue-50 border border-blue-300 text-blue-900 rounded-lg text-[11px] font-bold shadow-2xs">
                     🚚 Export Livraison (7 colonnes)
                   </span>
-                  {['Bandeau', 'Visière', 'Tote Bag', 'Chaussettes', 'Pack 4 Produits'].map((sheet) => (
+                  {['Bandeau', 'Visière', 'Tote Bag', 'Chaussettes', 'Hoodie', 'Pack 4 Produits'].map((sheet) => (
                     <span
                       key={sheet}
                       className="px-2.5 py-1 bg-white border border-neutral-200 rounded-lg text-[11px] font-semibold text-neutral-700 shadow-2xs"
@@ -263,7 +263,7 @@ export const GoogleSheetsModal: React.FC<GoogleSheetsModalProps> = ({ isOpen, on
                     {isTesting ? (
                       <>
                         <RefreshCw size={15} className="animate-spin" />
-                        <span>Envoi des 5 commandes de test en cours...</span>
+                        <span>Envoi des 6 commandes de test en cours...</span>
                       </>
                     ) : (
                       <>

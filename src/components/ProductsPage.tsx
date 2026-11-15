@@ -43,6 +43,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     { id: 'visiere', label: 'Visières & Casquettes', matchIds: ['oryven-visor'] },
     { id: 'bandeau', label: 'Bandeaux & Cheveux', matchIds: ['oryven-yoga-headband'] },
     { id: 'chaussettes', label: 'Chaussettes Pilates & Grip', matchIds: ['oryven-non-slip-grip-socks'] },
+    { id: 'hoodie', label: 'Vêtements & Hoodies', matchIds: ['oryven-hoodie-oversize'] },
   ];
 
   // Filter products
@@ -274,6 +275,21 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                         <span className="text-[10px] text-neutral-500 ml-1">
                           {product.colors.length} coloris
                         </span>
+                      </div>
+                    )}
+
+                    {/* Sizes if available */}
+                    {product.sizes && product.sizes.length > 0 && (
+                      <div className="flex items-center gap-1 flex-wrap pt-1">
+                        <span className="text-[10px] font-semibold text-neutral-400 mr-0.5">Tailles :</span>
+                        {product.sizes.map((sz) => (
+                          <span
+                            key={sz}
+                            className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700 border border-neutral-200"
+                          >
+                            {sz}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>

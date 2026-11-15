@@ -24,9 +24,15 @@ export const Footer: React.FC<FooterProps> = ({
           <div className="lg:col-span-2 space-y-4">
             <button
               onClick={onNavigateHome}
-              className="text-4xl font-black tracking-tight text-white lowercase font-heading cursor-pointer"
+              aria-label="Oryven - Accueil"
+              className="inline-flex items-center cursor-pointer hover:opacity-90 transition-opacity focus:outline-none"
             >
-              oryven
+              <img
+                src="https://res.cloudinary.com/diptsoc4h/image/upload/v1794742700/Logo_ORYVEN_horizontal_sur_fond_ivoire_r4idwm.webp"
+                alt="Oryven"
+                className="h-10 sm:h-12 w-auto object-contain rounded-lg"
+                referrerPolicy="no-referrer"
+              />
             </button>
             <p className="text-xs sm:text-sm text-neutral-400 max-w-xs leading-relaxed">
               Move Different. Au Maroc.

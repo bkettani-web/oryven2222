@@ -20,6 +20,8 @@ const PADEL_COURT_THUMBNAILS: Record<string, string> = {
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789911355/ChatGPT_Image_20_sept._2026_14_32_20_5_ldvl8u.webp',
   'oryven-non-slip-grip-socks':
     'https://res.cloudinary.com/diptsoc4h/image/upload/v1789660961/j0dq1fvx1ejox3rdnqcc_zhfvmq.webp',
+  'oryven-hoodie-oversize':
+    'https://res.cloudinary.com/diptsoc4h/image/upload/v1794678092/Sweat_noir_sans_cordons_sur_gazon_bleu_fpz0cy.webp',
 };
 
 // Variantes couleur prises sur le sol de padel
@@ -76,7 +78,7 @@ export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
               Nos Incontournables
             </span>
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black font-heading tracking-tight text-neutral-900 uppercase">
-              Les 4 Essentiels
+              Nos Essentiels
             </h2>
           </div>
           <div className="mt-2 md:mt-0 max-w-md">
@@ -91,6 +93,18 @@ export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
           {products
             .filter((p) => p.id !== 'pack-complet-oryven')
+            .sort((a, b) => {
+              const order = [
+                'oryven-tote-bag',
+                'oryven-yoga-headband',
+                'oryven-visor',
+                'oryven-hoodie-oversize',
+                'oryven-non-slip-grip-socks',
+              ];
+              const idxA = order.indexOf(a.id);
+              const idxB = order.indexOf(b.id);
+              return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+            })
             .map((product) => {
             const isWishlisted = wishlistIds.includes(product.id);
             const activeColorIdx = selectedColors[product.id] ?? 0;
@@ -226,6 +240,21 @@ export const EssentialsSection: React.FC<EssentialsSectionProps> = ({
                         <span className="text-[10px] text-neutral-500 ml-1 hidden sm:inline">
                           {activeColor.name}
                         </span>
+                      </div>
+                    )}
+
+                    {/* Size Options */}
+                    {product.sizes && product.sizes.length > 0 && (
+                      <div className="mt-2 flex items-center gap-1 flex-wrap">
+                        <span className="text-[10px] font-semibold text-neutral-400 mr-0.5">Tailles :</span>
+                        {product.sizes.map((sz) => (
+                          <span
+                            key={sz}
+                            className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-700 border border-neutral-200"
+                          >
+                            {sz}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>
